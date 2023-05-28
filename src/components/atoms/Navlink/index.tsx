@@ -4,26 +4,28 @@ import Link from 'next/link'
 import React from 'react'
 
 interface INavlink {
-  children: React.ReactNode
-  disable: boolean
+  disable?: boolean
   href: string
-  isExternalLink: boolean
+  isExternalLink?: boolean
   className: string
+  text: string
 }
 
 const Navlink = ({
-  children,
-  disable,
+  disable = false,
   href,
-  isExternalLink,
+  isExternalLink = false,
   className,
+  text,
 }: INavlink) => {
-  if (isExternalLink) {
+  if (!isExternalLink) {
     return (
-      <Link href={href}>
-        <a className={[className, disable ? 'disable' : ''].join(' ')}>
-          {children}
-        </a>
+      <Link
+        href={href}
+        className={[className, disable ? 'disable' : ''].join(' ')}
+        prefetch={true}
+      >
+        {text}
       </Link>
     )
   } else {
@@ -34,7 +36,7 @@ const Navlink = ({
         target="_blank"
         rel="noopener"
       >
-        {children}
+        {text}
       </a>
     )
   }

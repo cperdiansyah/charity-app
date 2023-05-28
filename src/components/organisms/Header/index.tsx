@@ -1,7 +1,36 @@
 'use client'
 import React from 'react'
-import  styles from'./header.module.scss'
+// import { useRouter } from 'next/router'
+import { usePathname } from 'next/navigation'
+// component
+import Navlink from 'components/atoms/Navlink'
+// styles
+import styles from './header.module.scss'
+interface INavlinkData {
+  name: string
+  href: string
+  className: string
+}
+
 const Header = () => {
+  const pathname = usePathname()
+  const navLinkData: INavlinkData[] = [
+    {
+      name: 'Home',
+      href: '/',
+      className: '',
+    },
+    {
+      name: 'About',
+      href: '/about',
+      className: '',
+    },
+    {
+      name: 'Contact',
+      href: '/contact',
+      className: '',
+    },
+  ]
   return (
     <header className="xs-header header-transparent">
       <div className="container">
@@ -9,22 +38,24 @@ const Header = () => {
           {/* <!-- .nav-header END --> */}
           <div className="nav-menus-wrapper row">
             <div className="xs-logo-wraper col-lg-2 xs-padding-0">
-              <a className="nav-brand" href="/">
+              <a className={`nav-brand ${styles['nav-brand']}`} href="/">
                 <img src="/images/logo.png" alt="" />
               </a>
             </div>
             {/* <!-- .xs-logo-wraper END --> */}
             <div className="col-lg-7">
-              <ul className={styles["nav-menu"]}>
-                <li>
-                  <a href="/">home</a>
-                </li>
-                <li>
-                  <a href="/about">about</a>
-                </li>
-                <li>
-                  <a href="/contact">Contact</a>
-                </li>
+              <ul className={`nav-menu ${styles['nav-menu']}`}>
+                {navLinkData.map((item: INavlinkData, index: number) => (
+                  <li key={index}>
+                    <Navlink
+                      className={`${item.className} ${
+                        pathname === item.href ? 'active' : ''
+                      }`}
+                      href={item.href}
+                      text={item.name}
+                    />
+                  </li>
+                ))}
               </ul>
               {/* <!-- .nav-menu END --> */}
             </div>
