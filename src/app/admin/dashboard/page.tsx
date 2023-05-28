@@ -1,4 +1,3 @@
-import { GetServerSideProps } from 'next';
 
 const AdminDashboard = () => {
   return (
@@ -8,14 +7,5 @@ const AdminDashboard = () => {
   );
 }
 
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-
-
-  return {
-    props:{
-
-    }
-  }
-}
 
 export default AdminDashboard
