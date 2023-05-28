@@ -9,7 +9,7 @@ const Footer = () => {
           <div className="row">
             <div className="col-lg-3 col-md-6 footer-widget xs-pr-20">
               <a href="/" className="xs-footer-logo">
-                <img src="/assets/images/footer_logo.png" alt="" />
+                <img src="/images/footer_logo.png" alt="" />
               </a>
               <p>
                 CharityPress online and raise money for charity and causes

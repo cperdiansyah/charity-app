@@ -1,5 +1,10 @@
-import { Inter } from 'next/font/google'
-const inter = Inter({ subsets: ['latin'] })
+import { Inter, Poppins } from 'next/font/google'
+// const inter = Inter({ subsets: ['latin'] })
+
+const poppins = Poppins({
+  weight: ['300', '400', '500', '600', '700', '800'],
+  subsets: ['latin'],
+})
 
 // styles
 import './globals.css'
@@ -30,7 +35,8 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className}>
+      {/* <body className={inter.className}> */}
+      <body className={poppins.className}>
         <Header />
         {children}
         <Footer />
