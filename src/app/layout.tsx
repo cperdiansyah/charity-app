@@ -1,7 +1,19 @@
 import { Inter } from 'next/font/google'
-import './globals.css'
-
 const inter = Inter({ subsets: ['latin'] })
+
+// styles
+import './globals.css'
+import '../../public/css/bootstrap.min.css'
+import '../../public/css/font-awesome.min.css'
+import '../../public/css/xsIcon.css'
+import '../../public/css/isotope.css'
+import '../../public/css/magnific-popup.css'
+import '../../public/css/owl.carousel.min.css'
+import '../../public/css/owl.theme.default.min.css'
+import '../../public/css/animate.css'
+import '../../public/css/plugins.css'
+import '../../public/css/style.css'
+import '../../public/css/responsive.css'
 
 export const metadata = {
   title: 'Create Next App',
@@ -15,9 +27,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={inter.className} suppressHydrationWarning={true}>
-        {children}
-      </body>
+      <body className={inter.className}>{children}</body>
     </html>
   )
 }
