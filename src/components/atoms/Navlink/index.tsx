@@ -4,11 +4,12 @@ import Link from 'next/link'
 import React from 'react'
 
 interface INavlink {
+  children?: React.ReactNode
   disable?: boolean
   href: string
   isExternalLink?: boolean
   className: string
-  text: string
+  text?: string
 }
 
 const Navlink = ({
@@ -17,6 +18,7 @@ const Navlink = ({
   isExternalLink = false,
   className,
   text,
+  children,
 }: INavlink) => {
   if (!isExternalLink) {
     return (
@@ -36,7 +38,7 @@ const Navlink = ({
         target="_blank"
         rel="noopener"
       >
-        {text}
+        {children}
       </a>
     )
   }
