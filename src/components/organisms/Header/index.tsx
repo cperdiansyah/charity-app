@@ -1,6 +1,6 @@
 'use client'
 import React from 'react'
-
+import  styles from'./header.module.scss'
 const Header = () => {
   return (
     <header className="xs-header header-transparent">
@@ -10,12 +10,12 @@ const Header = () => {
           <div className="nav-menus-wrapper row">
             <div className="xs-logo-wraper col-lg-2 xs-padding-0">
               <a className="nav-brand" href="/">
-                <img src="/assets/images/logo.png" alt="" />
+                <img src="/images/logo.png" alt="" />
               </a>
             </div>
             {/* <!-- .xs-logo-wraper END --> */}
             <div className="col-lg-7">
-              <ul className="nav-menu">
+              <ul className={styles["nav-menu"]}>
                 <li>
                   <a href="/">home</a>
                 </li>
