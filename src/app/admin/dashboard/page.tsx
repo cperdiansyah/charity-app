@@ -1,6 +1,6 @@
 import { GetServerSideProps } from 'next';
 
-const AdminHome = () => {
+const AdminDashboard = () => {
   return (
     <div>
       Enter
@@ -18,4 +18,4 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   }
 }
 
-export default AdminHome
+export default AdminDashboard
