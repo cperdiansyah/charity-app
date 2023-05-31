@@ -1,11 +1,5 @@
-
 const AdminDashboard = () => {
-  return (
-    <div>
-      Enter
-    </div>
-  );
+  return <div>Enter</div>
 }
-
 
 export default AdminDashboard
