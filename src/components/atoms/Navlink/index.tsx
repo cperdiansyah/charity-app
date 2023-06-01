@@ -25,7 +25,7 @@ const Navlink = ({
       <Link
         href={href}
         className={[className, disable ? 'disable' : ''].join(' ')}
-        prefetch={true}
+        // prefetch={false}
       >
         {text}
       </Link>
