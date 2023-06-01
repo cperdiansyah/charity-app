@@ -25,3 +25,11 @@
   flex-wrap: wrap;
   flex-direction: row;
 }
+
+.login-signup-button {
+  @apply flex w-[90%] flex-row justify-between;
+
+  button {
+    @apply rounded-xl;
+  }
+}

@@ -11,8 +11,22 @@ const CustomButton = (props: IPorps) => {
     return (
       <Button
         {...props}
-        className={`btn btn-primary btn-donation ${styles['btn-donation']} ${props.className}`}
+        className={`btn btn-primary btn-primary ${styles['btn-primary']} ${props.className}`}
         type="ghost"
+      >
+        {props.children}
+      </Button>
+    )
+  }
+  if (type === 'outline') {
+    return (
+      <Button
+        {...props}
+        className={`btn ${[
+          styles['btn-primary'],
+          styles['btn-secondary'],
+        ].join(" ")}  ${props.className}`}
+        type="default"
       >
         {props.children}
       </Button>

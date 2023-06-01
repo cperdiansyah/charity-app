@@ -46,7 +46,7 @@ const Header = () => {
               </a>
             </div>
             {/* <!-- .xs-logo-wraper END --> */}
-            <div className="col-lg-8">
+            <div className="col-lg-7">
               <ul className={`nav-menu ${styles['nav-menu']}`}>
                 {navLinkData.map((item: INavlinkData, index: number) => (
                   <li key={index}>
@@ -69,6 +69,14 @@ const Header = () => {
                 </li>
               </ul>
               {/* <!-- .nav-menu END --> */}
+            </div>
+            <div className="xs-navs-button d-flex-center-end col-lg-3 w-full">
+              <div
+                className={`login-signup-button ${styles['login-signup-button']}`}
+              >
+                <CustomButton type="outline" >Signup</CustomButton>
+                <CustomButton type="primary">Login</CustomButton>
+              </div>
             </div>
             {/* <div className="xs-navs-button d-flex-center-end col-lg-3">
               <a href="#popularcause" className="btn btn-primary">

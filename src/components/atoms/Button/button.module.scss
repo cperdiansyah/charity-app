@@ -1,4 +1,7 @@
-.btn-donation {
+$primary-color: #18bfc3;
+$hover-color: #041d57;
+
+.btn-primary {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -6,12 +9,21 @@
   padding: 16px 30px !important;
   box-sizing: border-box;
   height: 46px;
-  font-size: 0.85714em;
-
+ 
   span {
-    font-size: 75%;
     i {
       margin-right: 10px;
+    }
+  }
+}
+.btn-secondary {
+  color: $primary-color;
+  background-color: #fff;
+  &:hover {
+    color: #fff !important;
+    &:before,
+    &:after {
+      background-color: $hover-color;
     }
   }
 }
