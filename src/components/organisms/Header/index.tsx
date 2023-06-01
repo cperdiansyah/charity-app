@@ -1,7 +1,7 @@
 'use client'
 import React from 'react'
 // import { useRouter } from 'next/router'
-import { usePathname } from 'next/navigation'
+import { usePathname, useRouter } from 'next/navigation'
 // component
 import Navlink from 'components/atoms/Navlink'
 import CustomButton from 'components/atoms/Button'
@@ -17,6 +17,7 @@ interface INavlinkData {
 
 const Header = () => {
   const pathname = usePathname()
+  const router = useRouter()
   const navLinkData: INavlinkData[] = [
     {
       name: 'Home',
@@ -34,6 +35,9 @@ const Header = () => {
       className: '',
     },
   ]
+  // const handleClick = (pathname: string) => {
+  //   return router.push(pathname)
+  // }
   return (
     <header className="xs-header header-transparent">
       <div className="container">
@@ -74,8 +78,18 @@ const Header = () => {
               <div
                 className={`login-signup-button ${styles['login-signup-button']}`}
               >
-                <CustomButton type="outline" >Signup</CustomButton>
-                <CustomButton type="primary">Login</CustomButton>
+                <CustomButton
+                  type="outline"
+                  isLink
+                  href="/auth/signup"
+                  text="Signup"
+                />
+                <CustomButton
+                  type="primary"
+                  isLink
+                  href="/auth/login"
+                  text="Login"
+                />
               </div>
             </div>
             {/* <div className="xs-navs-button d-flex-center-end col-lg-3">

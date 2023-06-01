@@ -4,9 +4,35 @@ import { IPorps } from './interface'
 
 // Styles
 import styles from './button.module.scss'
+import Navlink from '../Navlink'
 
 const CustomButton = (props: IPorps) => {
   const { type = 'default' } = props
+
+  // If button is Link
+  if (props.isLink) {
+    if (type === 'primary') {
+      return (
+        <Navlink
+          href={props.href ?? '/'}
+          text={props.text}
+          className={`btn btn-primary btn-primary ${styles['btn-primary']} ${props.className}`}
+        />
+      )
+    }
+    if (type === 'outline') {
+      return (
+        <Navlink
+          href={props.href ?? '/'}
+          text={props.text}
+          className={`btn ${[
+            styles['btn-primary'],
+            styles['btn-secondary'],
+          ].join(' ')}  ${props.className}`}
+        />
+      )
+    }
+  }
   if (type === 'primary') {
     return (
       <Button
@@ -22,10 +48,9 @@ const CustomButton = (props: IPorps) => {
     return (
       <Button
         {...props}
-        className={`btn ${[
-          styles['btn-primary'],
-          styles['btn-secondary'],
-        ].join(" ")}  ${props.className}`}
+        className={`btn ${[styles['btn-primary'], styles['btn-secondary']].join(
+          ' '
+        )}  ${props.className}`}
         type="default"
       >
         {props.children}
