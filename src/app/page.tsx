@@ -2,6 +2,7 @@ import Header from 'components/organisms/Header'
 import Info from 'components/organisms/Info'
 import Welcome from 'components/organisms/Welcome'
 import Image from 'next/image'
+// import { NEXT_PUBLIC_BASE_URL as BASE_URL } from 'utils/api'
 
 const getCharity = async () => {
   try {
@@ -20,8 +21,8 @@ const getCharity = async () => {
 }
 
 export default async function Home() {
-  const data = await getCharity()
-  console.log(data.charity.length)
+  // const data = await getCharity()
+  // console.log(data.charity.length)
   return (
     <>
       <Welcome />
