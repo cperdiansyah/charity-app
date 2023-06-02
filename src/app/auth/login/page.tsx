@@ -1,12 +1,14 @@
 'use client'
-import React from 'react'
-import { Button, Checkbox, Form, Input } from 'antd'
+import { Checkbox, Form, Input } from 'antd'
 
 import UserTemplate from 'components/templates/UserTemplate'
-import styles from './login.module.scss'
 import Navlink from 'components/atoms/Navlink'
-import { NAVIGATION_LINK } from 'utils/link'
 import CustomButton from 'components/atoms/Button'
+
+// Utils
+import { NAVIGATION_LINK } from 'utils/link'
+// styles
+import styles from './login.module.scss'
 
 const Login = () => {
   const [form] = Form.useForm()
@@ -59,19 +61,6 @@ const Login = () => {
               </Form.Item>
             </div>
             <div className="flex justify-between">
-              {/* <div className="flex items-center gap-x-2">
-                <input
-                  id="remember"
-                  type="checkbox"
-                  className="h-4 w-4 rounded-md bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500"
-                />
-                <label
-                  htmlFor="remember"
-                  className="text-xs font-semibold uppercase tracking-wider text-gray-500"
-                >
-                  Remember me?
-                </label>
-              </div> */}
               <Form.Item
                 name="remember"
                 valuePropName="checked"
@@ -83,7 +72,6 @@ const Login = () => {
                 </Checkbox>
               </Form.Item>
               <Navlink
-                // className="text-medium ml-1 text-indigo-600 hover:underline"
                 className="text-xs font-semibold uppercase tracking-wider text-gray-500"
                 href={NAVIGATION_LINK.ForgotPassword}
                 text="Forgot Password"
