@@ -42,43 +42,86 @@ const Signup = () => {
             </div>
             <div className="form-item-wrapper">
               <Form.Item
-                label="Email/Username"
+                label="name"
+                name="name"
+                className={`antd-form-item ${styles['antd-form-item']}`}
+                rules={[
+                  { required: true, message: 'Please input your name!' },
+                  {
+                    type: 'string',
+                    min: 6,
+                    message: 'Must be at least 6 characters',
+                  },
+                ]}
+              >
+                <Input placeholder="input your name" />
+              </Form.Item>
+              <Form.Item
+                label="Username"
                 name="username"
                 className={`antd-form-item ${styles['antd-form-item']}`}
                 rules={[
                   { required: true, message: 'Please input your username!' },
+                  {
+                    type: 'string',
+                    min: 5,
+                    message: 'Must be at least 5 characters',
+                  },
                 ]}
               >
-                <Input type="email" placeholder="input your Email/Username" />
+                <Input placeholder="input your Username" />
+              </Form.Item>
+              <Form.Item
+                label="Email"
+                name="email"
+                className={`antd-form-item ${styles['antd-form-item']}`}
+                rules={[
+                  { required: true, message: 'Please input your email!' },
+                  {
+                    type: 'email',
+                    message: 'Please enter correct email address',
+                  },
+                ]}
+              >
+                <Input type="email" placeholder="input your Email" />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
                 className={`antd-form-item ${styles['antd-form-item']}`}
                 rules={[
-                  { required: true, message: 'Please input your username!' },
+                  { required: true, message: 'Please input your password!' },
                 ]}
               >
                 <Input type="password" placeholder="input your Password" />
               </Form.Item>
-            </div>
-            {/* <div className="flex justify-between">
               <Form.Item
-                name="remember"
-                valuePropName="checked"
-                wrapperCol={{ offset: 8, span: 16 }}
-                className={`${styles['checkbox-remember']}`}
+                label="Confirm Password"
+                name="confirm-password"
+                dependencies={['password']}
+                className={`antd-form-item ${styles['antd-form-item']}`}
+                rules={[
+                  {
+                    required: true,
+                    message: 'Please confirm your password!',
+                  },
+                  ({ getFieldValue }) => ({
+                    validator(_, value) {
+                      if (!value || getFieldValue('password') === value) {
+                        return Promise.resolve()
+                      }
+                      return Promise.reject(
+                        new Error(
+                          'The two passwords that you entered do not match!'
+                        )
+                      )
+                    },
+                  }),
+                ]}
               >
-                <Checkbox className="h-4 w-4 rounded-md  bg-indigo-500 focus:outline-none focus:ring-2 focus:ring-indigo-500">
-                  Remember me
-                </Checkbox>
+                <Input placeholder="input confirm Password" />
               </Form.Item>
-              <Navlink
-                className="text-xs font-semibold uppercase tracking-wider text-gray-500"
-                href={NAVIGATION_LINK.ForgotPassword}
-                text="Forgot Password"
-              />
-            </div> */}
+            </div>
             <CustomButton
               buttontype="primary"
               className="w-full !rounded-md font-semibold uppercase"

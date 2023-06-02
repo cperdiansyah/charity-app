@@ -44,17 +44,20 @@ const Login = () => {
                 name="username"
                 className={`antd-form-item ${styles['antd-form-item']}`}
                 rules={[
-                  { required: true, message: 'Please input your username!' },
+                  {
+                    required: true,
+                    message: 'Please input your email/username!',
+                  },
                 ]}
               >
-                <Input type="email" placeholder="input your Email/Username" />
+                <Input placeholder="input your Email/Username" />
               </Form.Item>
               <Form.Item
                 label="Password"
                 name="password"
                 className={`antd-form-item ${styles['antd-form-item']}`}
                 rules={[
-                  { required: true, message: 'Please input your username!' },
+                  { required: true, message: 'Please input your password!' },
                 ]}
               >
                 <Input type="password" placeholder="input your Password" />
