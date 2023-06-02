@@ -3,7 +3,7 @@ import React from 'react'
 import styles from './contact.module.scss'
 import Map from 'components/molecules/Map'
 import Navlink from 'components/atoms/Navlink'
-import UserTemplate from 'components/templates/UserTemplate'
+import UserTemplate from 'components/templates/UserLayout'
 
 const Contact = () => {
   return (

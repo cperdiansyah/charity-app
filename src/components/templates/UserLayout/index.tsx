@@ -2,7 +2,7 @@ import Footer from 'components/organisms/Footer'
 import Header from 'components/organisms/Header'
 import React from 'react'
 
-const UserTemplate = ({ children }: { children: React.ReactNode }) => {
+const UserLayout = ({ children }: { children: React.ReactNode }) => {
   return (
     <>
       <Header />
@@ -12,4 +12,4 @@ const UserTemplate = ({ children }: { children: React.ReactNode }) => {
   )
 }
 
-export default UserTemplate
+export default UserLayout

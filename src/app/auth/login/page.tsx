@@ -1,7 +1,7 @@
 'use client'
 import { Checkbox, Form, Input } from 'antd'
 
-import UserTemplate from 'components/templates/UserTemplate'
+import UserTemplate from 'components/templates/UserLayout'
 import Navlink from 'components/atoms/Navlink'
 import CustomButton from 'components/atoms/Button'
 
