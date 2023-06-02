@@ -7,11 +7,11 @@ import styles from './button.module.scss'
 import Navlink from '../Navlink'
 
 const CustomButton = (props: IPorps) => {
-  const { type = 'default' } = props
+  const { buttontype = 'default' } = props
 
   // If button is Link
   if (props.isLink) {
-    if (type === 'primary') {
+    if (buttontype === 'primary') {
       return (
         <Navlink
           href={props.href ?? '/'}
@@ -20,7 +20,7 @@ const CustomButton = (props: IPorps) => {
         />
       )
     }
-    if (type === 'outline') {
+    if (buttontype === 'outline') {
       return (
         <Navlink
           href={props.href ?? '/'}
@@ -33,7 +33,7 @@ const CustomButton = (props: IPorps) => {
       )
     }
   }
-  if (type === 'primary') {
+  if (buttontype === 'primary') {
     return (
       <Button
         {...props}
@@ -44,7 +44,7 @@ const CustomButton = (props: IPorps) => {
       </Button>
     )
   }
-  if (type === 'outline') {
+  if (buttontype === 'outline') {
     return (
       <Button
         {...props}

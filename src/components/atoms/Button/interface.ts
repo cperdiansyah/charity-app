@@ -1,9 +1,13 @@
-export interface IPorps {
+import { ButtonHTMLType } from 'antd/es/button'
+import { BaseButtonProps } from 'antd/es/button/button'
+
+export interface IPorps extends BaseButtonProps {
   children?: React.ReactNode
   className?: string
-  type?: 'default' | 'primary' | 'disabled' | 'outline' | 'transparent'
+  buttontype?: 'default' | 'primary' | 'disabled' | 'outline' | 'transparent'
   href?: string
   onClick?: VoidFunction
   isLink?: boolean
   text?: string
+  htmlType?: ButtonHTMLType
 }
