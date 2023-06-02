@@ -1,6 +1,5 @@
 'use client'
 import React from 'react'
-// import { useRouter } from 'next/router'
 import { usePathname, useRouter } from 'next/navigation'
 // component
 import Navlink from 'components/atoms/Navlink'
@@ -8,6 +7,7 @@ import CustomButton from 'components/atoms/Button'
 
 // styles
 import styles from './header.module.scss'
+import { NAVIGATION_LINK } from 'utils/link'
 
 interface INavlinkData {
   name: string
@@ -17,27 +17,23 @@ interface INavlinkData {
 
 const Header = () => {
   const pathname = usePathname()
-  const router = useRouter()
   const navLinkData: INavlinkData[] = [
     {
       name: 'Home',
-      href: '/',
+      href: NAVIGATION_LINK.Homepage,
       className: '',
     },
     {
       name: 'About',
-      href: '/about',
+      href: NAVIGATION_LINK.About,
       className: '',
     },
     {
       name: 'Contact',
-      href: '/contact',
+      href: NAVIGATION_LINK.Contact,
       className: '',
     },
   ]
-  // const handleClick = (pathname: string) => {
-  //   return router.push(pathname)
-  // }
   return (
     <header className="xs-header header-transparent">
       <div className="container">
@@ -45,9 +41,12 @@ const Header = () => {
           {/* <!-- .nav-header END --> */}
           <div className="nav-menus-wrapper row">
             <div className="xs-logo-wraper col-lg-2 xs-padding-0">
-              <a className={`nav-brand ${styles['nav-brand']}`} href="/">
+              <Navlink
+                className={`nav-brand ${styles['nav-brand']}`}
+                href={NAVIGATION_LINK.Homepage}
+              >
                 <img src="/images/logo.png" alt="" />
-              </a>
+              </Navlink>
             </div>
             {/* <!-- .xs-logo-wraper END --> */}
             <div className="col-lg-7">
@@ -64,7 +63,7 @@ const Header = () => {
                   </li>
                 ))}
                 <li>
-                  <CustomButton type="primary" href="#popularcause">
+                  <CustomButton buttontype="primary" href="#popularcause">
                     <span className="badge">
                       <i className="fa fa-heart" />
                       Donate Now
@@ -79,15 +78,15 @@ const Header = () => {
                 className={`login-signup-button ${styles['login-signup-button']}`}
               >
                 <CustomButton
-                  type="outline"
+                  buttontype="outline"
                   isLink
-                  href="/auth/signup"
+                  href={NAVIGATION_LINK.Signup}
                   text="Signup"
                 />
                 <CustomButton
-                  type="primary"
+                  buttontype="primary"
                   isLink
-                  href="/auth/login"
+                  href={NAVIGATION_LINK.Login}
                   text="Login"
                 />
               </div>
