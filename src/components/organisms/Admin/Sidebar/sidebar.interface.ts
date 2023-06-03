@@ -11,11 +11,12 @@ export interface ISidebarItem {
 
 export type MenuItem = Required<MenuProps>['items'][number] & {
   children?: MenuItem[]
+  pathname?: string
 }
 
 export interface IMenuItem {
-  label: string
-  href?: string
+  label: React.ReactNode | string
+  pathname?: string
   icon?: React.ElementType
   children?: IMenuItem[]
 }

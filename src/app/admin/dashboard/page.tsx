@@ -1,7 +1,7 @@
 import { NextPage } from 'next'
 
 const AdminDashboard: NextPage = () => {
-  return <div>Enter</div>
+  return <div>dashboard</div>
 }
 
 export default AdminDashboard

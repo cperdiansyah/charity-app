@@ -1,12 +1,7 @@
 import React from 'react'
 import { Layout, Menu, MenuProps } from 'antd'
-import {
-  UserOutlined,
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-} from '@ant-design/icons'
+import { useRouter } from 'next/navigation'
+
 // Component
 const { Sider } = Layout
 
@@ -15,50 +10,29 @@ import useScreenWidth from 'hooks/useScreenWidth'
 import useSidebarCollapsed from 'stores/toogle'
 
 // Utils, Interface, functions
-import { IAdminSidebar, IMenuItem } from './sidebar.interface'
-import { generateItem } from './sidebar.function'
+import { IMenuItem } from './sidebar.interface'
+import { adminSidebar, findItemByKey, generateItem } from './sidebar.function'
 
 // styles
 import styles from './sidebar.module.scss'
 
-export const item: IMenuItem[] = [
-  {
-    label: 'option 1',
-    icon: PieChartOutlined,
-  },
-  {
-    label: 'option 2',
-    icon: DesktopOutlined,
-  },
-  {
-    label: 'User',
-    icon: UserOutlined,
-    children: [{ label: 'Tom' }, { label: 'Bill' }, { label: 'Alex' }],
-  },
-  {
-    label: 'Team',
-    icon: TeamOutlined,
-    children: [{ label: 'Team 1' }, { label: 'Team 2' }, { label: 'Team 3' }],
-  },
-  {
-    label: 'Files',
-    icon: FileOutlined,
-  },
-]
-
+const item: IMenuItem[] = adminSidebar
 const menuItems = generateItem(item)
 
-const AdminSidebar: React.FC = ({ sidebarItem }: IAdminSidebar) => {
+const AdminSidebar: React.FC = () => {
+  const router = useRouter()
   const screenWidth = useScreenWidth()
   const [collapsed, setCollapsed] = useSidebarCollapsed()
   const onClick: MenuProps['onClick'] = (e) => {
-    console.log('click ', e)
-    // setCurrent(e.key)
+    const keyItem = e.key
+    const item: IMenuItem = findItemByKey(menuItems, keyItem)
+    if (item.pathname) {
+      router.push(item.pathname)
+    }
   }
   const sidebarWidth = () => {
     if (screenWidth > 0 && screenWidth < 700)
       return Math.floor(screenWidth * 0.4)
-
     return undefined
   }
 
@@ -80,7 +54,7 @@ const AdminSidebar: React.FC = ({ sidebarItem }: IAdminSidebar) => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={['4']}
+        defaultSelectedKeys={['1']}
         items={menuItems}
         onClick={onClick}
       />

@@ -62,7 +62,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
               background: colorBgContainer,
             }}
           >
-            Bill is a cat.
+            Bill is a cat. {children}
           </div>
         </Content>
         <Footer style={{ textAlign: 'center' }}>

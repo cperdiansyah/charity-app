@@ -1,5 +1,8 @@
 const AdminLink = {
   Dashboard: '/admin/dashboard',
+  CharityList: '/admin/charity',
+  CharityAdd: '/admin/charity/add',
+  CharityEdit: '/admin/charity/edit/:id',
 }
 
 export const NAVIGATION_LINK = {
@@ -9,5 +12,5 @@ export const NAVIGATION_LINK = {
   Contact: '/contact',
   Login: '/auth/login',
   Signup: '/auth/signup',
-  ForgotPassword: '/auth/forgot-password'
+  ForgotPassword: '/auth/forgot-password',
 }
