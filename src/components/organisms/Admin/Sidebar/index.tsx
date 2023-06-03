@@ -55,10 +55,17 @@ const AdminSidebar: React.FC = ({ sidebarItem }: IAdminSidebar) => {
     console.log('click ', e)
     // setCurrent(e.key)
   }
+  const sidebarWidth = () => {
+    if (screenWidth > 0 && screenWidth < 700)
+      return Math.floor(screenWidth * 0.4)
+
+    return undefined
+  }
 
   return (
     <Sider
       breakpoint="lg"
+      width={sidebarWidth()}
       collapsedWidth={screenWidth > 700 || screenWidth === 0 ? undefined : 1}
       onBreakpoint={(broken) => {
         // console.log(broken)
