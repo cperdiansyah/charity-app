@@ -1,4 +1,5 @@
 .header-container {
+  @apply flex items-center justify-between p-0 lg:px-5;
   .collapsed-button {
     @apply mr-3 h-16 w-12 lg:mr-0 lg:h-16 lg:w-16 lg:text-base;
   }

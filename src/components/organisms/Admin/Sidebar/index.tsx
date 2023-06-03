@@ -1,3 +1,5 @@
+'use client'
+
 import React from 'react'
 import { Layout, Menu, MenuProps } from 'antd'
 import { useRouter } from 'next/navigation'
@@ -11,7 +13,8 @@ import useSidebarCollapsed from 'stores/toogle'
 
 // Utils, Interface, functions
 import { IMenuItem } from './sidebar.interface'
-import { adminSidebar, findItemByKey, generateItem } from './sidebar.function'
+import { findItemByKey, generateItem } from './sidebar.function'
+import { adminSidebar } from 'utils/menu'
 
 // styles
 import styles from './sidebar.module.scss'
