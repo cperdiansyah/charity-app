@@ -1,4 +1,5 @@
 const AdminLink = {
+  AdminHome: '/admin',
   Dashboard: '/admin/dashboard',
   CharityList: '/admin/charity',
   CharityAdd: '/admin/charity/add',
