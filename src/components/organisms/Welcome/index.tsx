@@ -1,6 +1,24 @@
-import React from 'react'
+'use client'
+import React, { useEffect, useState } from 'react'
 import styles from './welcome.module.scss'
+import { BASE_HEADERS, FETCH_OPTIONS, IFetchOptions, SERVICE } from 'utils/api'
 const Welcome = () => {
+  const [data, setData] = useState(null)
+  const [isLoading, setLoading] = useState(false)
+  useEffect(() => {
+    // fetchData()
+  }, [])
+
+  const fetchData = async () => {
+    const url = [process.env.NEXT_PUBLIC_BASE_URL, SERVICE.charity].join('')
+
+    const response = await fetch(url, FETCH_OPTIONS)
+
+    const data = await response.json()
+    console.log(data)
+    setData(data)
+  }
+
   return (
     // <!-- welcome section -->
     <section className="">
@@ -15,9 +33,12 @@ const Welcome = () => {
                 <br />
                 and other gender-based violence.
               </p>
-              <a href="#popularcause" className="btn btn-outline-primary">
+              {/* <a href="#popularcause" className="btn btn-outline-primary">
                 View Causes
-              </a>
+              </a> */}
+              <button onClick={fetchData} className="btn btn-outline-primary">
+                View Causes
+              </button>
             </div>
             {/* <!-- .xs-welcome-wraper END --> */}
           </div>

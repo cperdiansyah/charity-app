@@ -6,10 +6,11 @@ import {
   PopupVideoSection,
   WeDoSection,
 } from './about.elements'
+import UserTemplate from 'components/templates/UserLayout'
 
 const About = () => {
   return (
-    <>
+    <UserTemplate>
       <BannerSection />
       <main className="xs-main">
         <PopupVideoSection />
@@ -17,7 +18,7 @@ const About = () => {
         <CounterSection />
         <WeDoSection />
       </main>
-    </>
+    </UserTemplate>
   )
 }
 

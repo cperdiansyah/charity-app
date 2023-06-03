@@ -17,15 +17,35 @@ const Navlink = ({
   href,
   isExternalLink = false,
   className,
-  text,
+  text = '',
   children,
 }: INavlink) => {
   if (!isExternalLink) {
+    if (children) {
+      return (
+        <Link
+          href={href}
+          className={[className, disable ? 'disable' : ''].join(' ')}
+          // prefetch={false}
+        >
+          {children}
+        </Link>
+      )
+    }
     return (
       <Link
         href={href}
         className={[className, disable ? 'disable' : ''].join(' ')}
-        prefetch={true}
+        // prefetch={false}
+      >
+        {text}
+      </Link>
+    )
+    return (
+      <Link
+        href={href}
+        className={[className, disable ? 'disable' : ''].join(' ')}
+        // prefetch={false}
       >
         {text}
       </Link>
