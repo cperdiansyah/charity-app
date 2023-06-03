@@ -1,6 +1,7 @@
 'use client'
 import React from 'react'
 const Footer = () => {
+  const getYear = new Date().getFullYear()
   return (
     // <!-- footer section start -->
     <footer className="xs-footer-section">
@@ -89,7 +90,9 @@ const Footer = () => {
           <div className="row">
             <div className="col-md-6">
               <div className="xs-copyright-text">
-                <p>&copy; Copyright 2018 Charity. - All Right's Reserved</p>
+                <p>
+                  &copy; Copyright {getYear} Charity. - All Right's Reserved
+                </p>
               </div>
             </div>
             <div className="col-md-6">

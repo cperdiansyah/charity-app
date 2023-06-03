@@ -7,6 +7,7 @@ const nextConfig = {
     // Enable TypeScript support.
     enable: true,
   },
+  compress: false,
 
   // Configure the routing system.
   // routes: [
@@ -21,30 +22,30 @@ const nextConfig = {
   // ],
 
   // Configure the SEO settings.
-  seo: {
-    title: 'Charity App',
-    description: 'This is my website.',
-  },
-
-  // Configure the analytics settings.
-  // analytics: {
-  // 	// Enable Google Analytics.
-  // 	googleAnalytics: {
-  // 		trackingId: "UA-XXXXXXXX-X",
-  // 	},
+  // seo: {
+  //   title: 'Charity App',
+  //   description: 'This is my website.',
   // },
 
-  // Configure the image optimization settings.
-  images: {
-    // Enable image optimization.
-    enable: true,
-  },
+  // // Configure the analytics settings.
+  // // analytics: {
+  // // 	// Enable Google Analytics.
+  // // 	googleAnalytics: {
+  // // 		trackingId: "UA-XXXXXXXX-X",
+  // // 	},
+  // // },
 
-  // Configure the font optimization settings.
-  fonts: {
-    // Enable font optimization.
-    enable: true,
-  },
+  // // Configure the image optimization settings.
+  // images: {
+  //   // Enable image optimization.
+  //   enable: true,
+  // },
+
+  // // Configure the font optimization settings.
+  // fonts: {
+  //   // Enable font optimization.
+  //   enable: true,
+  // },
   // Saass
   sassOptions: {
     includePaths: [path.join(__dirname, 'styles')],

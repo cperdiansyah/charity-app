@@ -3,10 +3,11 @@ import React from 'react'
 import styles from './contact.module.scss'
 import Map from 'components/molecules/Map'
 import Navlink from 'components/atoms/Navlink'
+import UserTemplate from 'components/templates/UserLayout'
 
 const Contact = () => {
   return (
-    <>
+    <UserTemplate>
       <section
         className={`xs-banner-inner-section parallax-window ${styles['banner-contact']} `}
       >
@@ -110,7 +111,7 @@ const Contact = () => {
         </section>
         {/* <!-- End contact section --> */}
       </main>
-    </>
+    </UserTemplate>
   )
 }
 
