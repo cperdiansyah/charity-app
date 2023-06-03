@@ -1,8 +1,11 @@
 'use client'
 import { useState, useEffect } from 'react'
 
+import useUpdated from 'hooks/useUpdated'
+
 const useScreenWidth = (): number => {
   const [screenWidth, setScreenWidth] = useState(0)
+  const [initialLoad, setInitialLoad] = useState(false)
 
   const handleResize: any = (): void => {
     setScreenWidth(window?.innerWidth)
@@ -11,6 +14,7 @@ const useScreenWidth = (): number => {
   useEffect(() => {
     if (typeof window !== 'undefined') {
       // Client-side-only code
+      setInitialLoad(true)
 
       window.addEventListener('resize', handleResize)
 
@@ -20,6 +24,12 @@ const useScreenWidth = (): number => {
       }
     }
   }, [])
+
+  useUpdated(() => {
+    if (initialLoad) {
+      handleResize()
+    }
+  }, [initialLoad])
 
   return screenWidth
 }

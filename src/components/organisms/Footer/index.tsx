@@ -91,7 +91,7 @@ const Footer = () => {
             <div className="col-md-6">
               <div className="xs-copyright-text">
                 <p>
-                  &copy; Copyright {getYear} Charity. - All Right's Reserved
+                  &copy; Copyright {getYear} Amalkita. - All Right's Reserved
                 </p>
               </div>
             </div>
