@@ -1,6 +1,8 @@
 'use client'
-import { Layout } from 'antd'
-import React from 'react'
+import React, { useState } from 'react'
+import { Breadcrumb, Button, Layout, theme } from 'antd'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import AdminSidebar from 'components/organisms/Admin/Sidebar'
 
 const { Header, Footer, Sider, Content } = Layout
 
@@ -33,16 +35,40 @@ const footerStyle: React.CSSProperties = {
   color: '#fff',
   backgroundColor: '#7dbcea',
 }
+import styles from './adminLayout.module.scss'
+import AdminHeader from 'components/organisms/Admin/Header'
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+  const [collapsed, setCollapsed] = useState(false)
+
+  const {
+    token: { colorBgContainer },
+  } = theme.useToken()
+  const toggleCollapsed = () => {
+    setCollapsed(!collapsed)
+  }
   return (
-    <Layout>
-      <Sider style={siderStyle}>Sider</Sider>
+    <Layout className={`${styles['admin-layout']}`}>
+      {/* <Sider style={siderStyle}>Sider</Sider>
+       */}
+      <AdminSidebar />
       <Layout>
-        <Header style={headerStyle}>Header</Header>
-        <Content style={contentStyle}> {children}</Content>
-        <Footer style={footerStyle}>Footer</Footer>
+        <AdminHeader />
+        {/* <Header style={{ padding: 0, background: colorBgContainer }} /> */}
+        <Content style={{ margin: '10px 16px' }}>
+          <div
+            style={{
+              padding: 24,
+              minHeight: 360,
+              background: colorBgContainer,
+            }}
+          >
+            Bill is a cat.
+          </div>
+        </Content>
+        <Footer style={{ textAlign: 'center' }}>
+          Ant Design ©2023 Created by Ant UED
+        </Footer>
       </Layout>
-      {/* {children} */}
     </Layout>
   )
 }
