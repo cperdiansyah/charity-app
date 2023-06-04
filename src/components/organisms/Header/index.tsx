@@ -60,7 +60,7 @@ const Header = () => {
               className={`xs-logo-wraper col-lg-2 xs-padding-0  ${styles['nav-wrapper']} `}
             >
               <Navlink
-                className={`nav-brand ${styles['nav-brand']}`}
+                className={`nav-brand ${styles['nav-brand']} md:m-0 `}
                 href={NAVIGATION_LINK.Homepage}
               >
                 <img src="/images/logo.png" alt="" />
@@ -84,7 +84,7 @@ const Header = () => {
                     onClose={onClose}
                     open={showDrawer}
                     size={'default'}
-                    className={`drawer ${styles['drawer']} `}
+                    className={`drawer ${styles['drawer']}  `}
                   >
                     <NavigationMobile data={navLinkData} />
                   </Drawer>
