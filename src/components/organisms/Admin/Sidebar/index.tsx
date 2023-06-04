@@ -18,6 +18,7 @@ import { adminSidebar } from 'utils/menu'
 
 // styles
 import styles from './sidebar.module.scss'
+import { sidebarWidth } from 'utils/helpers'
 
 const item: IMenuItem[] = adminSidebar
 const menuItems = generateItem(item)
@@ -32,11 +33,6 @@ const AdminSidebar: React.FC = () => {
     if (item.pathname) {
       router.push(item.pathname)
     }
-  }
-  const sidebarWidth = () => {
-    if (screenWidth > 0 && screenWidth < 700)
-      return Math.floor(screenWidth * 0.4)
-    return undefined
   }
 
   return (
