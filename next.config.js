@@ -3,11 +3,11 @@
 const path = require('path')
 const nextConfig = {
   // Configure the build process.
-  typescript: {
-    // Enable TypeScript support.
-    enable: true,
-  },
-  compress: false,
+  // typescript: {
+  //   // Enable TypeScript support.
+  //   enable: true,
+  // },
+  // compress: false,
 
   // Configure the routing system.
   // routes: [
