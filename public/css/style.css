@@ -3681,3 +3681,5 @@ h1, h2, h3 {
   background-repeat: no-repeat;
   background-position: center center;
   background-size: cover; }
+
+.ant-notification{ z-index: 9999;}

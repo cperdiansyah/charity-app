@@ -1,5 +1,5 @@
 // export const { NEXT_PUBLIC_BASE_URL } = process.env
-
+import axios from 'axios'
 import { RequestInit } from "next/dist/server/web/spec-extension/request"
 
 export const BASE_HEADERS = {
@@ -23,6 +23,12 @@ export const FETCH_OPTIONS: IFetchOptions = {
   headers: BASE_HEADERS,
 }
 
+export const api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_BASE_URL,
+  headers: BASE_HEADERS,
+})
+
 export const SERVICE = {
   charity: '/api/v1/charity',
+  login: '/api/v1/auth/login'
 }
