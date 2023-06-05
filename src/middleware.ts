@@ -14,6 +14,7 @@ export function middleware(request: NextRequest) {
   if (nextUrl.pathname === '/admin') {
     return NextResponse.redirect(new URL('/admin/dashboard', url))
   }
+  // console.log(cookies)
 
   // console.log(request.nextUrl)
 
