@@ -9,12 +9,19 @@ export function getJwtSecretKey() {
   return new TextEncoder().encode(secret)
 }
 
-export async function verifyJwtToken(token:string) {
+export async function verifyJwtToken(token: string) {
   try {
     const { payload } = await jwtVerify(token, getJwtSecretKey())
-
+    // console.log(payload)
     return payload
-  } catch (error) {
+  } catch (error: any) {
+    console.log(error)
+    // console.log(error.name)
+    if (error.name === 'JWTExpired') {
+      // console.log('error nih')
+
+      // const refresh = await refreshToken()
+    }
     return null
   }
 }
