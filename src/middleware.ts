@@ -1,6 +1,5 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { verifyJwtToken } from 'utils/auth'
 import { NAVIGATION_LINK } from 'utils/link'
 
 const AUTH_PAGES = [NAVIGATION_LINK.Login, NAVIGATION_LINK.Signup]
@@ -12,13 +11,10 @@ export async function middleware(request: NextRequest) {
   const { url, nextUrl, cookies } = request
   const { value: token } = cookies.get('token') ?? { value: null }
 
-  // console.log(cookies)
   // redirect to dashboard admin page when hit only host/admin
   if (nextUrl.pathname === '/admin') {
     return NextResponse.redirect(new URL('/admin/dashboard', url))
   }
-
-  // console.log(token)
 
   // check auth pages
   if (
@@ -41,17 +37,17 @@ export async function middleware(request: NextRequest) {
       return response
     }
 
-    if (!hasVerifiedToken) {
-      const searchParams = new URLSearchParams(nextUrl.searchParams)
-      searchParams.set('next', nextUrl.pathname)
+    // if (!hasVerifiedToken) {
+    //   const searchParams = new URLSearchParams(nextUrl.searchParams)
+    //   searchParams.set('next', nextUrl.pathname)
 
-      const response = NextResponse.redirect(
-        new URL(`/auth/login?${searchParams}`, url)
-      )
-      response.cookies.delete('token')
+    //   const response = NextResponse.redirect(
+    //     new URL(`/auth/login?${searchParams}`, url)
+    //   )
+    //   response.cookies.delete('token')
 
-      return response
-    }
+    //   return response
+    // }
   }
 
   return NextResponse.next()
