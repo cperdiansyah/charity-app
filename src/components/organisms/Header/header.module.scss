@@ -1,10 +1,27 @@
-.nav-brand {
-  display: flex !important;
-  img {
-    object-fit: contain;
-    margin: 0 auto;
-    margin-top: 1.2rem;
-    height: fit-content;
+$breakpoint-tablet: 1000px;
+.nav-wrapper {
+  @apply flex w-full items-center justify-between bg-white lg:w-0 lg:bg-transparent;
+  button {
+    width: 46px;
+    height: 46px;
+    @apply mx-4;
+  }
+  .nav-brand {
+    display: flex !important;
+    @media (max-width: $breakpoint-tablet) {
+      margin: 0 !important;
+      width: fit-content;
+    }
+    img {
+      object-fit: contain;
+      margin: 0 auto;
+      margin-top: 1.2rem;
+      height: fit-content;
+      @media (max-width: $breakpoint-tablet) {
+        margin: 0;
+        margin-right: auto;
+      }
+    }
   }
 }
 
@@ -16,6 +33,32 @@
   padding: 16px 30px !important;
   box-sizing: border-box;
   height: 46px;
+}
+.drawer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-wrap: wrap;
+  flex-direction: column;
+
+  .nav-menu {
+    flex-direction: column;
+    li {
+      width: 100%;
+      text-align: center;
+      margin-bottom: 10px;
+      a {
+        width: 100%;
+        @apply py-5;
+      }
+    }
+
+    .button-primary {
+      height: unset;
+      // padding: 12px 20px !important;
+      @apply mx-auto flex w-fit px-5 py-3 text-base;
+    }
+  }
 }
 
 .nav-menu {

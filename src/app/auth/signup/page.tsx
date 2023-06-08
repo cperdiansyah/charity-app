@@ -21,9 +21,7 @@ const Signup = () => {
 
   return (
     <UserTemplate>
-      <div
-        className={`flex w-full items-center justify-center bg-white p-10 pt-32 ${styles['signup-container']}`}
-      >
+      <div className={` ${styles['signup-container']}`}>
         <div
           className={`h-auto w-full max-w-lg rounded-md bg-white px-4 py-6  ${styles['card']}`}
         >

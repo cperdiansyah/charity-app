@@ -20,7 +20,7 @@ const Info = () => {
             20M people around the world.
           </h2>
         </div>
-        <div className="row">
+        <div className="row text-center lg:text-left">
           <div className="col-md-6 col-lg-3">
             <div className="xs-service-promo">
               <span className="icon-water" />
