@@ -19,8 +19,7 @@ import '../../public/css/animate.css'
 import '../../public/css/plugins.css'
 import '../../public/css/style.css'
 import '../../public/css/responsive.css'
-import Header from 'components/organisms/Header'
-import Footer from 'components/organisms/Footer'
+import Loading from './loading'
 
 export const metadata = {
   title: 'Amalkita',
@@ -36,8 +35,8 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        {children}
-      </body>
+        <Loading/>
+        {children}</body>
     </html>
   )
 }
