@@ -1,6 +1,6 @@
 'use client'
 import { useState } from 'react'
-import { Checkbox, Form, Input, Spin } from 'antd'
+import { Button, Checkbox, Form, Input, Spin } from 'antd'
 import _ from 'lodash'
 import nookies from 'nookies'
 import { useRouter } from 'next/navigation'
@@ -10,7 +10,7 @@ import CustomButton from 'components/atoms/Button'
 
 // Utils
 import { NAVIGATION_LINK } from 'utils/link'
-import { SERVICE, api } from 'utils/api'
+import { SERVICE, api, clientRefreshToken } from 'utils/api'
 import { notify } from 'utils/notify'
 // styles
 import styles from './login.module.scss'
@@ -32,17 +32,11 @@ const LoginForm = () => {
     const { password, username, remember = false } = values
 
     try {
-      const resLogin = await api.post(
-        SERVICE.login,
-        {
-          email: username,
-          password,
-          remember,
-        },
-        {
-          withCredentials: true,
-        }
-      )
+      const resLogin = await api.post(SERVICE.login, {
+        email: username,
+        password,
+        remember,
+      })
       const dataLogin: IResponseDataLogin = _.get(resLogin, 'data', {
         accessToken: '',
         email: '',
@@ -78,6 +72,7 @@ const LoginForm = () => {
       setLoading(false)
     }
   }
+  
   return (
     <div className={` ${styles['login-container']}`}>
       <div
@@ -157,6 +152,8 @@ const LoginForm = () => {
             </div>
           </Form>
         </Spin>
+
+        <Button onClick={() => clientRefreshToken()}>Test Refresh</Button>
       </div>
     </div>
   )

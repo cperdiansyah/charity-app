@@ -2,6 +2,7 @@
 import axios from 'axios'
 import nookies from 'nookies'
 import { RequestInit } from 'next/dist/server/web/spec-extension/request'
+import _ from 'lodash'
 
 const token = nookies.get(null, 'token') || null
 
@@ -34,6 +35,7 @@ export const FETCH_OPTIONS: IFetchOptions = {
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   headers: BASE_HEADERS,
+  withCredentials: true,
 })
 
 export const SERVICE = {
@@ -44,6 +46,29 @@ export const SERVICE = {
   refreshToken: '/api/v1/auth/refresh',
 }
 
+type responseRefreshToken = {
+  accessToken: string
+}
+
+export const clientRefreshToken = async (
+  isAnonymousToken: boolean = false
+): Promise<responseRefreshToken> => {
+  try {
+    const resRefresh = await api.post(SERVICE.refreshToken, {
+      isAnonymous: isAnonymousToken,
+    })
+
+    const dataRefreshToken = _.get(resRefresh, 'data')
+    console.log(dataRefreshToken)
+    nookies.destroy(null, 'token')
+    nookies.set(null, 'token', dataRefreshToken.accessToken)
+    return dataRefreshToken
+  } catch (error: any) {
+    console.error(error)
+    
+    return error
+  }
+}
 // HTTP request post with fetch api
 
 // export const fetchPost = async (url: string, bodyPayload: Object) => {
