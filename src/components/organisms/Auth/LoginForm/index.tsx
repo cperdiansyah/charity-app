@@ -71,9 +71,9 @@ const LoginForm = () => {
       console.log(error)
       const resError: IErrorResponse = _.get(error, 'response.data.error', {
         code: 400,
-        massage: '',
+        message: '',
       })
-      notify('error', resError.massage, '', 'topRight')
+      notify('error', resError.message, '', 'topRight')
       setLoading(false)
     }
   }

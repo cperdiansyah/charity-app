@@ -46,17 +46,17 @@ const SignupForm = () => {
       setLoading(false)
       const resError: IErrorResponse = _.get(error, 'error', {
         code: 400,
-        massage: '',
+        message: '',
       })
       const resErrorFeedback: IErrorResponse = _.get(error, '', {
         code: 400,
-        massage: '',
+        message: '',
       })
       notify(
         'error',
-        resError.massage.length > 0
-          ? resError.massage
-          : resErrorFeedback.massage,
+        resError.message.length > 0
+          ? resError.message
+          : resErrorFeedback.message,
         '',
         'bottomRight'
       )
