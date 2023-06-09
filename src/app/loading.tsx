@@ -5,30 +5,26 @@ const Loading = () => {
   const [isLoading, setIsLoading] = useState(true)
 
   const handleLoading = () => {
-    setIsLoading(false)
+    console.log('calling handleLoading')
+    setTimeout(() => {
+      setIsLoading(false)
+    }, 1500)
   }
 
   useEffect(() => {
-    const checkLoading = () => {
-      window.addEventListener('load', handleLoading)
-      // return () => window.removeEventListener('load', handleLoading)
-      setTimeout(() => {
-        handleLoading()
-      }, 1000)
-    }
-    checkLoading()
+    window.addEventListener('load', handleLoading)
     return () => window.removeEventListener('load', handleLoading)
   }, [])
-
-  return !isLoading ? (
-    <></>
-  ) : (
-    <div id="preloader">
-      <div className="spinner">
-        <div className="double-bounce1" />
-        <div className="double-bounce2" />
+  // console.log(isLoading)
+  return (
+    isLoading && (
+      <div id="preloader">
+        <div className="spinner">
+          <div className="double-bounce1" />
+          <div className="double-bounce2" />
+        </div>
       </div>
-    </div>
+    )
   )
 }
 

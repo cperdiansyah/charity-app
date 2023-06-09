@@ -72,7 +72,23 @@ $breakpoint-tablet: 1000px;
 .login-signup-button {
   @apply flex w-[90%] flex-row justify-between;
 
+  &.auth {
+    @apply block w-full;
+  }
+
   button {
     @apply rounded-xl;
   }
 }
+
+.profile-menu-button {
+  padding: 8px 15px !important;
+  // @apply;
+  .avatar {
+    @apply flex items-center justify-center;
+  }
+}
+
+// .menu-profile {
+//   @apply ml-auto  w-1/2;
+// }

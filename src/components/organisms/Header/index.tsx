@@ -1,13 +1,20 @@
 'use client'
-import React, { useState } from 'react'
+import React, { useState, useRef } from 'react'
 import { usePathname } from 'next/navigation'
-import { Drawer, Button } from 'antd'
-import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import { Drawer, Button, MenuProps, Menu, Avatar, Spin } from 'antd'
+import {
+  MenuFoldOutlined,
+  MenuUnfoldOutlined,
+  SettingOutlined,
+  UserOutlined,
+  LogoutOutlined,
+  LoadingOutlined,
+} from '@ant-design/icons'
+import _ from 'lodash'
 
 // component
 import Navlink from 'components/atoms/Navlink'
 import CustomButton from 'components/atoms/Button'
-import { Spin } from 'antd';
 
 // custom hooks
 import useScreenWidth from 'hooks/useScreenWidth'
@@ -15,6 +22,10 @@ import useScreenWidth from 'hooks/useScreenWidth'
 // styles
 import styles from './header.module.scss'
 import { NAVIGATION_LINK } from 'utils/link'
+import useAuth from 'hooks/useAuth'
+import { IMenuItem } from '../Admin/Sidebar/sidebar.interface'
+import { findItemByKey } from '../Admin/Sidebar/sidebar.function'
+import useUserData, { IUserData } from 'stores/userData'
 
 interface INavlinkData {
   name: string
@@ -22,35 +33,79 @@ interface INavlinkData {
   className: string
 }
 
+const menuItems: MenuProps['items'] = [
+  {
+    label: 'Profile',
+    key: 'navigationHeader',
+    icon: <UserOutlined />,
+    children: [
+      {
+        key: 'setting',
+        label: 'Settings',
+        icon: <SettingOutlined />,
+      },
+      {
+        key: 'logout',
+        label: 'Logout',
+        icon: <LogoutOutlined />,
+      },
+    ],
+  },
+]
+
+const navLinkData: INavlinkData[] = [
+  {
+    name: 'Home',
+    href: NAVIGATION_LINK.Homepage,
+    className: '',
+  },
+  {
+    name: 'About',
+    href: NAVIGATION_LINK.About,
+    className: '',
+  },
+  {
+    name: 'Contact',
+    href: NAVIGATION_LINK.Contact,
+    className: '',
+  },
+]
+
 const Header = () => {
   const screenWidth = useScreenWidth()
+  const token = useAuth()
+  const [userData, setUserData] = useUserData()
 
+  // console.log(_.isEmpty(token))
+  // console.log(userData)
+
+  const isAuth = useRef<boolean>(false)
+  const [isLoading, setIsLoading] = useState(true)
   const [showDrawer, setShowDrawer] = useState(false)
+
+  if (_.isEmpty(token)) {
+    isAuth.current = false
+  } else {
+    isAuth.current = true
+  }
 
   const buttonShowDrawer = () => {
     setShowDrawer(!showDrawer)
   }
+
   const onClose = () => {
     setShowDrawer(false)
   }
 
-  const navLinkData: INavlinkData[] = [
-    {
-      name: 'Home',
-      href: NAVIGATION_LINK.Homepage,
-      className: '',
-    },
-    {
-      name: 'About',
-      href: NAVIGATION_LINK.About,
-      className: '',
-    },
-    {
-      name: 'Contact',
-      href: NAVIGATION_LINK.Contact,
-      className: '',
-    },
-  ]
+  const onClick: MenuProps['onClick'] = (e) => {
+    // console.log('click ', e)
+    const keyItem = e.key
+
+    const item: IMenuItem = findItemByKey(menuItems, keyItem)
+    console.log(item)
+    // setCurrent(e.key)
+  }
+
   return (
     <header className="xs-header header-transparent">
       <div className="container">
@@ -93,7 +148,14 @@ const Header = () => {
               )}
             </div>
             {/* <!-- .xs-logo-wraper END --> */}
-            {screenWidth > 1000 && <NavigationDekstop data={navLinkData} />}
+            {screenWidth > 1000 && (
+              <NavigationDekstop
+                data={navLinkData}
+                isAuth={isAuth.current}
+                onClick={() => onClick}
+                userData={userData}
+              />
+            )}
             {/* <!-- .xs-navs-button END --> */}
           </div>
           {/* <!-- .nav-menus-wrapper .row END --> */}
@@ -105,7 +167,12 @@ const Header = () => {
   )
 }
 
-const NavigationDekstop = (props: { data: INavlinkData[] }): JSX.Element => {
+const NavigationDekstop = (props: {
+  data: INavlinkData[]
+  isAuth: boolean
+  onClick: VoidFunction
+  userData: IUserData
+}): JSX.Element => {
   const { data } = props
   const pathname = usePathname()
   return (
@@ -135,20 +202,39 @@ const NavigationDekstop = (props: { data: INavlinkData[] }): JSX.Element => {
         {/* <!-- .nav-menu END --> */}
       </div>
       <div className="xs-navs-button d-flex-center-end col-lg-3 w-full">
-        <div className={`login-signup-button ${styles['login-signup-button']}`}>
-          <CustomButton
-            buttontype="outline"
-            isLink
-            href={NAVIGATION_LINK.Signup}
-            text="Signup"
-          />
-          <CustomButton
-            buttontype="primary"
-            isLink
-            href={NAVIGATION_LINK.Login}
-            text="Login"
-          />
-        </div>
+        {!props.isAuth ? (
+          <div
+            className={`login-signup-button ${styles['login-signup-button']}`}
+          >
+            <CustomButton
+              buttontype="outline"
+              isLink
+              href={NAVIGATION_LINK.Signup}
+              text="Signup"
+            />
+            <CustomButton
+              buttontype="primary"
+              isLink
+              href={NAVIGATION_LINK.Login}
+              text="Login"
+            />
+          </div>
+        ) : (
+          <div className="profile-menu">
+            <CustomButton
+              buttontype="primary"
+              href={NAVIGATION_LINK.Profile}
+              className={`${styles['profile-menu-button']}`}
+            >
+              <Avatar
+                size={32}
+                icon={<UserOutlined />}
+                className="mr-2 !flex items-center justify-center "
+              />
+              {props.userData.name}
+            </CustomButton>
+          </div>
+        )}
       </div>
     </>
   )
