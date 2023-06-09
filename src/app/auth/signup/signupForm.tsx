@@ -1,27 +1,25 @@
 'use client'
 import React, { useState } from 'react'
-import { Checkbox, Form, Input, Spin } from 'antd'
+import { Form, Input, Spin } from 'antd'
 import _ from 'lodash'
-import nookies from 'nookies'
 import { useRouter } from 'next/navigation'
 
-import UserTemplate from 'components/templates/UserLayout'
 import Navlink from 'components/atoms/Navlink'
 import CustomButton from 'components/atoms/Button'
 
 // Utils
 import { NAVIGATION_LINK } from 'utils/link'
+import { notify } from 'utils/notify'
+import { signupService } from 'services/auth'
+import {
+  IErrorResponse,
+  ISubmitSignupForm,
+} from 'services/auth/index.interface'
 
 // styles
 import styles from './signup.module.scss'
 import useUserData from 'stores/userData'
-import {
-  IErrorResponse,
-  IResponseDataSignup,
-  ISubmitSignupForm,
-} from './index.interface'
-import { SERVICE, api } from 'utils/api'
-import { notify } from 'utils/notify'
+
 const SignupForm = () => {
   const [form] = Form.useForm()
   const router = useRouter()
@@ -31,37 +29,26 @@ const SignupForm = () => {
   const handleSubmit = async (values: ISubmitSignupForm): Promise<void> => {
     setLoading(true)
     try {
-      const resSignup = await api.post(SERVICE.register, values)
-      const dataLogin: IResponseDataSignup = _.get(resSignup, 'data', {
-        accessToken: '',
-        email: '',
-        name: '',
-        role: '',
-      })
-      nookies.destroy(null, 'token')
-      nookies.set(null, 'token', dataLogin.accessToken, {
-        path: '/',
-      })
-      setUserData({
-        name: dataLogin.name,
-        email: dataLogin.email,
-        role: dataLogin.role,
-      })
+      const response = await signupService(values)
+      if ('accessToken' in response) {
+        setUserData({
+          name: response.name,
+          email: response.email,
+          role: response.role,
+        })
 
-      notify('success', 'Register successful', '', 'topRight')
-      setTimeout(() => {
-        // if (dataLogin.role === 'admin')
-        //   return router.replace(NAVIGATION_LINK.Dashboard)
-
-        return router.replace(NAVIGATION_LINK.Homepage)
-      }, 500)
+        notify('success', 'Register successful', '', 'bottomRight')
+        setTimeout(() => {
+          return router.replace(NAVIGATION_LINK.Homepage)
+        }, 500)
+      }
     } catch (error) {
       setLoading(false)
-      const resError: IErrorResponse = _.get(error, 'response.data.error', {
+      const resError: IErrorResponse = _.get(error, 'error', {
         code: 400,
         massage: '',
       })
-      const resErrorFeedback: IErrorResponse = _.get(error, 'response.data', {
+      const resErrorFeedback: IErrorResponse = _.get(error, '', {
         code: 400,
         massage: '',
       })

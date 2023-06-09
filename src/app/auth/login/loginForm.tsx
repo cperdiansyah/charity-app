@@ -1,8 +1,7 @@
 'use client'
 import { useState } from 'react'
-import { Button, Checkbox, Form, Input, Spin } from 'antd'
+import { Checkbox, Form, Input, Spin } from 'antd'
 import _ from 'lodash'
-import nookies from 'nookies'
 import { useRouter } from 'next/navigation'
 
 import Navlink from 'components/atoms/Navlink'
@@ -10,17 +9,12 @@ import CustomButton from 'components/atoms/Button'
 
 // Utils
 import { NAVIGATION_LINK } from 'utils/link'
-import { SERVICE, api, clientRefreshToken } from 'utils/api'
 import { notify } from 'utils/notify'
 // styles
 import styles from './login.module.scss'
-
-import {
-  IErrorResponse,
-  IResponseDataLogin,
-  ISubmitLoginForm,
-} from './index.interface'
 import useUserData from 'stores/userData'
+import { loginService } from 'services/auth'
+import { IErrorResponse, ISubmitLoginForm } from 'services/auth/index.interface'
 
 const LoginForm = () => {
   const [form] = Form.useForm()
@@ -30,57 +24,38 @@ const LoginForm = () => {
 
   const handleSubmit = async (values: ISubmitLoginForm): Promise<void> => {
     setLoading(true)
-    const { password, username, remember = false } = values
 
     try {
-      const resLogin = await api.post(SERVICE.login, {
-        email: username,
-        password,
-        remember,
-      })
-      const dataLogin: IResponseDataLogin = _.get(resLogin, 'data', {
-        accessToken: '',
-        email: '',
-        name: '',
-        role: '',
-      })
-      nookies.destroy(null, 'token')
-      nookies.set(
-        null,
-        'token',
-        dataLogin.accessToken,
-        nookies.set(null, 'token', dataLogin.accessToken, {
-          path: '/',
+      const response = await loginService(values)
+
+      if ('accessToken' in response) {
+        setUserData({
+          name: response.name,
+          email: response.email,
+          role: response.role,
         })
-      )
-      setUserData({
-        name: dataLogin.name,
-        email: dataLogin.email,
-        role: dataLogin.role,
-      })
 
-      notify(
-        'success',
-        'Login successful',
-        `You will be directed to the ${
-          dataLogin.role === 'admin' ? 'Dashboard' : 'Homepage'
-        }`,
-        'bottomRight'
-      )
+        notify(
+          'success',
+          'Login successful',
+          `You will be directed to the ${
+            response.role === 'admin' ? 'Dashboard' : 'Homepage'
+          }`,
+          'bottomRight'
+        )
+        setTimeout(() => {
+          if (response.role === 'admin')
+            return router.replace(NAVIGATION_LINK.Dashboard)
 
-      setTimeout(() => {
-        // if (dataLogin.role === 'admin')
-        //   return router.replace(NAVIGATION_LINK.Dashboard)
-
-        return router.replace(NAVIGATION_LINK.Homepage)
-      }, 500)
+          return router.replace(NAVIGATION_LINK.Homepage)
+        }, 500)
+      }
     } catch (error) {
-      console.log(error)
-      const resError: IErrorResponse = _.get(error, 'response.data.error', {
+      const resError: IErrorResponse = _.get(error, 'error', {
         code: 400,
         massage: '',
       })
-      notify('error', resError.massage, '', 'topRight')
+      notify('error', resError.massage, '', 'bottomRight')
       setLoading(false)
     }
   }
@@ -164,8 +139,6 @@ const LoginForm = () => {
             </div>
           </Form>
         </Spin>
-
-        {/* <Button onClick={() => clientRefreshToken()}>Test Refresh</Button> */}
       </div>
     </div>
   )

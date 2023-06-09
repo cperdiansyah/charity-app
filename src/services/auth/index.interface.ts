@@ -4,12 +4,19 @@ export interface ISubmitLoginForm {
   remember?: boolean
 }
 
+export interface ISubmitSignupForm {
+  username: string
+  password: string
+  name: string
+  email: string
+}
+
 export interface IErrorResponse {
   code: number
   massage: string
 }
 
-export interface IResponseDataLogin {
+export interface IResponseDataAuth {
   accessToken: string
   email: string
   name: string
