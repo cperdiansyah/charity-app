@@ -1,57 +1,27 @@
 'use client'
 import React, { useState, useRef } from 'react'
-import { usePathname } from 'next/navigation'
-import { Drawer, Button, MenuProps, Menu, Avatar, Spin } from 'antd'
-import {
-  MenuFoldOutlined,
-  MenuUnfoldOutlined,
-  SettingOutlined,
-  UserOutlined,
-  LogoutOutlined,
-  LoadingOutlined,
-} from '@ant-design/icons'
+import { Drawer, Button } from 'antd'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import _ from 'lodash'
 
 // component
 import Navlink from 'components/atoms/Navlink'
-import CustomButton from 'components/atoms/Button'
 
 // custom hooks
 import useScreenWidth from 'hooks/useScreenWidth'
+import useAuth from 'hooks/useAuth'
 
 // styles
 import styles from './header.module.scss'
+
+// utils
 import { NAVIGATION_LINK } from 'utils/link'
-import useAuth from 'hooks/useAuth'
-import { IMenuItem } from '../Admin/Sidebar/sidebar.interface'
-import { findItemByKey } from '../Admin/Sidebar/sidebar.function'
-import useUserData, { IUserData } from 'stores/userData'
-
-interface INavlinkData {
-  name: string
-  href: string
-  className: string
-}
-
-const menuItems: MenuProps['items'] = [
-  {
-    label: 'Profile',
-    key: 'navigationHeader',
-    icon: <UserOutlined />,
-    children: [
-      {
-        key: 'setting',
-        label: 'Settings',
-        icon: <SettingOutlined />,
-      },
-      {
-        key: 'logout',
-        label: 'Logout',
-        icon: <LogoutOutlined />,
-      },
-    ],
-  },
-]
+import useUserData from 'stores/userData'
+import { INavlinkData, NavigationDekstop, NavigationMobile } from './Navigaton'
+import { IErrorResponse } from 'services/auth/index.interface'
+import { notify } from 'utils/notify'
+import { logoutServices } from 'services/auth'
+import { usePathname, useRouter } from 'next/navigation'
 
 const navLinkData: INavlinkData[] = [
   {
@@ -72,12 +42,14 @@ const navLinkData: INavlinkData[] = [
 ]
 
 const Header = () => {
+  const router = useRouter()
+  const pathname = usePathname()
   const screenWidth = useScreenWidth()
   const token = useAuth()
   const [userData, setUserData] = useUserData()
+  const [loading, setLoading] = useState(false)
 
   const isAuth = useRef<boolean>(false)
-  const [isLoading, setIsLoading] = useState(true)
   const [showDrawer, setShowDrawer] = useState(false)
 
   if (_.isEmpty(token)) {
@@ -94,17 +66,26 @@ const Header = () => {
     setShowDrawer(false)
   }
 
-  const onClick: MenuProps['onClick'] = (e) => {
-    // console.log('click ', e)
-    const keyItem = e.key
-
-    const item: IMenuItem = findItemByKey(menuItems, keyItem)
-    // console.log(item)
-    // setCurrent(e.key)
-  }
-
   const handleLogout = async () => {
-    console.log('logout')
+    setLoading(true)
+
+    try {
+      const response = await logoutServices()
+      if ('status' in response) {
+        notify('success', 'Logout successful', '', 'bottomRight')
+        setTimeout(() => {
+          if (pathname !== NAVIGATION_LINK.Homepage)
+            return router.push(NAVIGATION_LINK.Homepage)
+          return router.refresh()
+        }, 500)
+      }
+    } catch (error) {
+      const resError: IErrorResponse = _.get(error, 'error', {
+        code: 400,
+        message: '',
+      })
+      notify('error', resError.message, '', 'bottomRight')
+    }
   }
 
   return (
@@ -146,7 +127,6 @@ const Header = () => {
                     <NavigationMobile
                       data={navLinkData}
                       isAuth={isAuth.current}
-                      onClick={() => onClick}
                       userData={userData}
                       handleLogout={handleLogout}
                     />
@@ -159,7 +139,6 @@ const Header = () => {
               <NavigationDekstop
                 data={navLinkData}
                 isAuth={isAuth.current}
-                onClick={() => onClick}
                 userData={userData}
                 handleLogout={handleLogout}
               />
@@ -172,186 +151,6 @@ const Header = () => {
       </div>
       {/* <!-- .container end --> */}
     </header>
-  )
-}
-
-const NavigationDekstop = (props: {
-  data: INavlinkData[]
-  isAuth: boolean
-  onClick: VoidFunction
-  userData: IUserData
-  handleLogout: VoidFunction
-}): JSX.Element => {
-  const { data } = props
-  const pathname = usePathname()
-  return (
-    <>
-      <div className={` ${props.isAuth ? 'col-lg-6' : 'col-lg-7'} `}>
-        <ul className={`nav-menu ${styles['nav-menu']}`}>
-          {data.map((item: INavlinkData, index: number) => (
-            <li key={index}>
-              <Navlink
-                className={`${item.className} ${
-                  pathname === item.href ? 'active' : ''
-                }`}
-                href={item.href}
-                text={item.name}
-              />
-            </li>
-          ))}
-          <li>
-            <CustomButton
-              buttontype="primary"
-              href="#popularcause"
-              className={`${styles['btn-donation']}`}
-            >
-              <span className="badge">
-                <i className="fa fa-heart" />
-                Donate Now
-              </span>
-            </CustomButton>
-          </li>
-        </ul>
-        {/* <!-- .nav-menu END --> */}
-      </div>
-      <div className="xs-navs-button d-flex-center-end col w-full">
-        {!props.isAuth ? (
-          <div
-            className={`login-signup-button ${styles['login-signup-button']}`}
-          >
-            <CustomButton
-              buttontype="outline"
-              isLink
-              href={NAVIGATION_LINK.Signup}
-              text="Signup"
-            />
-            <CustomButton
-              buttontype="primary"
-              isLink
-              href={NAVIGATION_LINK.Login}
-              text="Login"
-            />
-          </div>
-        ) : (
-          <div className="profile-menu flex items-center ">
-            <CustomButton
-              buttontype="primary"
-              href={NAVIGATION_LINK.Profile}
-              className={`${styles['profile-menu-button']} mr-3`}
-            >
-              <Avatar
-                size={32}
-                icon={<UserOutlined />}
-                className="mr-2 !flex items-center justify-center "
-              />
-              {props.userData.name.split(' ')[0]}
-            </CustomButton>
-            <CustomButton
-              buttontype="primary"
-              onClick={props.handleLogout}
-              // className=
-              style={{
-                padding: '8px 15px !important',
-              }}
-              className={`!px-3 !py-2`}
-            >
-              <LogoutOutlined className="mr-2" />
-              Logout
-            </CustomButton>
-          </div>
-        )}
-      </div>
-    </>
-  )
-}
-
-const NavigationMobile = (props: {
-  data: INavlinkData[]
-  isAuth: boolean
-  onClick: VoidFunction
-  userData: IUserData
-  handleLogout: VoidFunction
-}): JSX.Element => {
-  const { data } = props
-  const pathname = usePathname()
-  return (
-    <>
-      <ul className={`nav-menu ${styles['nav-menu']}`}>
-        {data.map((item: INavlinkData, index: number) => (
-          <li key={index}>
-            <Navlink
-              className={`${item.className} ${
-                pathname === item.href ? 'active' : ''
-              }`}
-              href={item.href}
-              text={item.name}
-            />
-          </li>
-        ))}
-        <li>
-          <CustomButton
-            buttontype="primary"
-            className={`mb-5 text-white ${styles['button-primary']}`}
-            href="#popularcause"
-          >
-            <span className="badge">
-              <i className="fa fa-heart" />
-              Donate Now
-            </span>
-          </CustomButton>
-        </li>
-
-        {!props.isAuth ? (
-          <>
-            <li>
-              <CustomButton
-                buttontype="outline"
-                isLink
-                href={NAVIGATION_LINK.Signup}
-                text="Signup"
-                className={`${styles['button-primary']}`}
-              />
-            </li>
-            <li>
-              <CustomButton
-                buttontype="primary"
-                isLink
-                href={NAVIGATION_LINK.Login}
-                text="Login"
-                className={` text-white ${styles['button-primary']}`}
-              />
-            </li>
-          </>
-        ) : (
-          <>
-            <li>
-              <CustomButton
-                buttontype="primary"
-                href={NAVIGATION_LINK.Profile}
-                className={` mb-5  ${styles['profile-menu-button']}  ${styles['button-primary']}`}
-              >
-                <Avatar
-                  size={32}
-                  icon={<UserOutlined />}
-                  className="mr-2 !flex items-center justify-center "
-                />
-                {props.userData.name.split(' ')[0]}
-              </CustomButton>
-            </li>
-            <li>
-              <CustomButton
-                buttontype="primary"
-                onClick={props.handleLogout}
-                className={` mb-5 text-white ${styles['profile-menu-button']}  ${styles['logout-button']}  ${styles['button-primary']}`}
-              >
-                <LogoutOutlined className="mr-2" />
-                Logout
-              </CustomButton>
-            </li>
-          </>
-        )}
-      </ul>
-    </>
   )
 }
 

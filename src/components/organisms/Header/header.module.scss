@@ -63,7 +63,7 @@ $breakpoint-tablet: 1000px;
 
 .nav-menu {
   display: flex;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
   flex-wrap: wrap;
   flex-direction: row;
@@ -82,7 +82,7 @@ $breakpoint-tablet: 1000px;
 }
 
 .profile-menu-button {
-  padding: 8px 15px ;
+  padding: 8px 15px;
   background-color: #fff;
   color: #18bfc3;
   // @apply;

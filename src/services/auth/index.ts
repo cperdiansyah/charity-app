@@ -4,6 +4,7 @@ import { SERVICE, api } from 'utils/api'
 import {
   IErrorResponse,
   IResponseDataAuth,
+  IResponseDefault,
   ISubmitLoginForm,
   ISubmitSignupForm,
 } from './index.interface'
@@ -37,7 +38,7 @@ export const loginService = async (
   } catch (error) {
     const resError: IErrorResponse = _.get(error, 'response.data', {
       code: 400,
-      massage: '',
+      message: '',
     })
 
     return Promise.reject(resError)
@@ -63,7 +64,26 @@ export const signupService = async (
   } catch (error) {
     const resError: IErrorResponse = _.get(error, 'response.data', {
       code: 400,
-      massage: '',
+      message: '',
+    })
+
+    return Promise.reject(resError)
+  }
+}
+
+export const logoutServices = async (): Promise<IResponseDefault> => {
+  try {
+    const resLogout = await api.post(SERVICE.logout)
+    const dataResponse: IResponseDefault = _.get(resLogout, 'data', {
+      code: 400,
+      message: '',
+    })
+    nookies.destroy(null, 'token')
+    return dataResponse
+  } catch (error) {
+    const resError: IErrorResponse = _.get(error, 'response.data', {
+      code: 400,
+      message: '',
     })
 
     return Promise.reject(resError)
