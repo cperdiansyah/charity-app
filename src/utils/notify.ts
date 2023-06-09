@@ -10,6 +10,7 @@ export const notify = (
   placement: NotificationPlacement = 'topRight',
   duration?: number
 ) => {
+  
   return notification[type]({
     message: title ?? 'Something went wrong',
     description: message,

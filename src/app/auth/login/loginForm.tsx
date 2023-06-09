@@ -45,7 +45,14 @@ const LoginForm = () => {
         role: '',
       })
       nookies.destroy(null, 'token')
-      nookies.set(null, 'token', dataLogin.accessToken)
+      nookies.set(
+        null,
+        'token',
+        dataLogin.accessToken,
+        nookies.set(null, 'token', dataLogin.accessToken, {
+          path: '/',
+        })
+      )
       setUserData({
         name: dataLogin.name,
         email: dataLogin.email,

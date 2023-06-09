@@ -15,7 +15,11 @@ import { NAVIGATION_LINK } from 'utils/link'
 // styles
 import styles from './signup.module.scss'
 import useUserData from 'stores/userData'
-import { IErrorResponse, IResponseDataSignup, ISubmitSignupForm } from './index.interface'
+import {
+  IErrorResponse,
+  IResponseDataSignup,
+  ISubmitSignupForm,
+} from './index.interface'
 import { SERVICE, api } from 'utils/api'
 import { notify } from 'utils/notify'
 const SignupForm = () => {
@@ -26,7 +30,6 @@ const SignupForm = () => {
 
   const handleSubmit = async (values: ISubmitSignupForm): Promise<void> => {
     setLoading(true)
-    const { password, username, email, name } = values
     try {
       const resSignup = await api.post(SERVICE.register, values)
       const dataLogin: IResponseDataSignup = _.get(resSignup, 'data', {
@@ -35,37 +38,43 @@ const SignupForm = () => {
         name: '',
         role: '',
       })
-       nookies.destroy(null, 'token')
-       nookies.set(null, 'token', dataLogin.accessToken)
-       setUserData({
-         name: dataLogin.name,
-         email: dataLogin.email,
-         role: dataLogin.role,
-       })
-      
-      notify(
-        'success',
-        'Register successful',
-        "",
-        'topRight'
-      )
-       setTimeout(() => {
-         // if (dataLogin.role === 'admin')
-         //   return router.replace(NAVIGATION_LINK.Dashboard)
+      nookies.destroy(null, 'token')
+      nookies.set(null, 'token', dataLogin.accessToken, {
+        path: '/',
+      })
+      setUserData({
+        name: dataLogin.name,
+        email: dataLogin.email,
+        role: dataLogin.role,
+      })
 
-         return router.replace(NAVIGATION_LINK.Homepage)
-       }, 500)
+      notify('success', 'Register successful', '', 'topRight')
+      setTimeout(() => {
+        // if (dataLogin.role === 'admin')
+        //   return router.replace(NAVIGATION_LINK.Dashboard)
+
+        return router.replace(NAVIGATION_LINK.Homepage)
+      }, 500)
     } catch (error) {
       setLoading(false)
-       const resError: IErrorResponse = _.get(error, 'response.data.error', {
-         code: 400,
-         massage: '',
-       })
-       notify('error', resError.massage, '', 'topRight')
-       setLoading(false)
+      const resError: IErrorResponse = _.get(error, 'response.data.error', {
+        code: 400,
+        massage: '',
+      })
+      const resErrorFeedback: IErrorResponse = _.get(error, 'response.data', {
+        code: 400,
+        massage: '',
+      })
+      notify(
+        'error',
+        resError.massage.length > 0
+          ? resError.massage
+          : resErrorFeedback.massage,
+        '',
+        'topRight'
+      )
+      setLoading(false)
     }
-
-    console.log('Success:', values)
   }
   return (
     <div className={` ${styles['signup-container']}`}>
