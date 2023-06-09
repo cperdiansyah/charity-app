@@ -6,7 +6,7 @@ export interface ISubmitLoginForm {
 
 export interface IErrorResponse {
   code: number
-  massage: string
+  message: string
 }
 
 export interface IResponseDataLogin {

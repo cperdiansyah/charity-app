@@ -8,7 +8,7 @@ export interface ISubmitSignupForm {
 
 export interface IErrorResponse {
   code: number
-  massage: string
+  message: string
 }
 
 export interface IResponseDataSignup {

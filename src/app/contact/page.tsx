@@ -71,11 +71,11 @@ const Contact = () => {
                         </div>
                       </div>
                       {/* <!-- .input-group END --> */}
-                      <div className="input-group massage-group">
+                      <div className="input-group message-group">
                         <textarea
-                          name="massage"
+                          name="message"
                           placeholder="Enter Your Message....."
-                          id="xs-massage"
+                          id="xs-message"
                           className="form-control"
                           cols={30}
                           rows={10}

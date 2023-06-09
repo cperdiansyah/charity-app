@@ -11,9 +11,9 @@ export interface ISubmitSignupForm {
   email: string
 }
 
-export interface IErrorResponse {
+export interface IErrorResponse extends IResponseDefault {
   code: number
-  massage: string
+  message: string
 }
 
 export interface IResponseDataAuth {
@@ -21,4 +21,9 @@ export interface IResponseDataAuth {
   email: string
   name: string
   role: string
+}
+
+export interface IResponseDefault {
+  code: number
+  message: string
 }
