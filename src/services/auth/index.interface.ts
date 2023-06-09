@@ -26,4 +26,5 @@ export interface IResponseDataAuth {
 export interface IResponseDefault {
   code: number
   message: string
+  status?: string
 }
