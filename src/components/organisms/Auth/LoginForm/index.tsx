@@ -20,15 +20,16 @@ import {
   IResponseDataLogin,
   ISubmitLoginForm,
 } from './index.interface'
+import useUserData from 'stores/userData'
 
 const LoginForm = () => {
   const [form] = Form.useForm()
   const router = useRouter()
+  const [, setUserData] = useUserData()
   const [loading, setLoading] = useState<boolean>(false)
 
   const handleSubmit = async (values: ISubmitLoginForm): Promise<void> => {
     setLoading(true)
-
     const { password, username, remember = false } = values
 
     try {
@@ -43,9 +44,13 @@ const LoginForm = () => {
         name: '',
         role: '',
       })
-
       nookies.destroy(null, 'token')
       nookies.set(null, 'token', dataLogin.accessToken)
+      setUserData({
+        name: dataLogin.name,
+        email: dataLogin.email,
+        role: dataLogin.role,
+      })
 
       notify(
         'success',
@@ -72,7 +77,7 @@ const LoginForm = () => {
       setLoading(false)
     }
   }
-  
+
   return (
     <div className={` ${styles['login-container']}`}>
       <div
@@ -153,7 +158,7 @@ const LoginForm = () => {
           </Form>
         </Spin>
 
-        <Button onClick={() => clientRefreshToken()}>Test Refresh</Button>
+        {/* <Button onClick={() => clientRefreshToken()}>Test Refresh</Button> */}
       </div>
     </div>
   )
