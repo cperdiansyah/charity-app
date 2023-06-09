@@ -1,8 +1,7 @@
 'use client'
 import React from 'react'
-import { Checkbox, Form, Input } from 'antd'
+import { Form, Input } from 'antd'
 
-import UserTemplate from 'components/templates/UserLayout'
 import Navlink from 'components/atoms/Navlink'
 import CustomButton from 'components/atoms/Button'
 

@@ -11,7 +11,7 @@ export const notify = (
   duration?: number
 ) => {
   return notification[type]({
-    message: title,
+    message: title ?? 'Something went wrong',
     description: message,
     placement,
     duration,
