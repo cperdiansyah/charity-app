@@ -65,7 +65,7 @@ const LoginForm = () => {
         `You will be directed to the ${
           dataLogin.role === 'admin' ? 'Dashboard' : 'Homepage'
         }`,
-        'topRight'
+        'bottomRight'
       )
 
       setTimeout(() => {
