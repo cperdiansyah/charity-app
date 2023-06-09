@@ -1,11 +1,7 @@
-import _ from 'lodash'
-import nookies from 'nookies'
-
 import UserTemplate from 'components/templates/UserLayout'
+import LoginForm from './loginForm'
+// import LoginForm from 'components/organisms/Auth/LoginForm'
 
-import LoginForm from 'components/organisms/Auth/LoginForm'
-
-async function getData() { }
 
 const Login = () => {
   return (

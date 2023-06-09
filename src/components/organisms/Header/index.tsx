@@ -76,9 +76,6 @@ const Header = () => {
   const token = useAuth()
   const [userData, setUserData] = useUserData()
 
-  // console.log(_.isEmpty(token))
-  // console.log(userData)
-
   const isAuth = useRef<boolean>(false)
   const [isLoading, setIsLoading] = useState(true)
   const [showDrawer, setShowDrawer] = useState(false)
@@ -142,7 +139,12 @@ const Header = () => {
                     size={'default'}
                     className={`drawer ${styles['drawer']}  `}
                   >
-                    <NavigationMobile data={navLinkData} />
+                    <NavigationMobile
+                      data={navLinkData}
+                      isAuth={isAuth.current}
+                      onClick={() => onClick}
+                      userData={userData}
+                    />
                   </Drawer>
                 </>
               )}
@@ -240,7 +242,12 @@ const NavigationDekstop = (props: {
   )
 }
 
-const NavigationMobile = (props: { data: INavlinkData[] }): JSX.Element => {
+const NavigationMobile = (props: {
+  data: INavlinkData[]
+  isAuth: boolean
+  onClick: VoidFunction
+  userData: IUserData
+}): JSX.Element => {
   const { data } = props
   const pathname = usePathname()
   return (
@@ -269,24 +276,44 @@ const NavigationMobile = (props: { data: INavlinkData[] }): JSX.Element => {
             </span>
           </CustomButton>
         </li>
-        <li>
-          <CustomButton
-            buttontype="outline"
-            isLink
-            href={NAVIGATION_LINK.Signup}
-            text="Signup"
-            className={`${styles['button-primary']}`}
-          />
-        </li>
-        <li>
-          <CustomButton
-            buttontype="primary"
-            isLink
-            href={NAVIGATION_LINK.Login}
-            text="Login"
-            className={` text-white ${styles['button-primary']}`}
-          />
-        </li>
+
+        {!props.isAuth ? (
+          <>
+            <li>
+              <CustomButton
+                buttontype="outline"
+                isLink
+                href={NAVIGATION_LINK.Signup}
+                text="Signup"
+                className={`${styles['button-primary']}`}
+              />
+            </li>
+            <li>
+              <CustomButton
+                buttontype="primary"
+                isLink
+                href={NAVIGATION_LINK.Login}
+                text="Login"
+                className={` text-white ${styles['button-primary']}`}
+              />
+            </li>
+          </>
+        ) : (
+          <li>
+            <CustomButton
+              buttontype="primary"
+              href={NAVIGATION_LINK.Profile}
+              className={` mb-5 text-white ${styles['profile-menu-button']}  ${styles['button-primary']}`}
+            >
+              <Avatar
+                size={32}
+                icon={<UserOutlined />}
+                className="mr-2 !flex items-center justify-center "
+              />
+              {props.userData.name}
+            </CustomButton>
+          </li>
+        )}
       </ul>
     </>
   )
