@@ -99,8 +99,12 @@ const Header = () => {
     const keyItem = e.key
 
     const item: IMenuItem = findItemByKey(menuItems, keyItem)
-    console.log(item)
+    // console.log(item)
     // setCurrent(e.key)
+  }
+
+  const handleLogout = async () => {
+    console.log('logout')
   }
 
   return (
@@ -144,6 +148,7 @@ const Header = () => {
                       isAuth={isAuth.current}
                       onClick={() => onClick}
                       userData={userData}
+                      handleLogout={handleLogout}
                     />
                   </Drawer>
                 </>
@@ -156,6 +161,7 @@ const Header = () => {
                 isAuth={isAuth.current}
                 onClick={() => onClick}
                 userData={userData}
+                handleLogout={handleLogout}
               />
             )}
             {/* <!-- .xs-navs-button END --> */}
@@ -174,12 +180,13 @@ const NavigationDekstop = (props: {
   isAuth: boolean
   onClick: VoidFunction
   userData: IUserData
+  handleLogout: VoidFunction
 }): JSX.Element => {
   const { data } = props
   const pathname = usePathname()
   return (
     <>
-      <div className="col-lg-7">
+      <div className={` ${props.isAuth ? 'col-lg-6' : 'col-lg-7'} `}>
         <ul className={`nav-menu ${styles['nav-menu']}`}>
           {data.map((item: INavlinkData, index: number) => (
             <li key={index}>
@@ -203,7 +210,7 @@ const NavigationDekstop = (props: {
         </ul>
         {/* <!-- .nav-menu END --> */}
       </div>
-      <div className="xs-navs-button d-flex-center-end col-lg-3 w-full">
+      <div className="xs-navs-button d-flex-center-end col w-full">
         {!props.isAuth ? (
           <div
             className={`login-signup-button ${styles['login-signup-button']}`}
@@ -222,18 +229,26 @@ const NavigationDekstop = (props: {
             />
           </div>
         ) : (
-          <div className="profile-menu">
+          <div className="profile-menu flex items-center ">
             <CustomButton
               buttontype="primary"
               href={NAVIGATION_LINK.Profile}
-              className={`${styles['profile-menu-button']}`}
+              className={`${styles['profile-menu-button']} mr-3`}
             >
               <Avatar
                 size={32}
                 icon={<UserOutlined />}
                 className="mr-2 !flex items-center justify-center "
               />
-              {props.userData.name}
+              {props.userData.name.split(' ')[0]}
+            </CustomButton>
+            <CustomButton
+              buttontype="primary"
+              onClick={props.handleLogout}
+              className=" !px-3 !py-2"
+            >
+              <LogoutOutlined className="mr-2" />
+              Logout
             </CustomButton>
           </div>
         )}
@@ -247,6 +262,7 @@ const NavigationMobile = (props: {
   isAuth: boolean
   onClick: VoidFunction
   userData: IUserData
+  handleLogout: VoidFunction
 }): JSX.Element => {
   const { data } = props
   const pathname = usePathname()
@@ -299,20 +315,32 @@ const NavigationMobile = (props: {
             </li>
           </>
         ) : (
-          <li>
-            <CustomButton
-              buttontype="primary"
-              href={NAVIGATION_LINK.Profile}
-              className={` mb-5 text-white ${styles['profile-menu-button']}  ${styles['button-primary']}`}
-            >
-              <Avatar
-                size={32}
-                icon={<UserOutlined />}
-                className="mr-2 !flex items-center justify-center "
-              />
-              {props.userData.name}
-            </CustomButton>
-          </li>
+          <>
+            <li>
+              <CustomButton
+                buttontype="primary"
+                href={NAVIGATION_LINK.Profile}
+                className={` mb-5 text-white ${styles['profile-menu-button']}  ${styles['button-primary']}`}
+              >
+                <Avatar
+                  size={32}
+                  icon={<UserOutlined />}
+                  className="mr-2 !flex items-center justify-center "
+                />
+                {props.userData.name.split(' ')[0]}
+              </CustomButton>
+            </li>
+            <li>
+              <CustomButton
+                buttontype="primary"
+                onClick={props.handleLogout}
+                className={` mb-5 text-white ${styles['profile-menu-button']}  ${styles['logout-button']}  ${styles['button-primary']}`}
+              >
+                <LogoutOutlined className="mr-2" />
+                Logout
+              </CustomButton>
+            </li>
+          </>
         )}
       </ul>
     </>
