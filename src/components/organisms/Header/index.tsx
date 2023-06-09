@@ -200,7 +200,11 @@ const NavigationDekstop = (props: {
             </li>
           ))}
           <li>
-            <CustomButton buttontype="primary" href="#popularcause">
+            <CustomButton
+              buttontype="primary"
+              href="#popularcause"
+              className={`${styles['btn-donation']}`}
+            >
               <span className="badge">
                 <i className="fa fa-heart" />
                 Donate Now
@@ -245,7 +249,11 @@ const NavigationDekstop = (props: {
             <CustomButton
               buttontype="primary"
               onClick={props.handleLogout}
-              className=" !px-3 !py-2"
+              // className=
+              style={{
+                padding: '8px 15px !important',
+              }}
+              className={`!px-3 !py-2`}
             >
               <LogoutOutlined className="mr-2" />
               Logout
@@ -320,7 +328,7 @@ const NavigationMobile = (props: {
               <CustomButton
                 buttontype="primary"
                 href={NAVIGATION_LINK.Profile}
-                className={` mb-5 text-white ${styles['profile-menu-button']}  ${styles['button-primary']}`}
+                className={` mb-5  ${styles['profile-menu-button']}  ${styles['button-primary']}`}
               >
                 <Avatar
                   size={32}

@@ -71,7 +71,7 @@ const SignupForm = () => {
           ? resError.massage
           : resErrorFeedback.massage,
         '',
-        'topRight'
+        'bottomRight'
       )
       setLoading(false)
     }
