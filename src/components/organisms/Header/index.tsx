@@ -22,6 +22,7 @@ import { IErrorResponse } from 'services/auth/index.interface'
 import { notify } from 'utils/notify'
 import { logoutServices } from 'services/auth'
 import { usePathname, useRouter } from 'next/navigation'
+import useSpinnerLayout from 'stores/spinnerLayout'
 
 const navLinkData: INavlinkData[] = [
   {
@@ -44,10 +45,11 @@ const navLinkData: INavlinkData[] = [
 const Header = () => {
   const router = useRouter()
   const pathname = usePathname()
+  // custom hooks
   const screenWidth = useScreenWidth()
   const token = useAuth()
   const [userData, setUserData] = useUserData()
-  const [loading, setLoading] = useState(false)
+  const [, setSpinnerLayout] = useSpinnerLayout()
 
   const isAuth = useRef<boolean>(false)
   const [showDrawer, setShowDrawer] = useState(false)
@@ -67,15 +69,18 @@ const Header = () => {
   }
 
   const handleLogout = async () => {
-    setLoading(true)
+    setSpinnerLayout(true)
 
     try {
       const response = await logoutServices()
+      onClose()
+
       if ('status' in response) {
         notify('success', 'Logout successful', '', 'bottomRight')
         setTimeout(() => {
           if (pathname !== NAVIGATION_LINK.Homepage)
-            return router.push(NAVIGATION_LINK.Homepage)
+            router.push(NAVIGATION_LINK.Homepage)
+          setSpinnerLayout(false)
           return router.refresh()
         }, 500)
       }
@@ -85,6 +90,7 @@ const Header = () => {
         message: '',
       })
       notify('error', resError.message, '', 'bottomRight')
+      setSpinnerLayout(false)
     }
   }
 
