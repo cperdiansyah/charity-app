@@ -18,7 +18,7 @@ import { adminSidebar } from 'utils/menu'
 
 // styles
 import styles from './sidebar.module.scss'
-import { sidebarWidth } from 'utils/helpers'
+import { sidebarWidth } from 'helpers'
 
 const item: IMenuItem[] = adminSidebar
 const menuItems = generateItem(item)

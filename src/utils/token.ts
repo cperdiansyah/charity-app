@@ -19,3 +19,8 @@ import { SERVICE } from './api'
 //     return data
 //   }
 // }
+
+export const refreshToken = async () => {
+  const token = nookies.get(null, 'token') || null
+  console.log(token)
+}
