@@ -18,11 +18,7 @@ import styles from './header.module.scss'
 import { NAVIGATION_LINK } from 'utils/link'
 import useUserData from 'stores/userData'
 import { INavlinkData, NavigationDekstop, NavigationMobile } from './Navigaton'
-import { IErrorResponse } from 'services/auth/index.interface'
-import { notify } from 'helpers/notify'
-import { logoutServices } from 'services/auth'
-import { usePathname, useRouter } from 'next/navigation'
-import useSpinnerLayout from 'stores/spinnerLayout'
+import useLogout from 'hooks/useLogout'
 
 const navLinkData: INavlinkData[] = [
   {
@@ -43,13 +39,13 @@ const navLinkData: INavlinkData[] = [
 ]
 
 const Header = () => {
-  const router = useRouter()
-  const pathname = usePathname()
   // custom hooks
   const screenWidth = useScreenWidth()
   const token = useAuth()
+  const logoutHooks = useLogout()
+
+  // Global state
   const [userData, setUserData] = useUserData()
-  const [, setSpinnerLayout] = useSpinnerLayout()
 
   const isAuth = useRef<boolean>(false)
   const [showDrawer, setShowDrawer] = useState(false)
@@ -69,29 +65,7 @@ const Header = () => {
   }
 
   const handleLogout = async () => {
-    setSpinnerLayout(true)
-
-    try {
-      const response = await logoutServices()
-      onClose()
-
-      if ('status' in response) {
-        notify('success', 'Logout successful', '', 'bottomRight')
-        setTimeout(() => {
-          if (pathname !== NAVIGATION_LINK.Homepage)
-            router.push(NAVIGATION_LINK.Homepage)
-          setSpinnerLayout(false)
-          return router.refresh()
-        }, 500)
-      }
-    } catch (error) {
-      const resError: IErrorResponse = _.get(error, 'error', {
-        code: 400,
-        message: '',
-      })
-      notify('error', resError.message, '', 'bottomRight')
-      setSpinnerLayout(false)
-    }
+    await logoutHooks()
   }
 
   return (
