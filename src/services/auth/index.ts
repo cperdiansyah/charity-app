@@ -1,6 +1,8 @@
 import nookies from 'nookies'
 import _ from 'lodash'
-import { SERVICE, api } from 'utils/api'
+import { SERVICE } from 'utils/api'
+import { api } from 'utils/axios'
+
 import {
   IErrorResponse,
   IResponseDataAuth,
