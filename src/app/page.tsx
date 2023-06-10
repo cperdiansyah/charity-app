@@ -22,8 +22,6 @@ const getCharity = async () => {
 }
 
 export default async function Home() {
-  // const data = await getCharity()
-  // console.log(data.charity.length)
   return (
     <UserLayout>
       <Welcome />

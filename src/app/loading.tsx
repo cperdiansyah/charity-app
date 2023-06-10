@@ -19,7 +19,6 @@ const Loading = () => {
     }, 3000)
   }, [])
 
-  // console.log(isLoading)
   return isLoading ? (
     <div id="preloader">
       <div className="spinner">

@@ -15,7 +15,7 @@ const Welcome = () => {
     const response = await fetch(url, FETCH_OPTIONS)
 
     const data = await response.json()
-    console.log(data)
+    // console.log(data)
     setData(data)
   }
 

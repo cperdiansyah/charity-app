@@ -1,5 +1,6 @@
 import nookies from 'nookies'
 import { SERVICE } from './api'
+import { getCookie } from 'cookies-next'
 
 // export const refreshToken = async () => {
 //   const token = nookies.get(null, 'token') || null
@@ -21,6 +22,6 @@ import { SERVICE } from './api'
 // }
 
 export const refreshToken = async () => {
-  const token = nookies.get(null, 'token') || null
-  console.log(token)
+  const token =  getCookie('token')  || null
+  // console.log(token)
 }

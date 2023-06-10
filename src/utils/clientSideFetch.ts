@@ -71,7 +71,7 @@ export async function clientRefreshToken(
     })
 
     const dataRefreshToken = _.get(resRefresh, 'data')
-    console.log(dataRefreshToken)
+    // console.log(dataRefreshToken)
     nookies.destroy(null, 'token')
     nookies.set(null, 'token', dataRefreshToken.accessToken)
     return dataRefreshToken.accessToken

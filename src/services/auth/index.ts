@@ -1,7 +1,7 @@
 import nookies from 'nookies'
 import _ from 'lodash'
 import { SERVICE } from 'utils/api'
-import { api } from 'utils/axios'
+import { api } from 'utils/clientSideFetch'
 
 import {
   IErrorResponse,
@@ -28,14 +28,10 @@ export const loginService = async (
     })
 
     nookies.destroy(null, 'token')
-    nookies.set(
-      null,
-      'token',
-      dataLogin.accessToken,
-      nookies.set(null, 'token', dataLogin.accessToken, {
-        path: '/',
-      })
-    )
+    // nookies.set(null, 'token', dataLogin.accessToken)
+    nookies.set(null, 'token', dataLogin.accessToken, {
+      path: '/',
+    })
     return dataLogin
   } catch (error) {
     const resError: IErrorResponse = _.get(error, 'response.data', {
