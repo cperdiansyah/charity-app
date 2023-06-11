@@ -18,10 +18,7 @@ import styles from './header.module.scss'
 import { NAVIGATION_LINK } from 'utils/link'
 import useUserData from 'stores/userData'
 import { INavlinkData, NavigationDekstop, NavigationMobile } from './Navigaton'
-import { IErrorResponse } from 'services/auth/index.interface'
-import { notify } from 'utils/notify'
-import { logoutServices } from 'services/auth'
-import { usePathname, useRouter } from 'next/navigation'
+import useLogout from 'hooks/useLogout'
 
 const navLinkData: INavlinkData[] = [
   {
@@ -42,12 +39,13 @@ const navLinkData: INavlinkData[] = [
 ]
 
 const Header = () => {
-  const router = useRouter()
-  const pathname = usePathname()
+  // custom hooks
   const screenWidth = useScreenWidth()
   const token = useAuth()
+  const logoutHooks = useLogout()
+
+  // Global state
   const [userData, setUserData] = useUserData()
-  const [loading, setLoading] = useState(false)
 
   const isAuth = useRef<boolean>(false)
   const [showDrawer, setShowDrawer] = useState(false)
@@ -67,25 +65,7 @@ const Header = () => {
   }
 
   const handleLogout = async () => {
-    setLoading(true)
-
-    try {
-      const response = await logoutServices()
-      if ('status' in response) {
-        notify('success', 'Logout successful', '', 'bottomRight')
-        setTimeout(() => {
-          if (pathname !== NAVIGATION_LINK.Homepage)
-            return router.push(NAVIGATION_LINK.Homepage)
-          return router.refresh()
-        }, 500)
-      }
-    } catch (error) {
-      const resError: IErrorResponse = _.get(error, 'error', {
-        code: 400,
-        message: '',
-      })
-      notify('error', resError.message, '', 'bottomRight')
-    }
+    await logoutHooks()
   }
 
   return (

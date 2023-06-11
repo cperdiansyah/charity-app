@@ -1,8 +1,8 @@
 'use client'
 
-import React from 'react'
-import { Layout, Menu, MenuProps } from 'antd'
-import { useRouter } from 'next/navigation'
+import React, { useEffect, useState } from 'react'
+import { Button, Layout, Menu, MenuProps } from 'antd'
+import { usePathname, useRouter } from 'next/navigation'
 
 // Component
 const { Sider } = Layout
@@ -13,20 +13,40 @@ import useSidebarCollapsed from 'stores/toogle'
 
 // Utils, Interface, functions
 import { IMenuItem } from './sidebar.interface'
-import { findItemByKey, generateItem } from './sidebar.function'
+import {
+  findItemByKey,
+  findItemByPathname,
+  generateItem,
+} from './sidebar.function'
 import { adminSidebar } from 'utils/menu'
 
 // styles
 import styles from './sidebar.module.scss'
-import { sidebarWidth } from 'utils/helpers'
+import { sidebarWidth } from 'helpers'
+import useUpdated from 'hooks/useUpdated'
 
 const item: IMenuItem[] = adminSidebar
 const menuItems = generateItem(item)
 
 const AdminSidebar: React.FC = () => {
   const router = useRouter()
+  const pathname = usePathname()
   const screenWidth = useScreenWidth()
   const [collapsed, setCollapsed] = useSidebarCollapsed()
+  const [activePathname, setActivePathname] = useState<string[]>(['1'])
+
+  useEffect(() => {
+    setActiveMenu()
+  }, [])
+
+  useUpdated(() => {
+    setActiveMenu()
+  }, [pathname])
+
+  function setActiveMenu() {
+    const item = findItemByPathname(menuItems, pathname)
+    setActivePathname([item.key])
+  }
   const onClick: MenuProps['onClick'] = (e) => {
     const keyItem = e.key
     const item: IMenuItem = findItemByKey(menuItems, keyItem)
@@ -53,10 +73,13 @@ const AdminSidebar: React.FC = () => {
       <Menu
         theme="dark"
         mode="inline"
-        defaultSelectedKeys={['1']}
+        defaultSelectedKeys={activePathname}
         items={menuItems}
         onClick={onClick}
+        selectedKeys={activePathname}
       />
+
+      <Button onClick={setActiveMenu}>Test button</Button>
     </Sider>
   )
 }

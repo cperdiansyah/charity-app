@@ -1,8 +1,8 @@
 import React from 'react'
-import nookies from 'nookies'
+import { getCookie } from 'cookies-next'
 
 const useAuth = () => {
-  const token = nookies.get(null, 'token') || null
+  const token = getCookie('token') || null
   return token
 }
 

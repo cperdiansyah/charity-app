@@ -1,66 +1,71 @@
 'use client'
-import { Button, Layout, Menu, theme, Spin } from 'antd'
-import type { MenuProps } from 'antd'
+import _ from 'lodash'
 import React from 'react'
+import { Button, Layout, Menu, theme } from 'antd'
+import type { MenuProps } from 'antd'
 import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   SettingOutlined,
   UserOutlined,
   LogoutOutlined,
-  LoadingOutlined,
 } from '@ant-design/icons'
+
 // Components
 import { DynamicBreadcrumbs } from 'components/molecules/DynamicBreadcrumb'
 
 // custom hooks
 import useScreenWidth from 'hooks/useScreenWidth'
+import useUserData from 'stores/userData'
 
 // Global State
 import useSidebarCollapsed from 'stores/toogle'
-// utils
-import { IMenuItem } from '../Sidebar/sidebar.interface'
-import { findItemByKey } from '../Sidebar/sidebar.function'
+
 // Styles
 import styles from './header.module.scss'
+import useLogout from 'hooks/useLogout'
 
 const { Header } = Layout
-
-const menuItems: MenuProps['items'] = [
-  {
-    label: 'Nama user',
-    key: 'navigationHeader',
-    icon: <UserOutlined />,
-    children: [
-      {
-        key: 'setting',
-        label: 'Settings',
-        icon: <SettingOutlined />,
-      },
-      {
-        key: 'logout',
-        label: 'Logout',
-        icon: <LogoutOutlined />,
-      },
-    ],
-  },
-]
 
 const AdminHeader: React.FC = () => {
   const [collapsed, setCollapsed] = useSidebarCollapsed()
   const screenWidth = useScreenWidth()
+  const logoutHooks = useLogout()
+  const [userData, setUserData] = useUserData()
+
+  const menuItems: MenuProps['items'] = [
+    {
+      label: `${userData.name.split(' ')[0]}`,
+      key: 'navigationHeader',
+      icon: <UserOutlined />,
+      children: [
+        {
+          key: 'setting',
+          label: 'Settings',
+          icon: <SettingOutlined />,
+        },
+        {
+          key: 'logout',
+          label: 'Logout',
+          icon: <LogoutOutlined />,
+        },
+      ],
+    },
+  ]
 
   const {
     token: { colorBgContainer },
   } = theme.useToken()
 
   const onClick: MenuProps['onClick'] = (e) => {
-    // console.log('click ', e)
     const keyItem = e.key
+    if (keyItem === 'logout') {
+      handleLogout()
+    }
+  }
 
-    const item: IMenuItem = findItemByKey(menuItems, keyItem)
-    console.log(item)
-    // setCurrent(e.key)
+  const handleLogout = async () => {
+    await logoutHooks()
   }
 
   return (
@@ -86,7 +91,6 @@ const AdminHeader: React.FC = () => {
           mode="horizontal"
           items={menuItems}
         />
-        {/* <Spin /> */}
       </div>
     </Header>
   )

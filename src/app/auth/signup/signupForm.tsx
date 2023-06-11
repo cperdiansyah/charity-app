@@ -9,7 +9,7 @@ import CustomButton from 'components/atoms/Button'
 
 // Utils
 import { NAVIGATION_LINK } from 'utils/link'
-import { notify } from 'utils/notify'
+import { notify } from 'helpers/notify'
 import { signupService } from 'services/auth'
 import {
   IErrorResponse,

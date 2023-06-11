@@ -9,7 +9,7 @@ import CustomButton from 'components/atoms/Button'
 
 // Utils
 import { NAVIGATION_LINK } from 'utils/link'
-import { notify } from 'utils/notify'
+import { notify } from 'helpers/notify'
 // styles
 import styles from './login.module.scss'
 import useUserData from 'stores/userData'
