@@ -10,6 +10,7 @@ import {
   ISubmitLoginForm,
   ISubmitSignupForm,
 } from './index.interface'
+import { deleteCookie, setCookie } from 'cookies-next'
 
 export const loginService = async (
   formData: ISubmitLoginForm
@@ -27,13 +28,13 @@ export const loginService = async (
       role: '',
     })
 
-    nookies.destroy(null, 'token')
-    // nookies.set(null, 'token', dataLogin.accessToken)
-    nookies.set(null, 'token', dataLogin.accessToken, {
+    deleteCookie('token')
+    setCookie('token', dataLogin.accessToken, {
       path: '/',
     })
     return dataLogin
   } catch (error) {
+    deleteCookie('token')
     const resError: IErrorResponse = _.get(error, 'response.data', {
       code: 400,
       message: '',
@@ -54,12 +55,14 @@ export const signupService = async (
       name: '',
       role: '',
     })
-    nookies.destroy(null, 'token')
-    nookies.set(null, 'token', dataResponse.accessToken, {
+    deleteCookie('token')
+    setCookie('token', dataResponse.accessToken, {
       path: '/',
     })
+
     return dataResponse
   } catch (error) {
+    deleteCookie('token')
     const resError: IErrorResponse = _.get(error, 'response.data', {
       code: 400,
       message: '',
@@ -76,9 +79,11 @@ export const logoutServices = async (): Promise<IResponseDefault> => {
       code: 400,
       message: '',
     })
-    nookies.destroy(null, 'token')
+    deleteCookie('token')
     return dataResponse
   } catch (error) {
+    // nookies.destroy(null, 'token')
+    deleteCookie('token')
     const resError: IErrorResponse = _.get(error, 'response.data', {
       code: 400,
       message: '',
