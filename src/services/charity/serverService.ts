@@ -12,9 +12,12 @@ export const getCharity = async () => {
       undefined,
       'GET',
       token?.value
-    ).then((response) => response.json())
+    )
+    // console.log(charity)
+    // .then((response) => response.json())
     return charity
   } catch (error) {
-    console.log(error)
+    return error
+    // return Promise.reject(error)
   }
 }
