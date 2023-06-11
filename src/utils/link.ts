@@ -1,5 +1,10 @@
 const AdminLink = {
+  AdminHome: '/admin',
   Dashboard: '/admin/dashboard',
+  // Charity
+  CharityList: '/admin/charity',
+  CharityAdd: '/admin/charity/add',
+  CharityEdit: '/admin/charity/edit/:id',
 }
 
 export const NAVIGATION_LINK = {
@@ -7,7 +12,8 @@ export const NAVIGATION_LINK = {
   Homepage: '/',
   About: '/about',
   Contact: '/contact',
+  Profile: '/user/profile',
   Login: '/auth/login',
   Signup: '/auth/signup',
-  ForgotPassword: '/auth/forgot-password'
+  ForgotPassword: '/auth/forgot-password',
 }

@@ -1,104 +1,128 @@
 'use client'
-import React from 'react'
-import { usePathname, useRouter } from 'next/navigation'
+import React, { useState, useRef } from 'react'
+import { Drawer, Button } from 'antd'
+import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
+import _ from 'lodash'
+
 // component
 import Navlink from 'components/atoms/Navlink'
-import CustomButton from 'components/atoms/Button'
+
+// custom hooks
+import useScreenWidth from 'hooks/useScreenWidth'
+import useAuth from 'hooks/useAuth'
 
 // styles
 import styles from './header.module.scss'
-import { NAVIGATION_LINK } from 'utils/link'
 
-interface INavlinkData {
-  name: string
-  href: string
-  className: string
-}
+// utils
+import { NAVIGATION_LINK } from 'utils/link'
+import useUserData from 'stores/userData'
+import { INavlinkData, NavigationDekstop, NavigationMobile } from './Navigaton'
+import useLogout from 'hooks/useLogout'
+
+const navLinkData: INavlinkData[] = [
+  {
+    name: 'Home',
+    href: NAVIGATION_LINK.Homepage,
+    className: '',
+  },
+  {
+    name: 'About',
+    href: NAVIGATION_LINK.About,
+    className: '',
+  },
+  {
+    name: 'Contact',
+    href: NAVIGATION_LINK.Contact,
+    className: '',
+  },
+]
 
 const Header = () => {
-  const pathname = usePathname()
-  const navLinkData: INavlinkData[] = [
-    {
-      name: 'Home',
-      href: NAVIGATION_LINK.Homepage,
-      className: '',
-    },
-    {
-      name: 'About',
-      href: NAVIGATION_LINK.About,
-      className: '',
-    },
-    {
-      name: 'Contact',
-      href: NAVIGATION_LINK.Contact,
-      className: '',
-    },
-  ]
+  // custom hooks
+  const screenWidth = useScreenWidth()
+  const token = useAuth()
+  const logoutHooks = useLogout()
+
+  // Global state
+  const [userData, setUserData] = useUserData()
+
+  const isAuth = useRef<boolean>(false)
+  const [showDrawer, setShowDrawer] = useState(false)
+
+  if (_.isEmpty(token)) {
+    isAuth.current = false
+  } else {
+    isAuth.current = true
+  }
+
+  const buttonShowDrawer = () => {
+    setShowDrawer(!showDrawer)
+  }
+
+  const onClose = () => {
+    setShowDrawer(false)
+  }
+
+  const handleLogout = async () => {
+    await logoutHooks()
+  }
+
   return (
     <header className="xs-header header-transparent">
       <div className="container">
         <nav className="xs-menus">
           {/* <!-- .nav-header END --> */}
           <div className="nav-menus-wrapper row">
-            <div className="xs-logo-wraper col-lg-2 xs-padding-0">
+            <div
+              className={`xs-logo-wraper col-lg-2 xs-padding-0  ${styles['nav-wrapper']} `}
+            >
               <Navlink
-                className={`nav-brand ${styles['nav-brand']}`}
+                className={`nav-brand ${styles['nav-brand']} md:m-0 `}
                 href={NAVIGATION_LINK.Homepage}
               >
                 <img src="/images/logo.png" alt="" />
               </Navlink>
+              {/* <span>tester</span> */}
+
+              {screenWidth < 1000 && (
+                <>
+                  <Button
+                    className="barsMenu"
+                    type="default"
+                    onClick={buttonShowDrawer}
+                  >
+                    {showDrawer ? <MenuUnfoldOutlined /> : <MenuFoldOutlined />}
+                  </Button>
+
+                  <Drawer
+                    // title="Basic Drawer"
+                    placement="right"
+                    closable={true}
+                    onClose={onClose}
+                    open={showDrawer}
+                    size={'default'}
+                    className={`drawer ${styles['drawer']}  `}
+                  >
+                    <NavigationMobile
+                      data={navLinkData}
+                      isAuth={isAuth.current}
+                      userData={userData}
+                      handleLogout={handleLogout}
+                    />
+                  </Drawer>
+                </>
+              )}
             </div>
             {/* <!-- .xs-logo-wraper END --> */}
-            <div className="col-lg-7">
-              <ul className={`nav-menu ${styles['nav-menu']}`}>
-                {navLinkData.map((item: INavlinkData, index: number) => (
-                  <li key={index}>
-                    <Navlink
-                      className={`${item.className} ${
-                        pathname === item.href ? 'active' : ''
-                      }`}
-                      href={item.href}
-                      text={item.name}
-                    />
-                  </li>
-                ))}
-                <li>
-                  <CustomButton buttontype="primary" href="#popularcause">
-                    <span className="badge">
-                      <i className="fa fa-heart" />
-                      Donate Now
-                    </span>
-                  </CustomButton>
-                </li>
-              </ul>
-              {/* <!-- .nav-menu END --> */}
-            </div>
-            <div className="xs-navs-button d-flex-center-end col-lg-3 w-full">
-              <div
-                className={`login-signup-button ${styles['login-signup-button']}`}
-              >
-                <CustomButton
-                  buttontype="outline"
-                  isLink
-                  href={NAVIGATION_LINK.Signup}
-                  text="Signup"
-                />
-                <CustomButton
-                  buttontype="primary"
-                  isLink
-                  href={NAVIGATION_LINK.Login}
-                  text="Login"
-                />
-              </div>
-            </div>
-            {/* <div className="xs-navs-button d-flex-center-end col-lg-3">
-              <a href="#popularcause" className="btn btn-primary">
-                <span className="badge">
-                  <i className="fa fa-heart" />
-                </span>
-                Donate Now
-              </a>
-            </div> */}
+            {screenWidth > 1000 && (
+              <NavigationDekstop
+                data={navLinkData}
+                isAuth={isAuth.current}
+                userData={userData}
+                handleLogout={handleLogout}
+              />
+            )}
             {/* <!-- .xs-navs-button END --> */}
           </div>
           {/* <!-- .nav-menus-wrapper .row END --> */}

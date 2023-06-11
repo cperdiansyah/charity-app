@@ -8,7 +8,7 @@ interface INavlink {
   disable?: boolean
   href: string
   isExternalLink?: boolean
-  className: string
+  className?: string
   text?: string
 }
 

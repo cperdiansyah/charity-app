@@ -6,10 +6,11 @@ $hover-color: #041d57;
   flex-wrap: wrap;
   justify-content: center;
   align-items: center;
-  padding: 16px 30px !important;
+  // padding: 16px 30px !important;
+  padding: 16px 30px;
   box-sizing: border-box;
   height: 46px;
- 
+
   span {
     i {
       margin-right: 10px;

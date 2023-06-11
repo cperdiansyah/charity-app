@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import styles from './welcome.module.scss'
-import { BASE_HEADERS, FETCH_OPTIONS, IFetchOptions, SERVICE } from 'utils/api'
+import { FETCH_OPTIONS, SERVICE } from 'utils/api'
 const Welcome = () => {
   const [data, setData] = useState(null)
   const [isLoading, setLoading] = useState(false)
@@ -15,7 +15,7 @@ const Welcome = () => {
     const response = await fetch(url, FETCH_OPTIONS)
 
     const data = await response.json()
-    console.log(data)
+    // console.log(data)
     setData(data)
   }
 

@@ -10,4 +10,5 @@ export interface IPorps extends BaseButtonProps {
   isLink?: boolean
   text?: string
   htmlType?: ButtonHTMLType
+  style?:React.CSSProperties
 }

@@ -1,0 +1,27 @@
+import nookies from 'nookies'
+import { SERVICE } from './api'
+import { getCookie } from 'cookies-next'
+
+// export const refreshToken = async () => {
+//   const token = nookies.get(null, 'token') || null
+
+//   if (token) {
+//     const url = [process.env.NEXT_PUBLIC_BASE_URL, SERVICE.refreshToken].join(
+//       ''
+//     )
+//     // console.log(url)
+//     const bodyPayload = {
+//       isAnonymous: false,
+//     }
+//     const response = await fetchPost(url, bodyPayload)
+//     const data = await response.json()
+//     console.log(data)
+
+//     return data
+//   }
+// }
+
+export const refreshToken = async () => {
+  const token =  getCookie('token')  || null
+  // console.log(token)
+}
