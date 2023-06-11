@@ -16,6 +16,7 @@ import { DynamicBreadcrumbs } from 'components/molecules/DynamicBreadcrumb'
 
 // custom hooks
 import useScreenWidth from 'hooks/useScreenWidth'
+import useUserData from 'stores/userData'
 
 // Global State
 import useSidebarCollapsed from 'stores/toogle'
@@ -26,30 +27,31 @@ import useLogout from 'hooks/useLogout'
 
 const { Header } = Layout
 
-const menuItems: MenuProps['items'] = [
-  {
-    label: 'Nama user',
-    key: 'navigationHeader',
-    icon: <UserOutlined />,
-    children: [
-      {
-        key: 'setting',
-        label: 'Settings',
-        icon: <SettingOutlined />,
-      },
-      {
-        key: 'logout',
-        label: 'Logout',
-        icon: <LogoutOutlined />,
-      },
-    ],
-  },
-]
-
 const AdminHeader: React.FC = () => {
   const [collapsed, setCollapsed] = useSidebarCollapsed()
   const screenWidth = useScreenWidth()
   const logoutHooks = useLogout()
+  const [userData, setUserData] = useUserData()
+
+  const menuItems: MenuProps['items'] = [
+    {
+      label: `${userData.name.split(' ')[0]}`,
+      key: 'navigationHeader',
+      icon: <UserOutlined />,
+      children: [
+        {
+          key: 'setting',
+          label: 'Settings',
+          icon: <SettingOutlined />,
+        },
+        {
+          key: 'logout',
+          label: 'Logout',
+          icon: <LogoutOutlined />,
+        },
+      ],
+    },
+  ]
 
   const {
     token: { colorBgContainer },
