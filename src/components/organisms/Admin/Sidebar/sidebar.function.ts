@@ -50,3 +50,18 @@ export function findItemByKey(data: any, key: string): any {
   }
   return null
 }
+
+export function findItemByPathname(data: any, pathname: string): any {
+  for (let item of data) {
+    if (item.pathname === pathname) {
+      return item
+    }
+    if (item.children) {
+      const foundItem = findItemByKey(item.children, pathname)
+      if (foundItem) {
+        return foundItem
+      }
+    }
+  }
+  return null
+}
