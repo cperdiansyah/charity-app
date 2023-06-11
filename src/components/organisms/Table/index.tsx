@@ -1,16 +1,11 @@
 import React, { useState, useEffect } from 'react'
-import { Space, Table, Tag } from 'antd'
+import { Space, Table, Tag, Input } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { FilterValue, SorterResult } from 'antd/es/table/interface'
 import Column from 'antd/es/table/Column'
+import { DataType, ICustomTable, TableParams } from './table.interface'
 
-export interface DataType {
-  key: string
-  name: string
-  age: number
-  address: string
-  tags: string[]
-}
+const { Search } = Input
 
 const columns: ColumnsType<DataType> = [
   {
@@ -85,18 +80,6 @@ const datas: DataType[] = [
   },
 ]
 
-interface ICustomTable {
-  columns: ColumnsType<DataType>
-  datasources?: DataType[]
-}
-
-interface TableParams {
-  pagination?: TablePaginationConfig
-  sortField?: string
-  sortOrder?: string
-  filters?: Record<string, FilterValue>
-}
-
 const CustomTable: React.FC<ICustomTable> = ({ columns, datasources }) => {
   const [data, setData] = useState<DataType[]>()
   const [loading, setLoading] = useState(false)
@@ -130,8 +113,16 @@ const CustomTable: React.FC<ICustomTable> = ({ columns, datasources }) => {
       setData([])
     }
   }
+  const onSearch = (value: string) => console.log(value)
+
   return (
     <div className="table-container">
+      <Search
+        placeholder="input search text"
+        onSearch={onSearch}
+        style={{ width: 200 }}
+      />
+
       <Table
         columns={columns}
         dataSource={data}
