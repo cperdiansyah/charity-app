@@ -1,7 +1,7 @@
 import { notification } from 'antd'
 
 import type { NotificationPlacement } from 'antd/es/notification/interface'
-import { toCapitalize } from './capitalize'
+import { toCapitalize } from 'helpers/capitalize'
 type NotificationType = 'success' | 'info' | 'warning' | 'error'
 
 export const notify = (
