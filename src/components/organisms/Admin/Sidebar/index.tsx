@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Layout, Menu, MenuProps } from 'antd'
+import { Layout, Menu, MenuProps } from 'antd'
 import { usePathname, useRouter } from 'next/navigation'
 
 // Component
@@ -78,8 +78,6 @@ const AdminSidebar: React.FC = () => {
         onClick={onClick}
         selectedKeys={activePathname}
       />
-
-      <Button onClick={setActiveMenu}>Test button</Button>
     </Sider>
   )
 }
