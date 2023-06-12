@@ -17,6 +17,7 @@ export const BASE_HEADERS = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Credentials': 'true',
   Authorization: `Bearer ${JSON.stringify(token)}`,
+  // accept: 'application/json',
 }
 
 export const FETCH_OPTIONS: IFetchOptions = {

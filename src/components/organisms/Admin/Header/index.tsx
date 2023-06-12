@@ -90,6 +90,7 @@ const AdminHeader: React.FC = () => {
           selectable={false}
           mode="horizontal"
           items={menuItems}
+          className="w-full"
         />
       </div>
     </Header>
