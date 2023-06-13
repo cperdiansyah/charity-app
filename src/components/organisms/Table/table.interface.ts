@@ -6,6 +6,7 @@ export interface ICustomTable {
   datasources?: any[]
   init: Function
   loading?: boolean
+  placeholder?: string
 }
 
 export interface TableParams {

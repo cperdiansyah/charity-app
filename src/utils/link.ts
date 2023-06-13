@@ -5,6 +5,7 @@ const AdminLink = {
   CharityList: '/admin/charity',
   CharityAdd: '/admin/charity/add',
   CharityEdit: '/admin/charity/edit/:id',
+  
 }
 
 export const NAVIGATION_LINK = {

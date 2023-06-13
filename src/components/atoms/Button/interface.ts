@@ -7,8 +7,8 @@ export interface IPorps extends BaseButtonProps {
   buttontype?: 'default' | 'primary' | 'disabled' | 'outline' | 'transparent'
   href?: string
   onClick?: VoidFunction
-  isLink?: boolean
+  islink?: string | 'true' | boolean
   text?: string
   htmlType?: ButtonHTMLType
-  style?:React.CSSProperties
+  style?: React.CSSProperties
 }

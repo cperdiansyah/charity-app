@@ -22,7 +22,8 @@ const columns: ColumnsType<any> = [
     title: 'Donation Target',
     dataIndex: 'donation_target',
     key: 'donation_target',
-    render: (data) => currencyFormat(data),
+    
+    render: (data) => `Rp. ${currencyFormat(data)}`,
   },
   // {
   //   title: 'Tags',
@@ -62,32 +63,14 @@ interface ICharityResponse {
 }
 
 const AdminCharity = async () => {
-  const [loading, setLoading] = useState(false)
-  const [charity, setCharity] = useState<ICharityResponse | undefined>()
-  useEffect(() => {
-    asyncMethod()
-  }, [])
-
-  const asyncMethod = async () => {
-    setLoading(true)
+  const init = async () => {
     const dataCharity = await getCharityClient()
-    // console.log(dataCharity)
-    // setCharity(dataCharity)
-    setLoading(false)
     return dataCharity.charity
   }
 
-  // console.log(charity)
-  if (loading) return <>Loading......</>
-
   return (
     <div>
-      <CustomTable
-        columns={columns}
-        // datasources={charity?.charity}
-        init={asyncMethod}
-        loading={loading}
-      />
+      <CustomTable columns={columns} init={init} />
     </div>
   )
 }
