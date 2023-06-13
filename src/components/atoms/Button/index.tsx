@@ -8,7 +8,6 @@ import Navlink from '../Navlink'
 
 const CustomButton = (props: IPorps) => {
   const { buttontype = 'default' } = props
-
   // If button is Link
   if (props.islink || props.islink === 'true') {
     if (buttontype === 'primary') {
@@ -36,6 +35,16 @@ const CustomButton = (props: IPorps) => {
         </Navlink>
       )
     }
+
+    return (
+      <Navlink
+        href={props.href ?? '/'}
+        text={props.text}
+        className={`${styles['default-link-button-style']}  ${props.className}`}
+      >
+        {props.children}
+      </Navlink>
+    )
   }
   if (buttontype === 'primary') {
     return (

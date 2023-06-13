@@ -28,3 +28,27 @@ $hover-color: #041d57;
     }
   }
 }
+
+.default-link-button-style {
+  background-color: #fff;
+  box-shadow: 0 2px 0 rgba(0, 0, 0, 0.02);
+  font-size: 14px;
+  height: 32px;
+  border-color: #d9d9d9;
+  padding: 4px 15px;
+  border-radius: 6px;
+  border-width: 1px;
+  font-weight: 400;
+  white-space: nowrap;
+  text-align: center;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.645, 0.045, 0.355, 1);
+
+  color: rgba(0, 0, 0, 0.88);
+
+  &:hover {
+    // border: 1px solid #0056b3;
+    border-color: #0056b3;
+  }
+  // @apply btn !rounded-md  border-gray-400 bg-white px-[1rem] py-[0.5rem] text-sm !text-gray-600 shadow-lg;
+}
