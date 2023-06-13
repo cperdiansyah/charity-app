@@ -16,7 +16,7 @@ export const BASE_HEADERS = {
   'Content-Type': 'application/json',
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Credentials': 'true',
-  Authorization: `Bearer ${JSON.stringify(token)}`,
+  Authorization: `Bearer ${token}`,
   // accept: 'application/json',
 }
 

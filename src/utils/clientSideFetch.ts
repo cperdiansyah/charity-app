@@ -9,7 +9,6 @@ export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
   headers: BASE_HEADERS,
   withCredentials: true,
-  
 })
 
 // Axios interceptor for token refresh
@@ -74,7 +73,9 @@ export async function clientRefreshToken(
     const dataRefreshToken = _.get(resRefresh, 'data')
     // console.log(dataRefreshToken)
     nookies.destroy(null, 'token')
-    nookies.set(null, 'token', dataRefreshToken.accessToken)
+    nookies.set(null, 'token', dataRefreshToken.accessToken, {
+      path: '/',
+    })
     return dataRefreshToken.accessToken
   } catch (error: any) {
     console.error(error)
