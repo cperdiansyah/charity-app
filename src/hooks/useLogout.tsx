@@ -17,6 +17,7 @@ const useLogout = () => {
 
     try {
       const response = await logoutServices()
+      console.log(response)
       if ('status' in response) {
         notify('success', 'Logout successful', '', 'bottomRight')
         setTimeout(() => {
