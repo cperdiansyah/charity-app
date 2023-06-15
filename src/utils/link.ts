@@ -1,10 +1,10 @@
 const AdminLink = {
   AdminHome: '/admin',
   Dashboard: '/admin/dashboard',
-  // Charity
-  CharityList: '/admin/charity',
-  CharityAdd: '/admin/charity/add',
-  CharityEdit: '/admin/charity/edit/:id',
+  // Campaign
+  CampaignList: '/admin/campaign',
+  CampaignAdd: '/admin/campaign/add',
+  CampaignEdit: '/admin/campaign/edit/:id',
   
 }
 
