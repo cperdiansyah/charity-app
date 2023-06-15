@@ -14,3 +14,11 @@ export const currencyFormat = (money: number) => {
     minimumFractionDigits: 0,
   }).format(money)
 }
+
+
+export const removeAdminPath = (path: string) => {
+  const adminRegex = /^\/admin\/(.*)$/
+  const match = path.match(adminRegex)
+
+  return match ? '/' + match[1] : path
+}

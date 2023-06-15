@@ -9,6 +9,9 @@ const nextConfig = {
   //   includePaths: [path.join(__dirname, 'styles')],
   // },
   env: { NEXT_PUBLIC_BASE_URL: process.env.NEXT_PUBLIC_BASE_URL },
+  // experimental: {
+  //   urlImports: ['https: //fonts.googleapis.com/'],
+  // },
 }
 
 module.exports = nextConfig

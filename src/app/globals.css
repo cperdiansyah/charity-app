@@ -2,11 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-/* @import url('https: //fonts.googleapis.com/css?family=Poppins:300,400,500,600,700%7CRoboto+Slab:400,700');
+@import url('https: //fonts.googleapis.com/css?family=Poppins:300,400,500,600,700%7CRoboto+Slab:400,700');
 
-body{
+body {
   font-family: 'Poppins', sans-serif;
-} */
+}
 html {
   scroll-behavior: smooth;
 }
