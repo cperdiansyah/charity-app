@@ -10,6 +10,10 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@tiptap/core": "^2.0.3",
+    "@tiptap/pm": "^2.0.3",
+    "@tiptap/react": "^2.0.3",
+    "@tiptap/starter-kit": "^2.0.3",
     "@types/node": "20.1.4",
     "@types/react": "18.2.6",
     "@types/react-dom": "18.2.4",
@@ -18,7 +22,6 @@
     "axios": "^1.4.0",
     "cookies-next": "^2.1.1",
     "dayjs": "^1.11.8",
-    "draft-js": "^0.11.7",
     "eslint-config-next": "13.4.2",
     "jose": "^4.14.4",
     "lodash": "^4.17.21",
@@ -28,7 +31,6 @@
     "qs": "^6.11.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
-    "react-draft-wysiwyg": "^1.15.0",
     "swr": "^2.1.5",
     "swr-global-state": "^2.1.1",
     "tailwindcss": "3.3.2"

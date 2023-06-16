@@ -26,7 +26,6 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         <AdminSidebar />
         <Layout>
           <AdminHeader />
-          {/* <h1 style={{ margin: '10px 16px' }}>asdasd</h1> */}
           <HeaderBack style={{ margin: '5px 16px', marginTop: '15px' }} />
           <Content style={{ margin: '10px 16px' }}>
             <div

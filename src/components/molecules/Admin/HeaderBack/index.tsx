@@ -7,7 +7,6 @@ import { removeAdminPath } from 'helpers'
 import { toCapitalize } from 'helpers/capitalize'
 
 const HeaderBack = (props: { style?: CSSProperties }) => {
-  // const navigate =
   const pathname = usePathname()
   const router = useRouter()
 
