@@ -1,18 +1,26 @@
 'use client'
-import { Col, Form, Input, Row } from 'antd'
-import React, { useRef } from 'react'
+import { Button, Col, Form, Input, Row } from 'antd'
+import CustomButton from 'components/atoms/Button'
+import QuilEditor from 'components/molecules/QuilEditor'
+import React, { useEffect, useRef } from 'react'
+import useTextEditor from 'stores/textEditor'
 
 const FormAddCharity = () => {
   const [form] = Form.useForm()
-  const editorRef = useRef<any>(null)
+  const [editorValue, setEditorValue] = useTextEditor()
+
+  useEffect(() => {
+    handleResetForm()
+  }, [])
+
+  const handleResetForm = () => {
+    form.resetFields()
+    setEditorValue('')
+  }
 
   const handlSubmit = (values: any) => {
     console.log('Received values of form: ', values)
-
-    if (editorRef.current) {
-      // console.log(editorRef.current.getContent())
-      console.log(editorRef.current)
-    }
+    console.log(editorValue)
   }
 
   return (
@@ -39,7 +47,19 @@ const FormAddCharity = () => {
           <Col span={10}>
             <h1 className="text-center">test</h1>
           </Col>
+          <Col span={24}>
+            <QuilEditor />
+          </Col>
         </Row>
+
+        {/* <Button htmlType="submit">Simpan</Button> */}
+        <CustomButton
+          htmlType="submit"
+          buttontype="primary"
+          className="mt-2 !rounded-lg"
+        >
+          Simpan
+        </CustomButton>
       </Form>
     </div>
   )
