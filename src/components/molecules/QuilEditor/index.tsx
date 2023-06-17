@@ -8,6 +8,7 @@ import { Spin } from 'antd'
 
 interface IProps {
   initialValue?: string
+  placeholder?: string
 }
 
 const QuilEditor = (props: IProps) => {
@@ -32,6 +33,7 @@ const QuilEditor = (props: IProps) => {
         theme="snow"
         value={value}
         onChange={handleChange}
+        placeholder={props?.placeholder}
       />
     )
 
