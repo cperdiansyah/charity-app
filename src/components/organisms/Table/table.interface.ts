@@ -1,9 +1,12 @@
-import { ColumnsType, TablePaginationConfig } from "antd/es/table"
-import { FilterValue } from "antd/es/table/interface"
+import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
+import { FilterValue } from 'antd/es/table/interface'
 
 export interface ICustomTable {
-  columns: ColumnsType<DataType>
-  datasources?: DataType[]
+  columns: ColumnsType<any>
+  datasources?: any[]
+  init: Function
+  loading?: boolean
+  placeholder?: string
 }
 
 export interface TableParams {
@@ -13,11 +16,11 @@ export interface TableParams {
   filters?: Record<string, FilterValue>
 }
 
-
-export interface DataType {
-  key: string
-  name: string
-  age: number
-  address: string
-  tags: string[]
-}
+// export interface DataType {
+//   id: Key
+//   key: string
+//   name: string
+//   age: number
+//   address: string
+//   tags: string[]
+// }

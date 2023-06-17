@@ -65,13 +65,13 @@ export const NavigationDekstop = (props: {
           >
             <CustomButton
               buttontype="outline"
-              isLink
+              islink
               href={NAVIGATION_LINK.Signup}
               text="Signup"
             />
             <CustomButton
               buttontype="primary"
-              isLink
+              islink
               href={NAVIGATION_LINK.Login}
               text="Login"
             />
@@ -149,7 +149,7 @@ export const NavigationMobile = (props: {
             <li>
               <CustomButton
                 buttontype="outline"
-                isLink
+                islink
                 href={NAVIGATION_LINK.Signup}
                 text="Signup"
                 className={`${styles['button-primary']}`}
@@ -158,7 +158,7 @@ export const NavigationMobile = (props: {
             <li>
               <CustomButton
                 buttontype="primary"
-                isLink
+                islink
                 href={NAVIGATION_LINK.Login}
                 text="Login"
                 className={` text-white ${styles['button-primary']}`}

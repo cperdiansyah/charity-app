@@ -9,6 +9,7 @@ import AdminFooter from 'components/organisms/Admin/Footer'
 // styles
 import styles from './adminLayout.module.scss'
 import useSpinnerLayout from 'stores/spinnerLayout'
+import HeaderBack from 'components/molecules/Admin/HeaderBack'
 
 const { Content } = Layout
 
@@ -25,6 +26,7 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
         <AdminSidebar />
         <Layout>
           <AdminHeader />
+          <HeaderBack style={{ margin: '5px 16px', marginTop: '15px' }} />
           <Content style={{ margin: '10px 16px' }}>
             <div
               style={{

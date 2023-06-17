@@ -765,7 +765,7 @@ blockquote {
   display: block;
   position: relative;
   z-index: 1;
-  background-image: url("../images/logo-bg.png");
+  background-image: url("/images/logo-bg.png");
   -webkit-filter: drop-shadow(8px 0px 16px rgba(0, 0, 0, 0.2));
           filter: drop-shadow(8px 0px 16px rgba(0, 0, 0, 0.2));
   min-height: 140px;
