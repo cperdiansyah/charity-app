@@ -9,6 +9,7 @@ import { Spin } from 'antd'
 interface IProps {
   initialValue?: string
   placeholder?: string
+  height?: number
 }
 
 const QuilEditor = (props: IProps) => {
@@ -29,7 +30,7 @@ const QuilEditor = (props: IProps) => {
     return (
       <ReactQuill
         className=""
-        style={{ height: '150px', marginBottom: '50px' }}
+        style={{ height: props.height ?? '150px', marginBottom: '50px' }}
         theme="snow"
         value={value}
         onChange={handleChange}

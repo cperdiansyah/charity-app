@@ -9,8 +9,12 @@ import {
   Form,
   Input,
   InputNumber,
+  Radio,
+  RadioChangeEvent,
   Row,
+  Upload,
 } from 'antd'
+import { InboxOutlined } from '@ant-design/icons'
 
 /* Component */
 import CustomButton from 'components/atoms/Button'
@@ -20,10 +24,15 @@ import { disabledDate } from 'utils/disableDate'
 
 const { RangePicker } = DatePicker
 
+type mediaContentSource = 'url' | 'upload'
+
 const FormAddCharity = () => {
   const [form] = Form.useForm()
   const [editorValue, setEditorValue] = useTextEditor()
   const [errorEditor, setErrotEditor] = useState(false)
+  const [mediaContentSource, setMediaContentSource] =
+    useState<mediaContentSource>('url')
+  const [draftChecked, setDraftChecked] = useState(false)
 
   const editorEmptyLogic =
     editorValue.length === 0 ||
@@ -48,10 +57,8 @@ const FormAddCharity = () => {
   }
 
   const handlSubmit = (values: any) => {
+    console.log(values)
     checkEditorValue()
-
-    // console.log('Received values of form: ', values)
-    // console.log(editorValue)
   }
   const checkOnFailed = () => {
     checkEditorValue()
@@ -63,6 +70,47 @@ const FormAddCharity = () => {
     }
   }
 
+  const radioChange = (e: RadioChangeEvent) => {
+    console.log('radio checked', e.target.value)
+    setMediaContentSource(e.target.value)
+  }
+
+  const normFile = (e: any) => {
+    console.log('Upload event:', e)
+    if (Array.isArray(e)) {
+      return e
+    }
+    return e?.fileList
+  }
+
+  const mediaFormUrl = <Input placeholder="https://example.com/media.jpeg" />
+  const mediaFormUpload = (
+    <Form.Item>
+      <Form.Item
+        name="dragger"
+        valuePropName="fileList"
+        getValueFromEvent={normFile}
+        noStyle
+      >
+        <Upload.Dragger
+          name="files"
+          action="/upload.do"
+          accept="image/*,video/*"
+        >
+          <p className="ant-upload-drag-icon">
+            <InboxOutlined />
+          </p>
+          <p className="ant-upload-text">
+            Click or drag file to this area to upload
+          </p>
+          <p className="ant-upload-hint">
+            Support for a single or bulk upload.
+          </p>
+        </Upload.Dragger>
+      </Form.Item>
+    </Form.Item>
+  )
+
   return (
     <div className="form-add-charity-container">
       <Form
@@ -73,7 +121,8 @@ const FormAddCharity = () => {
         onFinishFailed={checkOnFailed}
       >
         <Row gutter={24}>
-          <Col span={14}>
+          {/* Content Campaign */}
+          <Col span={12}>
             <Form.Item
               name="title"
               label="Title"
@@ -98,7 +147,6 @@ const FormAddCharity = () => {
                   `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                 }
                 parser={(value: any) => value!.replace(/\$\s?|(,*)/g, '')}
-                // width={120}
                 className="w-full"
               />
             </Form.Item>
@@ -110,8 +158,35 @@ const FormAddCharity = () => {
               <RangePicker disabledDate={disabledDate} />
             </Form.Item>
           </Col>
-          <Col span={10}>
-            <h1 className="text-center">test</h1>
+
+          {/* Image Campaign */}
+          <Col span={12}>
+            <p className="text-left text-lg font-medium">Media</p>
+            <Form.Item
+              name="media_source"
+              label="Sources"
+              rules={[{ required: true, message: 'Media Sources is required' }]}
+              initialValue={mediaContentSource}
+            >
+              <Radio.Group
+                onChange={radioChange}
+                value={mediaContentSource}
+                defaultValue={mediaContentSource}
+              >
+                <Radio value={'url'}>Url</Radio>
+                <Radio value={'upload'}>Upload</Radio>
+              </Radio.Group>
+            </Form.Item>
+            <Form.Item
+              name="media_content"
+              shouldUpdate={(prevValues, curValues) =>
+                prevValues.media_source !== curValues.media_source
+              }
+            >
+              {form.getFieldValue('media_source') === 'url'
+                ? mediaFormUrl
+                : mediaFormUpload}
+            </Form.Item>
           </Col>
           <Col span={24}>
             <QuilEditor placeholder="Input your content here" />
@@ -120,10 +195,21 @@ const FormAddCharity = () => {
             )}
           </Col>
           <Col span={14}>
-            <Form.Item name="remember" valuePropName="checked" className="my-3">
-              <Checkbox defaultChecked={false}>Draft</Checkbox>
+            <Form.Item
+              name="draft"
+              valuePropName="checked"
+              className="my-3"
+              initialValue={draftChecked}
+            >
+              <Checkbox
+                defaultChecked={false}
+                checked={draftChecked}
+                onClick={() => setDraftChecked(!draftChecked)}
+              >
+                Draft
+              </Checkbox>
             </Form.Item>
-            <Form.Item>
+            <Form.Item name="submit">
               <CustomButton
                 htmlType="submit"
                 buttontype="primary"
