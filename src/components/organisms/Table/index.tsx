@@ -10,6 +10,7 @@ import CustomButton from 'components/atoms/Button'
 
 import { ICustomTable, TableParams } from './table.interface'
 import { usePathname } from 'next/navigation'
+import useLogoutSessionExpired from 'hooks/useLogoutSessionExpired'
 
 const { Search } = Input
 
@@ -73,6 +74,7 @@ const CustomTable: React.FC<ICustomTable> = ({
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<any>()
   const [page, setPage] = React.useState(1)
+  const logoutSessionExpiredHooks = useLogoutSessionExpired()
 
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
@@ -97,19 +99,30 @@ const CustomTable: React.FC<ICustomTable> = ({
   ])
 
   useEffect(() => {
-    getData()
+    if (!loading) {
+      getData()
+    }
   }, [])
 
   const getData = async () => {
     setLoading(true)
-    const tableData = await init()
-    // console.log(tableData)
-    if (!_.isEmpty(tableData)) {
-      setData(tableData)
-    } else {
-      setData([])
+    try {
+      const tableData = await init()
+      // console.log(tableData)
+      if (!_.isEmpty(tableData)) {
+        setData(tableData)
+      } else {
+        setData([])
+      }
+
+      setLoading(false)
+    } catch (error: any) {
+      const { status } = error.response
+      if (status === 403) {
+        logoutSessionExpiredHooks()
+      }
+      setLoading(false)
     }
-    setLoading(false)
   }
 
   const handleTableChange = (

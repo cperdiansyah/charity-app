@@ -2,7 +2,6 @@
 import React, { useEffect, useState, useRef } from 'react'
 import {
   Alert,
-  Button,
   Checkbox,
   Col,
   DatePicker,
@@ -22,6 +21,12 @@ import CustomButton from 'components/atoms/Button'
 import QuilEditor from 'components/molecules/QuilEditor'
 import useTextEditor from 'stores/textEditor'
 import { disabledDate } from 'utils/disableDate'
+import dayjs from 'dayjs'
+import { api } from 'utils/clientSideFetch'
+import { SERVICE } from 'utils/api'
+import { useRouter } from 'next/navigation'
+import { notify } from 'helpers/notify'
+import { NAVIGATION_LINK } from 'utils/link'
 
 const { RangePicker } = DatePicker
 
@@ -35,30 +40,9 @@ const normFile = (e: any) => {
   return e?.fileList
 }
 
-const mediaFormUrl = <Input placeholder="https://example.com/media.jpeg" />
-const mediaFormUpload = (
-  <Form.Item>
-    <Form.Item
-      name="dragger"
-      valuePropName="fileList"
-      getValueFromEvent={normFile}
-      noStyle
-    >
-      <Upload.Dragger name="files" action="/upload.do" accept="image/*,video/*">
-        <p className="ant-upload-drag-icon">
-          <InboxOutlined />
-        </p>
-        <p className="ant-upload-text">
-          Click or drag file to this area to upload
-        </p>
-        <p className="ant-upload-hint">Support for a single or bulk upload.</p>
-      </Upload.Dragger>
-    </Form.Item>
-  </Form.Item>
-)
-
 const FormAddCharity = () => {
   const [form] = Form.useForm()
+  const router = useRouter()
   const [editorValue, setEditorValue] = useTextEditor()
   const [errorEditor, setErrotEditor] = useState(false)
   const [mediaContentSource, setMediaContentSource] =
@@ -88,14 +72,31 @@ const FormAddCharity = () => {
     setEditorValue('')
   }
 
-  const handlSubmit = (values: any) => {
+  const handlSubmit = async (values: any) => {
     console.log(values)
     checkEditorValue()
 
     setLoading(true)
     try {
+      const dataCharity = {
+        title: values.title,
+        description: editorValue,
+        donation_target: values.target,
+        start_date: dayjs(values.dateCampaign[0]),
+        end_date: dayjs(values.dateCampaign[1]),
+        is_draft: values.draft,
+      }
+
+      await api.post(SERVICE.charity, dataCharity)
+
+      notify(
+        'success',
+        'Add Campaign Successful',
+        'campaign created successfully, please wait for admin verification',
+        'bottomRight'
+      )
       setTimeout(() => {
-        setLoading(false)
+        return router.replace(NAVIGATION_LINK.CampaignList)
       }, 500)
     } catch (error) {
       setLoading(false)
@@ -114,6 +115,26 @@ const FormAddCharity = () => {
   const radioChange = (e: RadioChangeEvent) => {
     console.log('radio checked', e.target.value)
     setMediaContentSource(e.target.value)
+  }
+
+  const uploadImageRequest = async (options?: any) => {
+    const { onSuccess, onError, file, onProgress } = options
+    try {
+      const fmData = new FormData()
+      const config = {
+        headers: { 'content-type': 'multipart/form-data' },
+      }
+      fmData.append('media_source', file)
+
+      const response = await api.post(SERVICE.uploadMediaTemp, fmData, config)
+
+      console.log('server res: ', response)
+      onSuccess('Ok')
+    } catch (err) {
+      console.log('Eroor: ', err)
+      const error = new Error('Some error')
+      return onError({ err })
+    }
   }
 
   return (
@@ -187,19 +208,77 @@ const FormAddCharity = () => {
                   <Radio value={'upload'}>Upload</Radio>
                 </Radio.Group>
               </Form.Item>
-              <Form.Item
-                name="media_content"
-                shouldUpdate={(prevValues, curValues) =>
-                  prevValues.media_source !== curValues.media_source
-                }
-                rules={[
-                  { required: true, message: 'Media Sources is required' },
-                ]}
-              >
-                {form.getFieldValue('media_source') === 'url'
-                  ? mediaFormUrl
-                  : mediaFormUpload}
-              </Form.Item>
+
+              <Form.List name="media">
+                {(fields, { add, remove }, { errors }) => {
+                  const mediaSources = form.getFieldValue('media_source')
+                  if (mediaSources === 'url') {
+                    return (
+                      <Form.Item
+                        name="media_content"
+                        shouldUpdate={(prevValues, curValues) =>
+                          prevValues.media_source !== curValues.media_source
+                        }
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Media Sources is required',
+                          },
+
+                          {
+                            pattern: new RegExp(
+                              /^(https?:\/\/)?[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(\/[a-zA-Z0-9-]+)*(\?[a-zA-Z0-9-]+)?$/
+                            ),
+                            message: 'Invalid URL',
+                          },
+                        ]}
+                      >
+                        <Input placeholder="https://example.com/media.jpeg" />
+                      </Form.Item>
+                    )
+                  }
+                  return (
+                    <Form.Item
+                      name="media_content"
+                      shouldUpdate={(prevValues, curValues) =>
+                        prevValues.media_source !== curValues.media_source
+                      }
+                      rules={[
+                        {
+                          required: true,
+                          message: 'Media Sources is required',
+                        },
+                      ]}
+                    >
+                      <Form.Item
+                        name="media_content_upload"
+                        valuePropName="fileList"
+                        getValueFromEvent={normFile}
+                        noStyle
+                      >
+                        <Upload.Dragger
+                          name="files"
+                          // action="/upload.do"
+                          accept="image/*,video/*"
+                          customRequest={uploadImageRequest}
+                          multiple
+                          maxCount={3}
+                        >
+                          <p className="ant-upload-drag-icon">
+                            <InboxOutlined />
+                          </p>
+                          <p className="ant-upload-text">
+                            Click or drag file to this area to upload
+                          </p>
+                          <p className="ant-upload-hint">
+                            Support for a single or bulk upload.
+                          </p>
+                        </Upload.Dragger>
+                      </Form.Item>
+                    </Form.Item>
+                  )
+                }}
+              </Form.List>
             </Col>
             <Col span={24}>
               <QuilEditor placeholder="Input your content here" />
