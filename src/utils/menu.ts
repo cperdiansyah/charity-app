@@ -21,6 +21,7 @@ export const SidebarMenu = {
   banner: {
     label: 'Banner',
     icon: PictureOutlined,
+    pathname: NAVIGATION_LINK.BannerList,
   },
   contentModeration: {
     label: 'Content Moderation',
@@ -47,5 +48,3 @@ export const userVerfiedSidebar = [
   SidebarMenu.charity,
   SidebarMenu.report,
 ]
-
-

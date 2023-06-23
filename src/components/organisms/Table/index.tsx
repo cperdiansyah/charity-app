@@ -11,6 +11,7 @@ import CustomButton from 'components/atoms/Button'
 import { ICustomTable, TableParams } from './table.interface'
 import { usePathname } from 'next/navigation'
 import useLogoutSessionExpired from 'hooks/useLogoutSessionExpired'
+import TableHeader from './tableHeader'
 
 const { Search } = Input
 
@@ -70,7 +71,7 @@ const CustomTable: React.FC<ICustomTable> = ({
   init,
   placeholder,
 }) => {
-  const pathame = usePathname()
+  const pathname = usePathname()
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<any>()
   const [page, setPage] = React.useState(1)
@@ -141,27 +142,18 @@ const CustomTable: React.FC<ICustomTable> = ({
       setData([])
     }
   }
-  const onSearch = (value: string) => console.log(value)
+  const onSearch: any = (value: string) => {
+    console.log(value)
+    return data
+  }
   return (
     <div className="table-container">
-      <div className="table-header mb-3 flex justify-between">
-        <div className="table-header-left">
-          <Search
-            placeholder={placeholder || 'Input Search Text'}
-            onSearch={onSearch}
-            style={{ width: 200 }}
-          />
-        </div>
-        <div className="table-header-right">
-          <CustomButton
-            islink={'true'}
-            href={`${pathame}/add`}
-            className=" flex items-center justify-center text-sm"
-          >
-            <PlusOutlined />
-          </CustomButton>
-        </div>
-      </div>
+      <TableHeader
+        onSearch={onSearch}
+        pathname={pathname}
+        placeholder={placeholder || ''}
+      />
+
       <div className="table-content">
         <Table
           columns={coloumn}
