@@ -14,9 +14,9 @@ export const SidebarMenu = {
     pathname: NAVIGATION_LINK.Dashboard,
   },
   charity: {
-    label: 'Charity',
+    label: 'Campaign',
     icon: DeploymentUnitOutlined,
-    pathname: NAVIGATION_LINK.CharityList,
+    pathname: NAVIGATION_LINK.CampaignList,
   },
   banner: {
     label: 'Banner',

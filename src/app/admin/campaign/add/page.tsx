@@ -1,7 +1,8 @@
 import React from 'react'
+import { FormAddCharity } from './campaign.element'
 
 const AdminCharityAdd = () => {
-  return <div>AdminCharityAdd</div>
+  return <FormAddCharity />
 }
 
 export default AdminCharityAdd

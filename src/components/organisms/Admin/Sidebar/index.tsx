@@ -45,7 +45,7 @@ const AdminSidebar: React.FC = () => {
 
   function setActiveMenu() {
     const item = findItemByPathname(menuItems, pathname)
-    setActivePathname([item.key])
+    setActivePathname([item?.key])
   }
   const onClick: MenuProps['onClick'] = (e) => {
     const keyItem = e.key

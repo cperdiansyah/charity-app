@@ -19,22 +19,22 @@ const Footer = () => {
               </p>
               <ul className="xs-social-list-v2">
                 <li>
-                  <a href="" className="color-facebook">
+                  <a href="#" className="color-facebook">
                     <i className="fa fa-facebook" />
                   </a>
                 </li>
                 <li>
-                  <a href="" className="color-twitter">
+                  <a href="#" className="color-twitter">
                     <i className="fa fa-twitter" />
                   </a>
                 </li>
                 <li>
-                  <a href="" className="color-dribbble">
+                  <a href="#" className="color-dribbble">
                     <i className="fa fa-dribbble" />
                   </a>
                 </li>
                 <li>
-                  <a href="" className="color-pinterest">
+                  <a href="#" className="color-pinterest">
                     <i className="fa fa-pinterest" />
                   </a>
                 </li>

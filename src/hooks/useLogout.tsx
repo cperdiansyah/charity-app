@@ -17,8 +17,7 @@ const useLogout = () => {
 
     try {
       const response = await logoutServices()
-      // onClose()
-
+      console.log(response)
       if ('status' in response) {
         notify('success', 'Logout successful', '', 'bottomRight')
         setTimeout(() => {
@@ -29,13 +28,20 @@ const useLogout = () => {
           // return router.refresh()
         }, 500)
       }
-    } catch (error) {
+    } catch (error: any) {
       const resError: IErrorResponse = _.get(error, 'error', {
         code: 400,
         message: '',
       })
       notify('error', resError.message, '', 'bottomRight')
-      setSpinnerLayout(false)
+      if (resError.code === 401 || resError.code === 403) {
+        setTimeout(() => {
+          router.push(NAVIGATION_LINK.Homepage)
+          setSpinnerLayout(false)
+        }, 1500)
+      } else {
+        setSpinnerLayout(false)
+      }
     }
   }
 

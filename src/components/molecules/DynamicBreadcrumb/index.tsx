@@ -4,6 +4,7 @@ import { Breadcrumb } from 'antd'
 import Navlink from 'components/atoms/Navlink'
 import { usePathname } from 'next/navigation'
 import { NAVIGATION_LINK } from 'utils/link'
+import { removeAdminPath } from 'helpers'
 
 export const DynamicBreadcrumbs = () => {
   const pathname = usePathname()
@@ -17,12 +18,7 @@ export const DynamicBreadcrumbs = () => {
     generateBreadcrumbItems(pathname)
   }, [pathname])
 
-  const removeAdminPath = (path: string) => {
-    const adminRegex = /^\/admin\/(.*)$/
-    const match = path.match(adminRegex)
-
-    return match ? '/' + match[1] : path
-  }
+  
 
   const generateBreadcrumbItems = (pathname: string) => {
     const clearPathname = removeAdminPath(pathname)
