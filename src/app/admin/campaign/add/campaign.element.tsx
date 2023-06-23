@@ -13,6 +13,9 @@ import {
   Row,
   Spin,
   Upload,
+  UploadFile,
+  UploadProps,
+  message,
 } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 
@@ -31,9 +34,13 @@ import { NAVIGATION_LINK } from 'utils/link'
 const { RangePicker } = DatePicker
 
 type mediaContentSource = 'url' | 'upload'
+export interface ICharityMedia {
+  content: string
+  content_type: 'image' | 'video'
+}
 
 const normFile = (e: any) => {
-  console.log('Upload event:', e)
+  // console.log('Upload event:', e)
   if (Array.isArray(e)) {
     return e
   }
@@ -49,6 +56,10 @@ const FormAddCharity = () => {
     useState<mediaContentSource>('url')
   const [draftChecked, setDraftChecked] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [uploadFileUrl, setUploadFileUrl] = useState([])
+  // const uploadFileUrl = useRef([''])
+
+  const [fileList, setFileList] = useState<UploadFile[]>()
 
   const editorEmptyLogic =
     editorValue.length === 0 ||
@@ -70,14 +81,29 @@ const FormAddCharity = () => {
   const handleResetForm = () => {
     form.resetFields()
     setEditorValue('')
+    setUploadFileUrl([])
   }
 
   const handlSubmit = async (values: any) => {
-    console.log(values)
     checkEditorValue()
+
+    // console.log(values)
 
     setLoading(true)
     try {
+      let media: ICharityMedia[] | undefined
+
+      if (values.media_source !== 'url') {
+        // mediaUrl = await uploadFileWithUrl(uploadFileUrl)
+      } else {
+        media = [
+          {
+            content: values.media.media_content,
+            content_type: 'image',
+          },
+        ]
+      }
+
       const dataCharity = {
         title: values.title,
         description: editorValue,
@@ -85,10 +111,10 @@ const FormAddCharity = () => {
         start_date: dayjs(values.dateCampaign[0]),
         end_date: dayjs(values.dateCampaign[1]),
         is_draft: values.draft,
+        media,
       }
 
       await api.post(SERVICE.charity, dataCharity)
-
       notify(
         'success',
         'Add Campaign Successful',
@@ -98,7 +124,15 @@ const FormAddCharity = () => {
       setTimeout(() => {
         return router.replace(NAVIGATION_LINK.CampaignList)
       }, 500)
-    } catch (error) {
+    } catch (error: any) {
+      console.error(error)
+      const errorResponse = error.response
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse.data.error.error.message || '',
+        'bottomRight'
+      )
       setLoading(false)
     }
   }
@@ -113,30 +147,101 @@ const FormAddCharity = () => {
   }
 
   const radioChange = (e: RadioChangeEvent) => {
-    console.log('radio checked', e.target.value)
     setMediaContentSource(e.target.value)
   }
 
-  const uploadImageRequest = async (options?: any) => {
-    const { onSuccess, onError, file, onProgress } = options
-    try {
-      const fmData = new FormData()
-      const config = {
-        headers: { 'content-type': 'multipart/form-data' },
+  const uploadImageRequest = (options?: any) => {
+    setTimeout(async () => {
+      const { onSuccess, onError, file, onProgress } = options
+      try {
+        const fmData = new FormData()
+        const config = {
+          headers: { 'content-type': 'multipart/form-data' },
+        }
+        fmData.append('media_source', file)
+
+        const response = await api.post(SERVICE.uploadMediaTemp, fmData, config)
+        const fileUrl: any = response.data.url
+
+        // const newUrl = [...uploadFileUrl.current, fileUrl[0]]
+        const newUrl: any = [...uploadFileUrl, ...fileUrl]
+        // console.log(uploadFileUrl)
+        // console.log(newUrl)
+
+        // console.log(uploadFileUrl.length)
+        if (uploadFileUrl.length === 0) {
+          // uploadFileUrl = fileUrl
+          setUploadFileUrl(fileUrl)
+        } else {
+          // uploadFileUrl.push(fileUrl[0])
+          // uploadFileUrl.current = newUrl
+          setUploadFileUrl(newUrl)
+        }
+        onSuccess('Ok')
+      } catch (err) {
+        console.log('Eroor: ', err)
+        const error = new Error('Some error')
+        return onError({ err })
       }
-      fmData.append('media_source', file)
+    }, 500)
+  }
 
-      const response = await api.post(SERVICE.uploadMediaTemp, fmData, config)
+  const uploadFileWithUrl = async (urls: string[]) => {
+    try {
+      const res = await api.post(SERVICE.mediaUpload, {
+        urls: urls,
+      })
+      const result = res.data
 
-      console.log('server res: ', response)
-      onSuccess('Ok')
-    } catch (err) {
-      console.log('Eroor: ', err)
-      const error = new Error('Some error')
-      return onError({ err })
+      return result.uploadedUrls
+    } catch (error) {
+      notify('error', 'Something went wrong', '', 'bottomRight')
     }
   }
 
+  const handleChange: UploadProps['onChange'] = (info) => {
+    let newFileList = [...info.fileList]
+
+    // 1. Limit the number of uploaded files
+    // Only to show two recent uploaded files, and old ones will be replaced by the new
+    newFileList = newFileList.slice(-2)
+
+    // 2. Read from response and show file link
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url
+      }
+      return file
+    })
+
+    setFileList(newFileList)
+  }
+
+  // const props: UploadProps = {
+  //   name: 'files',
+  //   // fileList: { fileList },
+  //   // action="/upload.do"
+  //   // accept: 'image/*,video/*',
+  //   // customRequest: { uploadImageRequest },
+  //   onChange: { handleChange },
+
+  //   // name: 'file',
+  //   // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  //   // headers: {
+  //   //   authorization: 'authorization-text',
+  //   // },
+  //   // onChange(info) {
+  //   //   if (info.file.status !== 'uploading') {
+  //   //     console.log(info.file, info.fileList)
+  //   //   }
+  //   //   if (info.file.status === 'done') {
+  //   //     message.success(`${info.file.name} file uploaded successfully`)
+  //   //   } else if (info.file.status === 'error') {
+  //   //     message.error(`${info.file.name} file upload failed.`)
+  //   //   }
+  //   // },
+  // }
   return (
     <div className="form-add-charity-container">
       <Spin spinning={loading}>
@@ -205,7 +310,9 @@ const FormAddCharity = () => {
                   defaultValue={mediaContentSource}
                 >
                   <Radio value={'url'}>Url</Radio>
-                  <Radio value={'upload'}>Upload</Radio>
+                  <Radio value={'upload'} disabled>
+                    Upload
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
 
@@ -227,9 +334,10 @@ const FormAddCharity = () => {
 
                           {
                             pattern: new RegExp(
-                              /^(https?:\/\/)?[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)+(\/[a-zA-Z0-9-]+)*(\?[a-zA-Z0-9-]+)?$/
+                              /^\b((?:https?|ftp):\/\/[^\s/$.?#].[^\s]*)\.(?:jpg|jpeg|png|gif)\b/
                             ),
-                            message: 'Invalid URL',
+                            message:
+                              'Invalid URL or format specified (jpeg|jpeg|png|gif)',
                           },
                         ]}
                       >
@@ -243,26 +351,24 @@ const FormAddCharity = () => {
                       shouldUpdate={(prevValues, curValues) =>
                         prevValues.media_source !== curValues.media_source
                       }
-                      rules={[
-                        {
-                          required: true,
-                          message: 'Media Sources is required',
-                        },
-                      ]}
                     >
                       <Form.Item
                         name="media_content_upload"
                         valuePropName="fileList"
                         getValueFromEvent={normFile}
                         noStyle
+                        rules={[
+                          {
+                            required: true,
+                            message: 'Media Content is required',
+                          },
+                        ]}
                       >
                         <Upload.Dragger
-                          name="files"
-                          // action="/upload.do"
                           accept="image/*,video/*"
                           customRequest={uploadImageRequest}
-                          multiple
-                          maxCount={3}
+                          onChange={handleChange}
+                          fileList={uploadFileUrl}
                         >
                           <p className="ant-upload-drag-icon">
                             <InboxOutlined />

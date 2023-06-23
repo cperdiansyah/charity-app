@@ -38,29 +38,6 @@ api.interceptors.response.use(
   }
 )
 
-// api.interceptors.request.use(
-//   async function (config) {
-//     let newConfig = config
-//     // const token = await Storage.get({
-//     //   key: REACT_APP_APP_NAME + '.auth_token',
-//     // })
-//     newConfig.headers['x-auth-token'] = token.value
-//     return newConfig
-//   },
-//   function (error) {
-//     return Promise.reject(error)
-//   }
-// )
-
-// api.interceptors.response.use(
-//   function (response) {
-//     return response
-//   },
-//   function (error) {
-//     return Promise.reject(error)
-//   }
-// )
-
 export async function clientRefreshToken(
   isAnonymousToken: boolean = false
 ): Promise<responseRefreshToken> {

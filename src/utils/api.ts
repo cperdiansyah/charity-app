@@ -15,6 +15,7 @@ export const SERVICE = {
   charity: '/api/v1/charity',
   detailCharity: '/api/v1/charity/:id',
   acceptCharity: '/api/v1/charity/:id/status',
+  mediaUpload: '/api/v1/charity/upload',
 }
 
 export const BASE_HEADERS = {
