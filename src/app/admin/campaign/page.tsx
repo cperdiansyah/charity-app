@@ -60,7 +60,11 @@ const columns: ColumnsType<any> = [
 const AdminCharity = async () => {
   const init = async () => {
     const dataCharity = await getCharityClient()
-    return dataCharity.charity
+    const result = {
+      data: dataCharity.charity,
+      meta: dataCharity.meta,
+    }
+    return result
   }
 
   return (

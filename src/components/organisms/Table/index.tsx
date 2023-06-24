@@ -1,9 +1,8 @@
 import _ from 'lodash'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { FilterValue, SorterResult } from 'antd/es/table/interface'
-
 
 import { ICustomTable, TableParams } from './table.interface'
 import { usePathname } from 'next/navigation'
@@ -25,8 +24,9 @@ const CustomTable: React.FC<ICustomTable> = ({
     pagination: {
       current: 1,
       pageSize: 10,
+      showSizeChanger: true,
       pageSizeOptions: ['10', '20', '50', '100'],
-      // showTotal
+      showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
     },
   })
 
@@ -45,17 +45,31 @@ const CustomTable: React.FC<ICustomTable> = ({
 
   useEffect(() => {
     if (!loading) {
-      getData()
+      console.log('useEffect')
+      MemoGetData()
     }
   }, [])
 
-  const getData = async () => {
-    setLoading(true)
+  const MemoGetData = useCallback(async () => {
+    return await getData()
+  }, [])
+
+  async function getData() {
     try {
+      setLoading(true)
       const tableData = await init()
-      // console.log(tableData)
       if (!_.isEmpty(tableData)) {
-        setData(tableData)
+        // console.log(tableData)
+        setData(tableData.data)
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            current: tableData.meta.page,
+            pageSize: tableData.meta.rows,
+            total: tableData.meta.total,
+          },
+        })
       } else {
         setData([])
       }
@@ -86,10 +100,12 @@ const CustomTable: React.FC<ICustomTable> = ({
       setData([])
     }
   }
+
   const onSearch: any = (value: string) => {
     console.log(value)
     return data
   }
+
   return (
     <div className="table-container">
       <TableHeader
@@ -112,5 +128,4 @@ const CustomTable: React.FC<ICustomTable> = ({
     </div>
   )
 }
-
-export default CustomTable
+export default React.memo(CustomTable)

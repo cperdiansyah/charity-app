@@ -1,5 +1,4 @@
 'use client'
-
 import {
   Button,
   Descriptions,
@@ -78,17 +77,21 @@ function getColumns(showModal: any) {
   ]
 }
 
+// const MemoizeCustomTable = React.memo(CustomTable)
+const MemoizeModalTable = React.memo(ModalTable)
+
 const AdminBanner = () => {
   const [visible, setVisible] = useState(false)
   const [bannerData, setBannerData] = useState<any>()
 
-  useEffect(() => {
-    init()
-  }, [])
-
   const init = async () => {
     const dataBanner = await getBannerClient()
-    return dataBanner.banner
+
+    const result = {
+      data: dataBanner.banner,
+      meta: dataBanner.meta,
+    }
+    return result
   }
   const showModal = (record: any) => {
     setBannerData(record)
@@ -97,8 +100,9 @@ const AdminBanner = () => {
 
   return (
     <div>
+      {/* <CustomTable columns={getColumns(showModal)} init={init} /> */}
       <CustomTable columns={getColumns(showModal)} init={init} />
-      <ModalTable
+      <MemoizeModalTable
         open={visible}
         setOpen={setVisible}
         data={bannerData}
@@ -115,7 +119,7 @@ interface IModalTable extends ModalFuncProps {
   setData?: any
 }
 
-const ModalTable = (props: IModalTable) => {
+function ModalTable(props: IModalTable) {
   if (props?.data === undefined) return <></>
 
   const handleCancel = (e: any) => {
