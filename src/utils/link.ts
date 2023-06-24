@@ -5,7 +5,10 @@ const AdminLink = {
   CampaignList: '/admin/campaign',
   CampaignAdd: '/admin/campaign/add',
   CampaignEdit: '/admin/campaign/edit/:id',
-  
+  // Banner
+  BannerList: '/admin/banner',
+  BannerAdd: '/admin/banner/add',
+  BannerEdit: '/admin/banner/edit/:id',
 }
 
 export const NAVIGATION_LINK = {

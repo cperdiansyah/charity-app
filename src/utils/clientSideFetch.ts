@@ -1,7 +1,6 @@
 import nookies from 'nookies'
 import axios from 'axios'
 import _ from 'lodash'
-
 import { BASE_HEADERS, SERVICE } from './api'
 import { responseRefreshToken } from './utils.interface'
 
@@ -22,14 +21,14 @@ api.interceptors.response.use(
       originalRequest._retry = true
 
       try {
-        const refreshedToken = await clientRefreshToken()
+        const refreshedToken: any = await clientRefreshToken()
 
         // Retry the original request with the new access token
         originalRequest.headers['Authorization'] = `Bearer ${refreshedToken}`
         return api(originalRequest)
-      } catch (refreshError) {
+      } catch (refreshError: any) {
         // Handle the error when refreshing the token
-        console.error('Token refresh error:', refreshError)
+
         throw refreshError
       }
     }
@@ -38,29 +37,6 @@ api.interceptors.response.use(
     return Promise.reject(error)
   }
 )
-
-// api.interceptors.request.use(
-//   async function (config) {
-//     let newConfig = config
-//     // const token = await Storage.get({
-//     //   key: REACT_APP_APP_NAME + '.auth_token',
-//     // })
-//     newConfig.headers['x-auth-token'] = token.value
-//     return newConfig
-//   },
-//   function (error) {
-//     return Promise.reject(error)
-//   }
-// )
-
-// api.interceptors.response.use(
-//   function (response) {
-//     return response
-//   },
-//   function (error) {
-//     return Promise.reject(error)
-//   }
-// )
 
 export async function clientRefreshToken(
   isAnonymousToken: boolean = false
@@ -71,15 +47,13 @@ export async function clientRefreshToken(
     })
 
     const dataRefreshToken = _.get(resRefresh, 'data')
-    // console.log(dataRefreshToken)
+
     nookies.destroy(null, 'token')
     nookies.set(null, 'token', dataRefreshToken.accessToken, {
       path: '/',
     })
     return dataRefreshToken.accessToken
   } catch (error: any) {
-    console.error(error)
-
-    return error
+    return Promise.reject(error)
   }
 }

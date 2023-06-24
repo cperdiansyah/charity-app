@@ -8,6 +8,6 @@ export const getCharityClient = async () => {
     const dataCharity = _.get(resCharity, 'data')
     return dataCharity
   } catch (error) {
-    return error
+    return Promise.reject(error)
   }
 }

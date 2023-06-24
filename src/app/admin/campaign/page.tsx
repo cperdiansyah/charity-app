@@ -22,7 +22,7 @@ const columns: ColumnsType<any> = [
     title: 'Donation Target',
     dataIndex: 'donation_target',
     key: 'donation_target',
-    
+
     render: (data) => `Rp. ${currencyFormat(data)}`,
   },
   // {
@@ -56,11 +56,6 @@ const columns: ColumnsType<any> = [
     ),
   },
 ]
-
-interface ICharityResponse {
-  charity: any
-  meta: any
-}
 
 const AdminCharity = async () => {
   const init = async () => {
