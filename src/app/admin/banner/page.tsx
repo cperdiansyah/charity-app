@@ -16,6 +16,7 @@ import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
 
 import CustomTable from 'components/organisms/Table'
 import { getBannerClient } from 'services/banner/clientService'
+import useUpdated from 'hooks/useUpdated'
 
 function getColumns(showModal: any) {
   return [
@@ -97,7 +98,12 @@ const AdminBanner = () => {
   return (
     <div>
       <CustomTable columns={getColumns(showModal)} init={init} />
-      <ModalTable open={visible} setOpen={setVisible} data={bannerData} />
+      <ModalTable
+        open={visible}
+        setOpen={setVisible}
+        data={bannerData}
+        setData={setBannerData}
+      />
     </div>
   )
 }
@@ -106,6 +112,7 @@ interface IModalTable extends ModalFuncProps {
   open: boolean
   setOpen?: Dispatch<SetStateAction<boolean>>
   data: any
+  setData?: any
 }
 
 const ModalTable = (props: IModalTable) => {
@@ -116,10 +123,22 @@ const ModalTable = (props: IModalTable) => {
     if (props?.setOpen) props?.setOpen(false)
   }
 
+  const resetData = (e?: any) => {
+    setTimeout(() => {
+      if (props?.setData) props?.setData()
+    }, 500)
+  }
+
   const { status, end_date } = props?.data
   const isStatusActive = dayjs(end_date) > dayjs() && status === 'active'
   const color = isStatusActive ? 'green' : 'volcano'
   const text = isStatusActive ? 'ACTIVE' : 'INACTIVE'
+
+  useUpdated(() => {
+    if (!props.open) {
+      resetData()
+    }
+  }, [props.open])
 
   return (
     <Modal
@@ -135,7 +154,7 @@ const ModalTable = (props: IModalTable) => {
         </Descriptions.Item>
         <Descriptions.Item label="Image" span={24}>
           <Image
-           src={props.data.image}
+            src={props?.data?.image}
             alt={props?.data?.title}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
@@ -144,14 +163,14 @@ const ModalTable = (props: IModalTable) => {
           <Tag color={color}>{text}</Tag>
         </Descriptions.Item>
         <Descriptions.Item label="Start Date" span={24}>
-          {dayjs(props.data.start_date).format('DD MMMM YYYY')}
+          {dayjs(props?.data?.start_date).format('DD MMMM YYYY')}
         </Descriptions.Item>
         <Descriptions.Item label="End Date" span={24}>
-          {dayjs(props.data.end_date).format('DD MMMM YYYY')}
+          {dayjs(props?.data?.end_date).format('DD MMMM YYYY')}
         </Descriptions.Item>
         <Descriptions.Item label="Redirection Link" span={24}>
-          <Link href={props.data.redirection_link}>
-            {props.data.redirection_link}
+          <Link href={props?.data?.redirection_link}>
+            {props?.data?.redirection_link}
           </Link>
         </Descriptions.Item>
       </Descriptions>
