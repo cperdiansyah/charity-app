@@ -1,6 +1,7 @@
 // import { FormContextProps } from "antd/es/form/context"
 
 import { FormProps } from 'antd'
+import dayjs, { Dayjs } from 'dayjs'
 
 export type mediaContentSource = 'url' | 'upload'
 
@@ -18,8 +19,8 @@ export interface initialValue {
   media: {
     media_content: string
   }
-  status: 'active' | 'inactive'
-  dateBanner: string[]
+  status: boolean
+  dateBanner?: string[] | Dayjs[]
 }
 
 export interface IFormAddBanner {}

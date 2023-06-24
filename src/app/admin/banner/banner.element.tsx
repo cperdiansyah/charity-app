@@ -32,6 +32,7 @@ import {
 } from './banner.interface'
 
 const { RangePicker } = DatePicker
+const dateFormat = 'DD/MM/YYYY'
 
 export const FormAddBanner = (props: IFormAddBanner) => {
   const [form] = Form.useForm()
@@ -87,6 +88,7 @@ export const FormEditBanner = (props: IFormAddBanner) => {
   const [form] = Form.useForm()
   const router = useRouter()
   const params = useParams()
+  const { id: idBanner } = params
 
   const [loading, setLoading] = useState(false)
   const [bannerValue, setBannerValue] = useState<initialValue>()
@@ -98,7 +100,23 @@ export const FormEditBanner = (props: IFormAddBanner) => {
   const getBannerData = async () => {
     setLoading(true)
     try {
-      console.log(params)
+      const resBanner = await api.get(`${SERVICE.banner}/${idBanner}`)
+      const dataBanner = resBanner.data.banner
+
+      const initialValue = {
+        title: dataBanner?.title,
+        status: dataBanner?.status === 'active' ? true : false,
+        redirection_link: dataBanner?.redirection_link,
+        media: {
+          media_content: dataBanner?.image,
+        },
+        dateBanner: [
+          dayjs(dataBanner?.start_date),
+          dayjs(dataBanner?.end_date),
+        ],
+      }
+      setBannerValue(initialValue)
+
       setLoading(false)
     } catch (error: any) {
       console.error(error)
@@ -124,11 +142,12 @@ export const FormEditBanner = (props: IFormAddBanner) => {
         status: values.status ? 'active' : 'inactive',
         image: values?.media?.media_content,
       }
-      await api.post(SERVICE.createBanner, dataBanner)
+
+      await api.patch(`${SERVICE.banner}/${idBanner}`, dataBanner)
       notify(
         'success',
-        'Add Banner Successful',
-        'banner created successfully',
+        'Update Banner Successful',
+        'banner updated successfully',
         'bottomRight'
       )
       setTimeout(() => {
@@ -153,6 +172,7 @@ export const FormEditBanner = (props: IFormAddBanner) => {
       loading={loading}
       onFinish={handlSubmit}
       buttonSubmitText="Update"
+      initialValue={bannerValue}
     />
   )
 }
@@ -162,6 +182,13 @@ export const FormBanner = (props: IFormBanner) => {
     useState<mediaContentSource>('url')
   const [imageUrl, setImageUrl] = useState('')
 
+  useEffect(() => {
+    if (props.initialValue) {
+      props.form.setFieldsValue(props.initialValue)
+      setImageUrl(props.initialValue.media.media_content)
+    }
+  }, [props.initialValue])
+
   const handleImageUrl = debounce((event) => {
     setImageUrl(event.target.value)
   }, 2000)
@@ -169,6 +196,7 @@ export const FormBanner = (props: IFormBanner) => {
   const radioChange = (e: RadioChangeEvent) => {
     setMediaContentSource(e.target.value)
   }
+
   return (
     <div className="form-add-banner-container">
       <Spin spinning={props.loading}>
@@ -233,7 +261,7 @@ export const FormBanner = (props: IFormBanner) => {
                   { required: true, message: 'Banner Duration is required' },
                 ]}
               >
-                <RangePicker disabledDate={disabledDate} />
+                <RangePicker disabledDate={disabledDate} format={dateFormat} />
               </Form.Item>
             </Col>
             {/* Image */}
