@@ -3,8 +3,8 @@ import {
   Col,
   DatePicker,
   Form,
+  Image,
   Input,
-  InputNumber,
   Radio,
   RadioChangeEvent,
   Row,
@@ -12,14 +12,18 @@ import {
   Switch,
 } from 'antd'
 import React, { useState } from 'react'
+import _, { debounce } from 'lodash'
+
 import { useRouter } from 'next/navigation'
-import { disabledDate } from 'utils/disableDate'
-import CustomButton from 'components/atoms/Button'
-import { notify } from 'helpers/notify'
 import dayjs from 'dayjs'
+
+import { notify } from 'helpers/notify'
+import { disabledDate } from 'utils/disableDate'
 import { api } from 'utils/clientSideFetch'
 import { SERVICE } from 'utils/api'
 import { NAVIGATION_LINK } from 'utils/link'
+
+import CustomButton from 'components/atoms/Button'
 
 const { RangePicker } = DatePicker
 
@@ -32,6 +36,7 @@ export const FormAddBanner = () => {
   const [loading, setLoading] = useState(false)
   const [mediaContentSource, setMediaContentSource] =
     useState<mediaContentSource>('url')
+  const [imageUrl, setImageUrl] = useState('')
 
   const radioChange = (e: RadioChangeEvent) => {
     setMediaContentSource(e.target.value)
@@ -45,6 +50,7 @@ export const FormAddBanner = () => {
         end_date: dayjs(values.dateBanner[1]),
         redirection_link: values.redirection_link,
         status: values.status ? 'active' : 'inactive',
+        image: values?.media?.media_content,
       }
       await api.post(SERVICE.createBanner, dataBanner)
       notify(
@@ -68,6 +74,10 @@ export const FormAddBanner = () => {
       setLoading(false)
     }
   }
+
+  const handleImageUrl = debounce((event) => {
+    setImageUrl(event.target.value)
+  }, 2000)
 
   return (
     <div className="form-add-banner-container">
@@ -162,28 +172,47 @@ export const FormAddBanner = () => {
                   const mediaSources = form.getFieldValue('media_source')
                   if (mediaSources === 'url') {
                     return (
-                      <Form.Item
-                        name="media_content"
-                        shouldUpdate={(prevValues, curValues) =>
-                          prevValues.media_source !== curValues.media_source
-                        }
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Media Sources is required',
-                          },
+                      <>
+                        <Form.Item
+                          name="media_content"
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.media_source !== curValues.media_source
+                          }
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Media Sources is required',
+                            },
 
-                          {
-                            pattern: new RegExp(
-                              /^\b((?:https?|ftp):\/\/[^\s/$.?#].[^\s]*)\.(?:jpg|jpeg|png|gif)\b/
-                            ),
-                            message:
-                              'Invalid URL or format specified (jpeg|jpeg|png|gif)',
-                          },
-                        ]}
-                      >
-                        <Input placeholder="https://example.com/media.jpeg" />
-                      </Form.Item>
+                            {
+                              pattern: new RegExp(
+                                /^\b((?:https?|ftp):\/\/[^\s/$.?#].[^\s]*)\.(?:jpg|jpeg|png|gif)\b/
+                              ),
+                              message:
+                                'Invalid URL or format specified (jpeg|jpeg|png|gif)',
+                            },
+                          ]}
+                        >
+                          <Input
+                            placeholder="https://example.com/media.jpeg"
+                            onChange={handleImageUrl}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="media_content_preview"
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.media_content !== curValues.media_content
+                          }
+                        >
+                          <Image
+                            width={300}
+                            src={
+                              imageUrl ||
+                              'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'
+                            }
+                          />
+                        </Form.Item>
+                      </>
                     )
                   }
                   return (
