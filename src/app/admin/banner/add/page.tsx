@@ -1,7 +1,8 @@
 import React from 'react'
+import { FormAddBanner } from '../banner.element'
 
 const AdminAddBanner = () => {
-  return <div>AdminAddBanner</div>
+  return <FormAddBanner />
 }
 
 export default AdminAddBanner

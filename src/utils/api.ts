@@ -19,6 +19,7 @@ export const SERVICE = {
 
   // Banner
   banner: '/api/v1/banner',
+  createBanner: '/api/v1/banner/create',
   detailBanner: '/api/v1/banner/:id',
   // acceptBanner: '/api/v1/banner/:id/status',
 }
