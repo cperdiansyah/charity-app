@@ -1,7 +1,7 @@
 import React from 'react'
 
-const AddBanner = () => {
-  return <div>AddBanner</div>
+const AdminAddBanner = () => {
+  return <div>AdminAddBanner</div>
 }
 
-export default AddBanner
+export default AdminAddBanner

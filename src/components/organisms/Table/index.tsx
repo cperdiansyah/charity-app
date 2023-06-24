@@ -1,73 +1,17 @@
 import _ from 'lodash'
 import React, { useState, useEffect } from 'react'
-import { Table, Input } from 'antd'
-import { PlusOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import { Table } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { FilterValue, SorterResult } from 'antd/es/table/interface'
-import Column from 'antd/es/table/Column'
 
-import CustomButton from 'components/atoms/Button'
 
 import { ICustomTable, TableParams } from './table.interface'
 import { usePathname } from 'next/navigation'
 import useLogoutSessionExpired from 'hooks/useLogoutSessionExpired'
 import TableHeader from './tableHeader'
 
-const { Search } = Input
-
-// const columns: ColumnsType<DataType> = [
-//   {
-//     title: 'Name',
-//     dataIndex: 'name',
-//     key: 'name',
-//     render: (text) => <a>{text}</a>,
-//   },
-//   {
-//     title: 'Age',
-//     dataIndex: 'age',
-//     key: 'age',
-//   },
-//   {
-//     title: 'Address',
-//     dataIndex: 'address',
-//     key: 'address',
-//   },
-//   {
-//     title: 'Tags',
-//     key: 'tags',
-//     dataIndex: 'tags',
-//     render: (_, { tags }) => (
-//       <>
-//         {tags.map((tag) => {
-//           let color = tag.length > 5 ? 'geekblue' : 'green'
-//           if (tag === 'loser') {
-//             color = 'volcano'
-//           }
-//           return (
-//             <Tag color={color} key={tag}>
-//               {tag.toUpperCase()}
-//             </Tag>
-//           )
-//         })}
-//       </>
-//     ),
-//   },
-//   {
-//     title: 'Action',
-//     key: 'action',
-//     render: (_, record) => (
-//       <Space size="middle">
-//         <a>Invite {record.name}</a>
-//         <a>Delete</a>
-//       </Space>
-//     ),
-//   },
-// ]
-
 const CustomTable: React.FC<ICustomTable> = ({
   columns,
-  // datasources,
-  // loading,
   init,
   placeholder,
 }) => {
