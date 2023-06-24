@@ -169,7 +169,7 @@ const ModalTable = (props: IModalTable) => {
           {dayjs(props?.data?.end_date).format('DD MMMM YYYY')}
         </Descriptions.Item>
         <Descriptions.Item label="Redirection Link" span={24}>
-          <Link href={props?.data?.redirection_link}>
+          <Link href={props?.data?.redirection_link} target="_blank">
             {props?.data?.redirection_link}
           </Link>
         </Descriptions.Item>
