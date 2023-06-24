@@ -11,10 +11,10 @@ import {
   Spin,
   Switch,
 } from 'antd'
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import _, { debounce } from 'lodash'
 
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
 import dayjs from 'dayjs'
 
 import { notify } from 'helpers/notify'
@@ -24,24 +24,22 @@ import { SERVICE } from 'utils/api'
 import { NAVIGATION_LINK } from 'utils/link'
 
 import CustomButton from 'components/atoms/Button'
+import {
+  IFormAddBanner,
+  IFormBanner,
+  initialValue,
+  mediaContentSource,
+} from './banner.interface'
 
 const { RangePicker } = DatePicker
 
-type mediaContentSource = 'url' | 'upload'
-
-export const FormAddBanner = () => {
+export const FormAddBanner = (props: IFormAddBanner) => {
   const [form] = Form.useForm()
   const router = useRouter()
 
   const [loading, setLoading] = useState(false)
-  const [mediaContentSource, setMediaContentSource] =
-    useState<mediaContentSource>('url')
-  const [imageUrl, setImageUrl] = useState('')
 
-  const radioChange = (e: RadioChangeEvent) => {
-    setMediaContentSource(e.target.value)
-  }
-  const handlSubmit = async (values: any) => {
+  const handlSubmit: any = async (values: any) => {
     setLoading(true)
     try {
       const dataBanner = {
@@ -75,20 +73,114 @@ export const FormAddBanner = () => {
     }
   }
 
+  return (
+    <FormBanner
+      form={form}
+      loading={loading}
+      onFinish={handlSubmit}
+      buttonSubmitText="Save"
+    />
+  )
+}
+
+export const FormEditBanner = (props: IFormAddBanner) => {
+  const [form] = Form.useForm()
+  const router = useRouter()
+  const params = useParams()
+
+  const [loading, setLoading] = useState(false)
+  const [bannerValue, setBannerValue] = useState<initialValue>()
+
+  useEffect(() => {
+    getBannerData()
+  }, [])
+
+  const getBannerData = async () => {
+    setLoading(true)
+    try {
+      console.log(params)
+      setLoading(false)
+    } catch (error: any) {
+      console.error(error)
+      const errorResponse = error.response
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse?.data?.error?.error?.message || '',
+        'bottomRight'
+      )
+      setLoading(false)
+    }
+  }
+
+  const handlSubmit: any = async (values: any) => {
+    setLoading(true)
+    try {
+      const dataBanner = {
+        title: values.title,
+        start_date: dayjs(values.dateBanner[0]),
+        end_date: dayjs(values.dateBanner[1]),
+        redirection_link: values.redirection_link,
+        status: values.status ? 'active' : 'inactive',
+        image: values?.media?.media_content,
+      }
+      await api.post(SERVICE.createBanner, dataBanner)
+      notify(
+        'success',
+        'Add Banner Successful',
+        'banner created successfully',
+        'bottomRight'
+      )
+      setTimeout(() => {
+        return router.replace(NAVIGATION_LINK.BannerList)
+      }, 500)
+    } catch (error: any) {
+      console.error(error)
+      const errorResponse = error.response
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse?.data?.error?.error?.message || '',
+        'bottomRight'
+      )
+      setLoading(false)
+    }
+  }
+
+  return (
+    <FormBanner
+      form={form}
+      loading={loading}
+      onFinish={handlSubmit}
+      buttonSubmitText="Update"
+    />
+  )
+}
+
+export const FormBanner = (props: IFormBanner) => {
+  const [mediaContentSource, setMediaContentSource] =
+    useState<mediaContentSource>('url')
+  const [imageUrl, setImageUrl] = useState('')
+
   const handleImageUrl = debounce((event) => {
     setImageUrl(event.target.value)
   }, 2000)
 
+  const radioChange = (e: RadioChangeEvent) => {
+    setMediaContentSource(e.target.value)
+  }
   return (
     <div className="form-add-banner-container">
-      <Spin spinning={loading}>
+      <Spin spinning={props.loading}>
         <Form
-          form={form}
-          onFinish={handlSubmit}
+          form={props.form}
+          onFinish={props.onFinish}
           scrollToFirstError
           layout="vertical"
+          initialValues={props.initialValue}
         >
           <Row gutter={24}>
+            {/* Banner Content */}
             <Col span={12}>
               <Form.Item
                 name="title"
@@ -144,7 +236,7 @@ export const FormAddBanner = () => {
                 <RangePicker disabledDate={disabledDate} />
               </Form.Item>
             </Col>
-            {/* Image Campaign */}
+            {/* Image */}
             <Col span={12}>
               <p className="text-left text-lg font-medium">Media</p>
               <Form.Item
@@ -169,7 +261,7 @@ export const FormAddBanner = () => {
 
               <Form.List name="media">
                 {(fields, { add, remove }, { errors }) => {
-                  const mediaSources = form.getFieldValue('media_source')
+                  const mediaSources = props.form.getFieldValue('media_source')
                   if (mediaSources === 'url') {
                     return (
                       <>
@@ -262,7 +354,7 @@ export const FormAddBanner = () => {
                 buttontype="primary"
                 className="mt-2 !rounded-lg"
               >
-                Save
+                {props.buttonSubmitText || 'Save'}
               </CustomButton>
             </Form.Item>
           </Row>
