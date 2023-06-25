@@ -6,7 +6,7 @@ import { IErrorResponse } from 'services/auth/index.interface'
 import useSpinnerLayout from 'stores/spinnerLayout'
 import { NAVIGATION_LINK } from 'utils/link'
 
-const useLogout = () => {
+const useLogoutSessionExpired = () => {
   const router = useRouter()
   const pathname = usePathname()
 
@@ -19,7 +19,7 @@ const useLogout = () => {
       const response = await logoutServices()
       // console.log(response)
       if ('status' in response) {
-        notify('success', 'Logout successful', '', 'bottomRight')
+        notify('error', 'Session Expired', '', 'bottomRight')
         setTimeout(() => {
           if (pathname !== NAVIGATION_LINK.Homepage)
             router.push(NAVIGATION_LINK.Homepage)
@@ -48,4 +48,4 @@ const useLogout = () => {
   return logout
 }
 
-export default useLogout
+export default useLogoutSessionExpired

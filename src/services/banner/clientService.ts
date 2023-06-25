@@ -2,18 +2,18 @@ import _ from 'lodash'
 import { SERVICE } from 'utils/api'
 import { api } from 'utils/clientSideFetch'
 
-interface IGetCharityQuery {
+interface IGetBannersQuery {
   page?: number | string
   rows?: number | string
 }
 
-export const getCharityClient = async (query?: IGetCharityQuery) => {
+export const getBannerClient = async (query?: IGetBannersQuery) => {
   try {
-    const resCharity = await api.get(SERVICE.charity, {
+    const resBanner = await api.get(SERVICE.banner, {
       params: query,
     })
-    const dataCharity = _.get(resCharity, 'data')
-    return dataCharity
+    const dataBanner = _.get(resBanner, 'data')
+    return dataBanner
   } catch (error) {
     return Promise.reject(error)
   }

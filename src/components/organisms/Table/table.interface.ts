@@ -2,7 +2,7 @@ import { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { FilterValue } from 'antd/es/table/interface'
 
 export interface ICustomTable {
-  columns: ColumnsType<any>
+  columns: ColumnsType<any> | any
   datasources?: any[]
   init: Function
   loading?: boolean

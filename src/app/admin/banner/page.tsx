@@ -1,22 +1,24 @@
 'use client'
-import { Button, Descriptions, Image, Modal, Space, Tag, Tooltip } from 'antd'
+import {
+  Button,
+  Descriptions,
+  Modal,
+  ModalFuncProps,
+  Image,
+  Tag,
+  Tooltip,
+} from 'antd'
 import dayjs from 'dayjs'
-import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import React, { useState } from 'react'
+import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { useSearchParams } from 'next/navigation'
 
-/* Component */
 import CustomTable from 'components/organisms/Table'
-
-/* Utils */
-import { currencyFormat } from 'helpers'
-import { getCharityClient } from 'services/charity/clientService'
-import { NAVIGATION_LINK } from 'utils/link'
-import { CAMPAIGN_STATUS_WITH_COLORS } from './campaign'
+import { getBannerClient } from 'services/banner/clientService'
 import useUpdated from 'hooks/useUpdated'
-import { IModalTable } from './campaign.interfce'
-import _ from 'lodash'
+import { IModalTable } from './banner.interface'
+import { NAVIGATION_LINK } from 'utils/link'
 
 function getColumns(showModal: any) {
   return [
@@ -24,42 +26,18 @@ function getColumns(showModal: any) {
       dataIndex: 'title',
       key: 'title',
       title: 'Title',
-      width: 250,
     },
     {
       title: 'Status',
       key: 'status',
-      width: 100,
       render: (value: any) => {
         const { status, end_date } = value
-        const isCampaignStillRunning = dayjs(end_date) > dayjs()
+        const isStatusActive = dayjs(end_date) > dayjs() && status === 'active'
+        const color = isStatusActive ? 'green' : 'volcano'
+        const text = isStatusActive ? 'ACTIVE' : 'INACTIVE'
 
-        let campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
-          (item) => item.label === status
-        )
-
-        if (campaignStatus) {
-          if (!isCampaignStillRunning) {
-            campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
-              (item) => item.label === 'completed'
-            )
-          }
-          return (
-            <Tag color={campaignStatus?.color}>
-              {campaignStatus?.status.toUpperCase()}
-            </Tag>
-          )
-        }
-
-        return <Tag color="default">{status.toUpperCase()}</Tag>
+        return <Tag color={color}>{text}</Tag>
       },
-    },
-    {
-      title: 'Donation Target',
-      dataIndex: 'donation_target',
-      key: 'donation_target',
-
-      render: (data: number) => `Rp. ${currencyFormat(data)}`,
     },
     {
       title: 'Start Date',
@@ -75,15 +53,16 @@ function getColumns(showModal: any) {
     },
     {
       title: 'Action',
-      key: 'action',
+      key: 'operation',
       fixed: 'right',
       width: 150,
+
       render: (value: any, record: any) => {
         return (
           <div className="flex items-center">
             <Tooltip placement="bottomRight" title="Edit Banner">
               <Link
-                href={`${NAVIGATION_LINK.CampaignEdit}${value._id}`}
+                href={`${NAVIGATION_LINK.BannerEdit}${value._id}`}
                 className="px-3 py-2"
               >
                 <EditOutlined />
@@ -106,40 +85,43 @@ function getColumns(showModal: any) {
 
 const MemoizeModalTable = React.memo(ModalTable)
 
-const AdminCharity = () => {
+const AdminBanner = () => {
   const searchParams = useSearchParams()
-  const [visible, setVisible] = useState<boolean>(false)
-  const [chairtyData, setCharityData] = useState<any>({})
+  const [visible, setVisible] = useState(false)
+  const [bannerData, setBannerData] = useState<any>()
 
   const current = searchParams.get('current')
   const pageSize = searchParams.get('pageSize')
+
   const queryParams = {
     page: current || 1,
     rows: pageSize || 10,
   }
 
   const init = async () => {
-    const dataCharity = await getCharityClient(queryParams)
+    const dataBanner = await getBannerClient(queryParams)
+
     const result = {
-      data: dataCharity.charity,
-      meta: dataCharity.meta,
+      data: dataBanner.banner,
+      meta: dataBanner.meta,
     }
     return result
   }
 
   const showModal = (record: any) => {
-    setCharityData(record)
+    setBannerData(record)
     setVisible(true)
   }
 
   return (
     <div>
+      {/* <CustomTable columns={getColumns(showModal)} init={init} /> */}
       <CustomTable columns={getColumns(showModal)} init={init} />
       <MemoizeModalTable
         open={visible}
         setOpen={setVisible}
-        data={chairtyData}
-        setData={setCharityData}
+        data={bannerData}
+        setData={setBannerData}
       />
     </div>
   )
@@ -159,25 +141,16 @@ function ModalTable(props: IModalTable) {
     }, 500)
   }
 
+  const { status, end_date } = props?.data
+  const isStatusActive = dayjs(end_date) > dayjs() && status === 'active'
+  const color = isStatusActive ? 'green' : 'volcano'
+  const text = isStatusActive ? 'ACTIVE' : 'INACTIVE'
+
   useUpdated(() => {
     if (!props.open) {
       resetData()
     }
   }, [props.open])
-
-  /* Status */
-  const { status, end_date } = props?.data
-  const isCampaignStillRunning = dayjs(end_date) > dayjs()
-  let campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
-    (item) => item.label === status
-  )
-  if (campaignStatus) {
-    if (!isCampaignStillRunning) {
-      campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
-        (item) => item.label === 'completed'
-      )
-    }
-  }
 
   return (
     <Modal
@@ -187,50 +160,34 @@ function ModalTable(props: IModalTable) {
       closable={true}
       maskClosable={true}
     >
-      {/* <Button>Detail</Button> */}
       <Descriptions bordered className="mt-4">
         <Descriptions.Item label="Title" span={24}>
           {props?.data?.title}
         </Descriptions.Item>
         <Descriptions.Item label="Image" span={24}>
           <Image
-            src={_.get(props?.data, 'media[0].content')}
+            src={props?.data?.image}
             alt={props?.data?.title}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Descriptions.Item>
-        <Descriptions.Item label="Donation Target" span={24}>
-          {`Rp. ${currencyFormat(props?.data?.donation_target)}`}
-        </Descriptions.Item>
         <Descriptions.Item label="Status" span={24}>
-          {campaignStatus ? (
-            <Tag color={campaignStatus?.color}>
-              {campaignStatus?.status?.toUpperCase()}
-            </Tag>
-          ) : (
-            <Tag color="default">{status?.toUpperCase()}</Tag>
-          )}
+          <Tag color={color}>{text}</Tag>
         </Descriptions.Item>
-
         <Descriptions.Item label="Start Date" span={24}>
           {dayjs(props?.data?.start_date).format('DD MMMM YYYY')}
         </Descriptions.Item>
         <Descriptions.Item label="End Date" span={24}>
           {dayjs(props?.data?.end_date).format('DD MMMM YYYY')}
         </Descriptions.Item>
-        <Descriptions.Item label="Post Date" span={24}>
-          {props?.data?.post_date
-            ? dayjs(props?.data?.post_date).format('DD MMMM YYYY')
-            : '-'}
-        </Descriptions.Item>
-        <Descriptions.Item label="Description" span={24}>
-          <div
-            dangerouslySetInnerHTML={{ __html: props?.data?.description }}
-          ></div>
+        <Descriptions.Item label="Redirection Link" span={24}>
+          <Link href={props?.data?.redirection_link} target="_blank">
+            {props?.data?.redirection_link}
+          </Link>
         </Descriptions.Item>
       </Descriptions>
     </Modal>
   )
 }
 
-export default AdminCharity
+export default AdminBanner

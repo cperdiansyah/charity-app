@@ -41,15 +41,6 @@ const Navlink = ({
         {text}
       </Link>
     )
-    return (
-      <Link
-        href={href}
-        className={[className, disable ? 'disable' : ''].join(' ')}
-        // prefetch={false}
-      >
-        {text}
-      </Link>
-    )
   } else {
     return (
       <a

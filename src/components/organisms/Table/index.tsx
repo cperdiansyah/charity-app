@@ -1,85 +1,37 @@
 import _ from 'lodash'
-import React, { useState, useEffect } from 'react'
-import { Table, Input } from 'antd'
-import { PlusOutlined, PlusCircleOutlined } from '@ant-design/icons'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
+import { Table } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { FilterValue, SorterResult } from 'antd/es/table/interface'
-import Column from 'antd/es/table/Column'
-
-import CustomButton from 'components/atoms/Button'
 
 import { ICustomTable, TableParams } from './table.interface'
-import { usePathname } from 'next/navigation'
-
-const { Search } = Input
-
-// const columns: ColumnsType<DataType> = [
-//   {
-//     title: 'Name',
-//     dataIndex: 'name',
-//     key: 'name',
-//     render: (text) => <a>{text}</a>,
-//   },
-//   {
-//     title: 'Age',
-//     dataIndex: 'age',
-//     key: 'age',
-//   },
-//   {
-//     title: 'Address',
-//     dataIndex: 'address',
-//     key: 'address',
-//   },
-//   {
-//     title: 'Tags',
-//     key: 'tags',
-//     dataIndex: 'tags',
-//     render: (_, { tags }) => (
-//       <>
-//         {tags.map((tag) => {
-//           let color = tag.length > 5 ? 'geekblue' : 'green'
-//           if (tag === 'loser') {
-//             color = 'volcano'
-//           }
-//           return (
-//             <Tag color={color} key={tag}>
-//               {tag.toUpperCase()}
-//             </Tag>
-//           )
-//         })}
-//       </>
-//     ),
-//   },
-//   {
-//     title: 'Action',
-//     key: 'action',
-//     render: (_, record) => (
-//       <Space size="middle">
-//         <a>Invite {record.name}</a>
-//         <a>Delete</a>
-//       </Space>
-//     ),
-//   },
-// ]
+import {
+  usePathname,
+  useRouter,
+} from 'next/navigation'
+import useLogoutSessionExpired from 'hooks/useLogoutSessionExpired'
+import TableHeader from './tableHeader'
 
 const CustomTable: React.FC<ICustomTable> = ({
   columns,
-  // datasources,
-  // loading,
   init,
   placeholder,
 }) => {
-  const pathame = usePathname()
+  const pathname = usePathname()
+  const router = useRouter()
+
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<any>()
   const [page, setPage] = React.useState(1)
+  const logoutSessionExpiredHooks = useLogoutSessionExpired()
 
   const [tableParams, setTableParams] = useState<TableParams>({
     pagination: {
       current: 1,
       pageSize: 10,
+      showSizeChanger: true,
       pageSizeOptions: ['10', '20', '50', '100'],
-      // showTotal
+      showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
     },
   })
 
@@ -97,58 +49,95 @@ const CustomTable: React.FC<ICustomTable> = ({
   ])
 
   useEffect(() => {
-    getData()
+    if (!loading) {
+      MemoGetData()
+    }
   }, [])
 
-  const getData = async () => {
-    setLoading(true)
-    const tableData = await init()
-    // console.log(tableData)
-    if (!_.isEmpty(tableData)) {
-      setData(tableData)
-    } else {
-      setData([])
+  const MemoGetData = useCallback(async () => {
+    return await getData()
+  }, [])
+
+  async function getData() {
+    try {
+      setLoading(true)
+      const tableData = await init()
+      if (!_.isEmpty(tableData)) {
+        // console.log(tableData)
+        setData(tableData.data)
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            current: tableData.meta.page,
+            pageSize: tableData.meta.rows,
+            total: tableData.meta.total,
+          },
+        })
+      } else {
+        setData([])
+      }
+
+      setLoading(false)
+    } catch (error: any) {
+      const { status } = error.response
+      if (status === 403) {
+        logoutSessionExpiredHooks()
+      }
+      setLoading(false)
     }
-    setLoading(false)
   }
 
-  const handleTableChange = (
+  const handleTableChange: any = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue>,
     sorter: SorterResult<any>
   ) => {
     setTableParams({
+      ...pagination,
+      ...filters,
+      ...sorter,
       pagination,
       filters,
-      ...sorter,
     })
+
+    const params = convertTableParams({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    })
+
+    router.push(`?${params}`)
 
     // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([])
     }
   }
-  const onSearch = (value: string) => console.log(value)
+
+  const onSearch: any = (value: string) => {
+    console.log(value)
+    return data
+  }
+
+  const convertTableParams = (data: TablePaginationConfig) => {
+    const params = new URLSearchParams()
+
+    Object.entries(data).forEach(([key, value]) => {
+      params.append(key, value)
+    })
+    // const queryParams = params.toString()
+    // return queryParams
+    return params
+  }
+
   return (
     <div className="table-container">
-      <div className="table-header mb-3 flex justify-between">
-        <div className="table-header-left">
-          <Search
-            placeholder={placeholder || 'Input Search Text'}
-            onSearch={onSearch}
-            style={{ width: 200 }}
-          />
-        </div>
-        <div className="table-header-right">
-          <CustomButton
-            islink={'true'}
-            href={`${pathame}/add`}
-            className=" flex items-center justify-center text-sm"
-          >
-            <PlusOutlined />
-          </CustomButton>
-        </div>
-      </div>
+      <TableHeader
+        onSearch={onSearch}
+        pathname={pathname}
+        placeholder={placeholder || ''}
+      />
+
       <div className="table-content">
         <Table
           columns={coloumn}
@@ -156,12 +145,10 @@ const CustomTable: React.FC<ICustomTable> = ({
           pagination={tableParams.pagination}
           loading={loading}
           rowKey={(data) => data?._id}
-
-          // onChange={handleTableChange}
+          onChange={handleTableChange}
         />
       </div>
     </div>
   )
 }
-
-export default CustomTable
+export default React.memo(CustomTable)
