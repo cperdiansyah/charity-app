@@ -7,7 +7,7 @@ interface IGetCharityQuery {
   rows?: number | string
 }
 
-export const getCharityClient = async (query: IGetCharityQuery) => {
+export const getCharityClient = async (query?: IGetCharityQuery) => {
   try {
     const resCharity = await api.get(SERVICE.charity, {
       params: query,

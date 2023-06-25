@@ -1,4 +1,7 @@
+import { ModalFuncProps } from 'antd'
 import { Dayjs } from 'dayjs'
+import { Dispatch, SetStateAction } from 'react'
+
 
 export type mediaContentSource = 'url' | 'upload'
 
@@ -29,4 +32,12 @@ export interface InitialValue {
   draft: boolean
   dateCampaign?: string[] | Dayjs[]
   description?: string
+}
+
+
+export interface IModalTable extends ModalFuncProps {
+  open: boolean
+  setOpen?: Dispatch<SetStateAction<boolean>>
+  data: any
+  setData?: any
 }
