@@ -45,7 +45,6 @@ const CustomTable: React.FC<ICustomTable> = ({
 
   useEffect(() => {
     if (!loading) {
-      console.log('useEffect')
       MemoGetData()
     }
   }, [])
@@ -84,7 +83,7 @@ const CustomTable: React.FC<ICustomTable> = ({
     }
   }
 
-  const handleTableChange = (
+  const handleTableChange: any = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue>,
     sorter: SorterResult<any>
@@ -93,6 +92,12 @@ const CustomTable: React.FC<ICustomTable> = ({
       pagination,
       filters,
       ...sorter,
+    })
+
+    console.log({
+      pagination,
+      filters,
+      sorter,
     })
 
     // `dataSource` is useless since `pageSize` changed
@@ -121,8 +126,7 @@ const CustomTable: React.FC<ICustomTable> = ({
           pagination={tableParams.pagination}
           loading={loading}
           rowKey={(data) => data?._id}
-
-          // onChange={handleTableChange}
+          onChange={handleTableChange}
         />
       </div>
     </div>
