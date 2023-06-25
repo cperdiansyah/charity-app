@@ -19,7 +19,7 @@ import {
 import { InboxOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
-import { debounce } from 'lodash'
+import _, { debounce } from 'lodash'
 
 /* Component */
 import CustomButton from 'components/atoms/Button'
@@ -303,7 +303,7 @@ export const FormEditCharity = () => {
         draft: dataCharity?.draft,
         target: dataCharity?.donation_target,
         media: {
-          media_content: dataCharity?.media[0].content,
+          media_content: _.get(dataCharity, 'media[0].content'),
         },
         dateCampaign: [
           dayjs(dataCharity?.start_date),
@@ -317,6 +317,7 @@ export const FormEditCharity = () => {
     } catch (error: any) {
       console.error(error)
       const errorResponse = error.response
+      console.log(errorResponse)
       notify(
         'error',
         'Something went wrong',
@@ -365,7 +366,9 @@ export const FormEditCharity = () => {
         'success',
         'Update Campaign Successful',
         `campaign updaetd successfully${
-          userData.role !== 'admin' && ', please wait for admin verification'
+          userData.role !== 'admin'
+            ? ', please wait for admin verification'
+            : ''
         }`,
         'bottomRight'
       )
@@ -478,7 +481,13 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                   { required: true, message: 'Date Campaign is required' },
                 ]}
               >
-                <RangePicker disabledDate={disabledDate} format={dateFormat} />
+                <RangePicker
+                  disabledDate={disabledDate}
+                  format={dateFormat}
+                  style={{
+                    width: '70%',
+                  }}
+                />
               </Form.Item>
             </Col>
 
