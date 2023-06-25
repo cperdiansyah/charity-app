@@ -5,7 +5,10 @@ import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { FilterValue, SorterResult } from 'antd/es/table/interface'
 
 import { ICustomTable, TableParams } from './table.interface'
-import { usePathname } from 'next/navigation'
+import {
+  usePathname,
+  useRouter,
+} from 'next/navigation'
 import useLogoutSessionExpired from 'hooks/useLogoutSessionExpired'
 import TableHeader from './tableHeader'
 
@@ -15,6 +18,8 @@ const CustomTable: React.FC<ICustomTable> = ({
   placeholder,
 }) => {
   const pathname = usePathname()
+  const router = useRouter()
+
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<any>()
   const [page, setPage] = React.useState(1)
@@ -89,16 +94,19 @@ const CustomTable: React.FC<ICustomTable> = ({
     sorter: SorterResult<any>
   ) => {
     setTableParams({
+      ...pagination,
+      ...filters,
+      ...sorter,
       pagination,
       filters,
-      ...sorter,
     })
 
-    console.log({
-      pagination,
-      filters,
-      sorter,
+    const params = convertTableParams({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
     })
+
+    router.push(`?${params}`)
 
     // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
@@ -109,6 +117,17 @@ const CustomTable: React.FC<ICustomTable> = ({
   const onSearch: any = (value: string) => {
     console.log(value)
     return data
+  }
+
+  const convertTableParams = (data: TablePaginationConfig) => {
+    const params = new URLSearchParams()
+
+    Object.entries(data).forEach(([key, value]) => {
+      params.append(key, value)
+    })
+    // const queryParams = params.toString()
+    // return queryParams
+    return params
   }
 
   return (

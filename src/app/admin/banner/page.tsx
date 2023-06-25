@@ -18,6 +18,7 @@ import { getBannerClient } from 'services/banner/clientService'
 import useUpdated from 'hooks/useUpdated'
 import { IModalTable } from './banner.interface'
 import { NAVIGATION_LINK } from 'utils/link'
+import { useParams, usePathname, useSearchParams } from 'next/navigation'
 
 function getColumns(showModal: any) {
   return [
@@ -85,11 +86,20 @@ function getColumns(showModal: any) {
 const MemoizeModalTable = React.memo(ModalTable)
 
 const AdminBanner = () => {
+  const searchParams = useSearchParams()
   const [visible, setVisible] = useState(false)
   const [bannerData, setBannerData] = useState<any>()
 
+  const current = searchParams.get('current')
+  const pageSize = searchParams.get('pageSize')
+
+  const queryParams = {
+    page: current || 1,
+    rows: pageSize || 10,
+  }
+
   const init = async () => {
-    const dataBanner = await getBannerClient()
+    const dataBanner = await getBannerClient(queryParams)
 
     const result = {
       data: dataBanner.banner,
@@ -97,6 +107,7 @@ const AdminBanner = () => {
     }
     return result
   }
+
   const showModal = (record: any) => {
     setBannerData(record)
     setVisible(true)
@@ -115,7 +126,6 @@ const AdminBanner = () => {
     </div>
   )
 }
-
 
 function ModalTable(props: IModalTable) {
   if (props?.data === undefined) return <></>

@@ -14,6 +14,7 @@ import { currencyFormat } from 'helpers'
 import { getCharityClient } from 'services/charity/clientService'
 import { NAVIGATION_LINK } from 'utils/link'
 import { CAMPAIGN_STATUS_WITH_COLORS } from './campaign'
+import { useSearchParams } from 'next/navigation'
 
 const columns: ColumnsType<any> = [
   {
@@ -96,8 +97,16 @@ const columns: ColumnsType<any> = [
 ]
 
 const AdminCharity = async () => {
+  const searchParams = useSearchParams()
+  const current = searchParams.get('current')
+  const pageSize = searchParams.get('pageSize')
+  const queryParams = {
+    page: current || 1,
+    rows: pageSize || 10,
+  }
+
   const init = async () => {
-    const dataCharity = await getCharityClient()
+    const dataCharity = await getCharityClient(queryParams)
     const result = {
       data: dataCharity.charity,
       meta: dataCharity.meta,

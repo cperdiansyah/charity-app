@@ -2,9 +2,16 @@ import _ from 'lodash'
 import { SERVICE } from 'utils/api'
 import { api } from 'utils/clientSideFetch'
 
-export const getBannerClient = async () => {
+interface IGetBannersQuery {
+  page?: number | string
+  rows?: number | string
+}
+
+export const getBannerClient = async (query?: IGetBannersQuery) => {
   try {
-    const resBanner = await api.get(SERVICE.banner)
+    const resBanner = await api.get(SERVICE.banner, {
+      params: query,
+    })
     const dataBanner = _.get(resBanner, 'data')
     return dataBanner
   } catch (error) {
