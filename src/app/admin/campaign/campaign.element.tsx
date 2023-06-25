@@ -6,38 +6,41 @@ import {
   Col,
   DatePicker,
   Form,
+  Image,
   Input,
   InputNumber,
   Radio,
   RadioChangeEvent,
   Row,
   Spin,
-  Upload,
   UploadFile,
   UploadProps,
-  message,
 } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
+import dayjs from 'dayjs'
+import { useRouter } from 'next/navigation'
 
 /* Component */
 import CustomButton from 'components/atoms/Button'
 import QuilEditor from 'components/molecules/QuilEditor'
 import useTextEditor from 'stores/textEditor'
+
+/* Utils */
 import { disabledDate } from 'utils/disableDate'
-import dayjs from 'dayjs'
 import { api } from 'utils/clientSideFetch'
 import { SERVICE } from 'utils/api'
-import { useRouter } from 'next/navigation'
 import { notify } from 'helpers/notify'
 import { NAVIGATION_LINK } from 'utils/link'
 
-const { RangePicker } = DatePicker
+/* Interface */
+import {
+  IFormCharity,
+  mediaContentSource,
+  ICharityMedia,
+} from './campaign.interfce'
+import { debounce } from 'lodash'
 
-type mediaContentSource = 'url' | 'upload'
-export interface ICharityMedia {
-  content: string
-  content_type: 'image' | 'video'
-}
+const { RangePicker } = DatePicker
 
 const normFile = (e: any) => {
   // console.log('Upload event:', e)
@@ -47,109 +50,11 @@ const normFile = (e: any) => {
   return e?.fileList
 }
 
-const FormAddCharity = () => {
-  const [form] = Form.useForm()
-  const router = useRouter()
-  const [editorValue, setEditorValue] = useTextEditor()
-  const [errorEditor, setErrotEditor] = useState(false)
-  const [mediaContentSource, setMediaContentSource] =
-    useState<mediaContentSource>('url')
-  const [draftChecked, setDraftChecked] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [uploadFileUrl, setUploadFileUrl] = useState([])
-  // const uploadFileUrl = useRef([''])
+/* 
 
-  const [fileList, setFileList] = useState<UploadFile[]>()
+  // unused code but can be need in the future
 
-  const editorEmptyLogic =
-    editorValue.length === 0 ||
-    editorValue === '<p><br></p>' ||
-    editorValue === '<p></p>'
-
-  useEffect(() => {
-    handleResetForm()
-  }, [])
-
-  useEffect(() => {
-    if (errorEditor) {
-      if (!editorEmptyLogic) {
-        setErrotEditor(false)
-      }
-    }
-  }, [editorValue.length])
-
-  const handleResetForm = () => {
-    form.resetFields()
-    setEditorValue('')
-    setUploadFileUrl([])
-  }
-
-  const handlSubmit = async (values: any) => {
-    checkEditorValue()
-
-    // console.log(values)
-
-    setLoading(true)
-    try {
-      let media: ICharityMedia[] | undefined
-
-      if (values.media_source !== 'url') {
-        // mediaUrl = await uploadFileWithUrl(uploadFileUrl)
-      } else {
-        media = [
-          {
-            content: values.media.media_content,
-            content_type: 'image',
-          },
-        ]
-      }
-
-      const dataCharity = {
-        title: values.title,
-        description: editorValue,
-        donation_target: values.target,
-        start_date: dayjs(values.dateCampaign[0]),
-        end_date: dayjs(values.dateCampaign[1]),
-        is_draft: values.draft,
-        media,
-      }
-
-      await api.post(SERVICE.charity, dataCharity)
-      notify(
-        'success',
-        'Add Campaign Successful',
-        'campaign created successfully, please wait for admin verification',
-        'bottomRight'
-      )
-      setTimeout(() => {
-        return router.replace(NAVIGATION_LINK.CampaignList)
-      }, 500)
-    } catch (error: any) {
-      console.error(error)
-      const errorResponse = error.response
-      notify(
-        'error',
-        'Something went wrong',
-        errorResponse.data.error.error.message || '',
-        'bottomRight'
-      )
-      setLoading(false)
-    }
-  }
-  const checkOnFailed = () => {
-    checkEditorValue()
-  }
-
-  const checkEditorValue = () => {
-    if (editorEmptyLogic) {
-      setErrotEditor(true)
-    }
-  }
-
-  const radioChange = (e: RadioChangeEvent) => {
-    setMediaContentSource(e.target.value)
-  }
-
+  
   const uploadImageRequest = (options?: any) => {
     setTimeout(async () => {
       const { onSuccess, onError, file, onProgress } = options
@@ -242,15 +147,144 @@ const FormAddCharity = () => {
   //   //   }
   //   // },
   // }
+
+
+*/
+
+export const FormAddCharity = () => {
+  const [form] = Form.useForm()
+  const router = useRouter()
+  const [editorValue, setEditorValue] = useTextEditor()
+  const [errorEditor, setErrorEditor] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [uploadFileUrl, setUploadFileUrl] = useState([])
+  // const uploadFileUrl = useRef([''])
+
+  const [fileList, setFileList] = useState<UploadFile[]>()
+
+  const editorEmptyLogic =
+    editorValue.length === 0 ||
+    editorValue === '<p><br></p>' ||
+    editorValue === '<p></p>'
+
+  useEffect(() => {
+    handleResetForm()
+  }, [])
+
+  useEffect(() => {
+    if (errorEditor) {
+      if (!editorEmptyLogic) {
+        setErrorEditor(false)
+      }
+    }
+  }, [editorValue.length])
+
+  const handleResetForm = () => {
+    form.resetFields()
+    setEditorValue('')
+    setUploadFileUrl([])
+  }
+
+  const handlSubmit: any = async (values: any) => {
+    checkEditorValue()
+    setLoading(true)
+
+    try {
+      let media: ICharityMedia[] | undefined
+
+      if (values.media_source !== 'url') {
+        // mediaUrl = await uploadFileWithUrl(uploadFileUrl)
+      } else {
+        media = [
+          {
+            content: values.media.media_content,
+            content_type: 'image',
+          },
+        ]
+      }
+
+      const dataCharity = {
+        title: values.title,
+        description: editorValue,
+        donation_target: values.target,
+        start_date: dayjs(values.dateCampaign[0]),
+        end_date: dayjs(values.dateCampaign[1]),
+        is_draft: values.draft,
+        media,
+      }
+      await api.post(SERVICE.charity, dataCharity)
+      notify(
+        'success',
+        'Add Campaign Successful',
+        'campaign created successfully, please wait for admin verification',
+        'bottomRight'
+      )
+      setTimeout(() => {
+        return router.replace(NAVIGATION_LINK.CampaignList)
+      }, 500)
+    } catch (error: any) {
+      console.error(error)
+      const errorResponse = error.response
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse.data.error.error.message || '',
+        'bottomRight'
+      )
+      setLoading(false)
+    }
+  }
+  const checkOnFailed = () => {
+    checkEditorValue()
+  }
+
+  const checkEditorValue = () => {
+    if (editorEmptyLogic) {
+      setErrorEditor(true)
+    }
+  }
+
+  return (
+    <FormCharity
+      loading={loading}
+      form={form}
+      onFinish={handlSubmit}
+      onFinishFailed={checkOnFailed}
+      errorEditor={errorEditor}
+    />
+  )
+}
+
+export const FormCharity: React.FC<IFormCharity> = (props) => {
+  const [mediaContentSource, setMediaContentSource] =
+    useState<mediaContentSource>('url')
+
+  const [imageUrl, setImageUrl] = useState('')
+
+  useEffect(() => {
+    if (props.initialValue) {
+      props.form.setFieldsValue(props.initialValue)
+      //  setImageUrl(props.initialValue.media.media_content)
+    }
+  }, [props.initialValue])
+
+  const handleImageUrl = debounce((event) => {
+    setImageUrl(event.target.value)
+  }, 2000)
+
+  const radioChange = (e: RadioChangeEvent) => {
+    setMediaContentSource(e.target.value)
+  }
   return (
     <div className="form-add-charity-container">
-      <Spin spinning={loading}>
+      <Spin spinning={props.loading}>
         <Form
-          form={form}
-          onFinish={handlSubmit}
+          form={props.form}
+          onFinish={props.onFinish}
           scrollToFirstError
           layout="vertical"
-          onFinishFailed={checkOnFailed}
+          onFinishFailed={props.onFinishFailed}
+          initialValues={props.initialValue}
         >
           <Row gutter={24}>
             {/* Content Campaign */}
@@ -318,31 +352,50 @@ const FormAddCharity = () => {
 
               <Form.List name="media">
                 {(fields, { add, remove }, { errors }) => {
-                  const mediaSources = form.getFieldValue('media_source')
+                  const mediaSources = props.form.getFieldValue('media_source')
                   if (mediaSources === 'url') {
                     return (
-                      <Form.Item
-                        name="media_content"
-                        shouldUpdate={(prevValues, curValues) =>
-                          prevValues.media_source !== curValues.media_source
-                        }
-                        rules={[
-                          {
-                            required: true,
-                            message: 'Media Sources is required',
-                          },
+                      <>
+                        <Form.Item
+                          name="media_content"
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.media_source !== curValues.media_source
+                          }
+                          rules={[
+                            {
+                              required: true,
+                              message: 'Media Sources is required',
+                            },
 
-                          {
-                            pattern: new RegExp(
-                              /^\b((?:https?|ftp):\/\/[^\s/$.?#].[^\s]*)\.(?:jpg|jpeg|png|gif)\b/
-                            ),
-                            message:
-                              'Invalid URL or format specified (jpeg|jpeg|png|gif)',
-                          },
-                        ]}
-                      >
-                        <Input placeholder="https://example.com/media.jpeg" />
-                      </Form.Item>
+                            {
+                              pattern: new RegExp(
+                                /^\b((?:https?|ftp):\/\/[^\s/$.?#].[^\s]*)\.(?:jpg|jpeg|png|gif)\b/
+                              ),
+                              message:
+                                'Invalid URL or format specified (jpeg|jpeg|png|gif)',
+                            },
+                          ]}
+                        >
+                          <Input
+                            placeholder="https://example.com/media.jpeg"
+                            onChange={handleImageUrl}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="media_content_preview"
+                          shouldUpdate={(prevValues, curValues) =>
+                            prevValues.media_content !== curValues.media_content
+                          }
+                        >
+                          <Image
+                            width={300}
+                            src={
+                              imageUrl ||
+                              'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930'
+                            }
+                          />
+                        </Form.Item>
+                      </>
                     )
                   }
                   return (
@@ -352,7 +405,7 @@ const FormAddCharity = () => {
                         prevValues.media_source !== curValues.media_source
                       }
                     >
-                      <Form.Item
+                      {/* <Form.Item
                         name="media_content_upload"
                         valuePropName="fileList"
                         getValueFromEvent={normFile}
@@ -380,7 +433,7 @@ const FormAddCharity = () => {
                             Support for a single or bulk upload.
                           </p>
                         </Upload.Dragger>
-                      </Form.Item>
+                      </Form.Item> */}
                     </Form.Item>
                   )
                 }}
@@ -388,21 +441,16 @@ const FormAddCharity = () => {
             </Col>
             <Col span={24}>
               <QuilEditor placeholder="Input your content here" />
-              {errorEditor && (
+              {props?.errorEditor && (
                 <Alert message="Text Editor is Required" type="error" />
               )}
             </Col>
             <Col span={14}>
-              <Form.Item
-                name="draft"
-                valuePropName="checked"
-                className="my-3"
-                initialValue={draftChecked}
-              >
+              <Form.Item name="draft" valuePropName="checked" className="my-3">
                 <Checkbox
                   defaultChecked={false}
-                  checked={draftChecked}
-                  onClick={() => setDraftChecked(!draftChecked)}
+                  // checked={draftChecked}
+                  // onClick={() => setDraftChecked(!draftChecked)}
                 >
                   Draft
                 </Checkbox>
@@ -423,5 +471,3 @@ const FormAddCharity = () => {
     </div>
   )
 }
-
-export { FormAddCharity }

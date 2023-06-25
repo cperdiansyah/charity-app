@@ -1,5 +1,5 @@
 import React from 'react'
-import { FormAddCharity } from './campaign.element'
+import { FormAddCharity } from '../campaign.element'
 
 const AdminCharityAdd = () => {
   return <FormAddCharity />

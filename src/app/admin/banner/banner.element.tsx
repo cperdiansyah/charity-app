@@ -180,6 +180,7 @@ export const FormEditBanner = (props: IFormAddBanner) => {
 export const FormBanner = (props: IFormBanner) => {
   const [mediaContentSource, setMediaContentSource] =
     useState<mediaContentSource>('url')
+  
   const [imageUrl, setImageUrl] = useState('')
 
   useEffect(() => {

@@ -1,25 +1,32 @@
-// import { FormContextProps } from "antd/es/form/context"
-
 import { Dayjs } from 'dayjs'
 
 export type mediaContentSource = 'url' | 'upload'
 
-export interface IFormBanner {
+export interface IFormCharity {
   loading: boolean
   form: any
   onFinish: VoidFunction
+  onFinishFailed?: VoidFunction
   buttonSubmitText?: string
   initialValue?: initialValue
+
+  //
+  errorEditor?: boolean
 }
 
-export interface initialValue {
+export interface ICharityMedia {
+  content: string
+  content_type: 'image' | 'video'
+}
+
+interface initialValue {
   title: string
-  redirection_link: string
+  target: number
   media: {
     media_content: string
   }
-  status: boolean
+  media_source: string
+  draft: boolean
   dateBanner?: string[] | Dayjs[]
+  description: string
 }
-
-export interface IFormAddBanner {}
