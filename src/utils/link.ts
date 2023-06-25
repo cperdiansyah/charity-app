@@ -4,11 +4,11 @@ const AdminLink = {
   // Campaign
   CampaignList: '/admin/campaign',
   CampaignAdd: '/admin/campaign/add',
-  CampaignEdit: '/admin/campaign/edit/:id',
+  CampaignEdit: '/admin/campaign/edit/',
   // Banner
   BannerList: '/admin/banner',
   BannerAdd: '/admin/banner/add',
-  BannerEdit: '/admin/banner/edit/:id',
+  BannerEdit: '/admin/banner/edit/',
 }
 
 export const NAVIGATION_LINK = {

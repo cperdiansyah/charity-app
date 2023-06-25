@@ -1,22 +1,59 @@
 'use client'
-import { Space, Tag } from 'antd'
+import { Space, Tag, Tooltip } from 'antd'
 import { ColumnsType } from 'antd/es/table'
+import dayjs from 'dayjs'
+import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import Link from 'next/link'
+import React from 'react'
+
+/* Component */
 import CustomTable from 'components/organisms/Table'
-// import { DataType } from 'components/organisms/Table/table.interface'
+
+/* Utils */
 import { currencyFormat } from 'helpers'
-import React, { useEffect, useState } from 'react'
 import { getCharityClient } from 'services/charity/clientService'
+import { NAVIGATION_LINK } from 'utils/link'
+import { CAMPAIGN_STATUS_WITH_COLORS } from './campaign'
 
 const columns: ColumnsType<any> = [
   {
     dataIndex: 'title',
     key: 'title',
     title: 'Title',
+    width: 250,
   },
   {
     title: 'Status',
-    dataIndex: 'status',
     key: 'status',
+    width: 100,
+    render: (value: any) => {
+      const { status, end_date } = value
+      const isCampaignStillRunning = dayjs(end_date) > dayjs()
+
+      const campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
+        (item) => item.label === status
+      )
+      console.log(campaignStatus)
+
+      if (campaignStatus) {
+        if (!isCampaignStillRunning) {
+          const campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
+            (item) => item.label === 'completed'
+          )
+          return (
+            <Tag color={campaignStatus?.color}>
+              {campaignStatus?.status?.toUpperCase()}
+            </Tag>
+          )
+        }
+        return (
+          <Tag color={campaignStatus.color}>
+            {campaignStatus.status.toUpperCase()}
+          </Tag>
+        )
+      }
+      return <Tag color="default">{status.toUpperCase()}</Tag>
+    },
   },
   {
     title: 'Donation Target',
@@ -25,35 +62,37 @@ const columns: ColumnsType<any> = [
 
     render: (data) => `Rp. ${currencyFormat(data)}`,
   },
-  // {
-  //   title: 'Tags',
-  //   key: 'tags',
-  //   dataIndex: 'tags',
-  //   render: (_, { tags }) => (
-  //     <>
-  //       {tags.map((tag) => {
-  //         let color = tag.length > 5 ? 'geekblue' : 'green'
-  //         if (tag === 'loser') {
-  //           color = 'volcano'
-  //         }
-  //         return (
-  //           <Tag color={color} key={tag}>
-  //             {tag.toUpperCase()}
-  //           </Tag>
-  //         )
-  //       })}
-  //     </>
-  //   ),
-  // },
+  {
+    title: 'Start Date',
+    dataIndex: 'start_date',
+    key: 'start_date',
+    render: (date: string) => dayjs(date).format('DD MMMM YYYY'),
+  },
+  {
+    title: 'End Date',
+    dataIndex: 'end_date',
+    key: 'end_date',
+    render: (date: string) => dayjs(date).format('DD MMMM YYYY'),
+  },
   {
     title: 'Action',
     key: 'action',
-    render: (_, record) => (
-      <Space size="middle">
-        <a>Invite {record.name}</a>
-        <a>Delete</a>
-      </Space>
-    ),
+    fixed: 'right',
+    width: 150,
+    render: (value: any, record: any) => {
+      return (
+        <div className="flex items-center">
+          <Tooltip placement="bottomRight" title="Edit Banner">
+            <Link
+              href={`${NAVIGATION_LINK.CampaignEdit}${value._id}`}
+              className="px-3 py-2"
+            >
+              <EditOutlined />
+            </Link>
+          </Tooltip>
+        </div>
+      )
+    },
   },
 ]
 

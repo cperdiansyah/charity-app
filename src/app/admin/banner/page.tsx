@@ -16,6 +16,8 @@ import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import CustomTable from 'components/organisms/Table'
 import { getBannerClient } from 'services/banner/clientService'
 import useUpdated from 'hooks/useUpdated'
+import { IModalTable } from './banner.interface'
+import { NAVIGATION_LINK } from 'utils/link'
 
 function getColumns(showModal: any) {
   return [
@@ -58,7 +60,10 @@ function getColumns(showModal: any) {
         return (
           <div className="flex items-center">
             <Tooltip placement="bottomRight" title="Edit Banner">
-              <Link href={`banner/edit/${value._id}`} className="px-3 py-2">
+              <Link
+                href={`${NAVIGATION_LINK.BannerEdit}${value._id}`}
+                className="px-3 py-2"
+              >
                 <EditOutlined />
               </Link>
             </Tooltip>
@@ -77,7 +82,6 @@ function getColumns(showModal: any) {
   ]
 }
 
-// const MemoizeCustomTable = React.memo(CustomTable)
 const MemoizeModalTable = React.memo(ModalTable)
 
 const AdminBanner = () => {
@@ -112,12 +116,6 @@ const AdminBanner = () => {
   )
 }
 
-interface IModalTable extends ModalFuncProps {
-  open: boolean
-  setOpen?: Dispatch<SetStateAction<boolean>>
-  data: any
-  setData?: any
-}
 
 function ModalTable(props: IModalTable) {
   if (props?.data === undefined) return <></>
