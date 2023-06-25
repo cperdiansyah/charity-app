@@ -2,7 +2,7 @@ import _ from 'lodash'
 import { IFetchOptions } from './utils.interface'
 import { getCookie } from 'cookies-next'
 
-const token = getCookie('token') || null
+const token = getCookie('token')
 
 export const SERVICE = {
   login: '/api/v1/auth/login',
@@ -28,7 +28,7 @@ export const BASE_HEADERS = {
   'Content-Type': 'application/json',
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Credentials': 'true',
-  Authorization: `Bearer ${token}`,
+  Authorization: `Bearer ${token ? token : ''}`,
   // accept: 'application/json',
 }
 

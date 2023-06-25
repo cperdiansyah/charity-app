@@ -1,30 +1,39 @@
-// import { FormContextProps } from "antd/es/form/context"
-
 import { ModalFuncProps } from 'antd'
 import { Dayjs } from 'dayjs'
 import { Dispatch, SetStateAction } from 'react'
 
+
 export type mediaContentSource = 'url' | 'upload'
 
-export interface IFormBanner {
+export interface IFormCharity {
   loading: boolean
   form: any
   onFinish: VoidFunction
+  onFinishFailed?: VoidFunction
   buttonSubmitText?: string
-  initialValue?: initialValue
+  initialValue?: InitialValue
+
+  //
+  errorEditor?: boolean
 }
 
-export interface initialValue {
+export interface ICharityMedia {
+  content: string
+  content_type: 'image' | 'video'
+}
+
+export interface InitialValue {
   title: string
-  redirection_link: string
+  target: number
   media: {
     media_content: string
   }
-  status: boolean
-  dateBanner?: string[] | Dayjs[]
+  media_source?: string
+  draft: boolean
+  dateCampaign?: string[] | Dayjs[]
+  description?: string
 }
 
-export interface IFormAddBanner {}
 
 export interface IModalTable extends ModalFuncProps {
   open: boolean

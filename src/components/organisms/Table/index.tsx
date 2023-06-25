@@ -1,12 +1,14 @@
 import _ from 'lodash'
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useMemo, useCallback } from 'react'
 import { Table } from 'antd'
 import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { FilterValue, SorterResult } from 'antd/es/table/interface'
 
-
 import { ICustomTable, TableParams } from './table.interface'
-import { usePathname } from 'next/navigation'
+import {
+  usePathname,
+  useRouter,
+} from 'next/navigation'
 import useLogoutSessionExpired from 'hooks/useLogoutSessionExpired'
 import TableHeader from './tableHeader'
 
@@ -16,6 +18,8 @@ const CustomTable: React.FC<ICustomTable> = ({
   placeholder,
 }) => {
   const pathname = usePathname()
+  const router = useRouter()
+
   const [loading, setLoading] = useState<boolean>(false)
   const [data, setData] = useState<any>()
   const [page, setPage] = React.useState(1)
@@ -25,8 +29,9 @@ const CustomTable: React.FC<ICustomTable> = ({
     pagination: {
       current: 1,
       pageSize: 10,
+      showSizeChanger: true,
       pageSizeOptions: ['10', '20', '50', '100'],
-      // showTotal
+      showTotal: (total, range) => `${range[0]}-${range[1]} of ${total} items`,
     },
   })
 
@@ -45,17 +50,30 @@ const CustomTable: React.FC<ICustomTable> = ({
 
   useEffect(() => {
     if (!loading) {
-      getData()
+      MemoGetData()
     }
   }, [])
 
-  const getData = async () => {
-    setLoading(true)
+  const MemoGetData = useCallback(async () => {
+    return await getData()
+  }, [])
+
+  async function getData() {
     try {
+      setLoading(true)
       const tableData = await init()
-      // console.log(tableData)
       if (!_.isEmpty(tableData)) {
-        setData(tableData)
+        // console.log(tableData)
+        setData(tableData.data)
+        setTableParams({
+          ...tableParams,
+          pagination: {
+            ...tableParams.pagination,
+            current: tableData.meta.page,
+            pageSize: tableData.meta.rows,
+            total: tableData.meta.total,
+          },
+        })
       } else {
         setData([])
       }
@@ -70,26 +88,48 @@ const CustomTable: React.FC<ICustomTable> = ({
     }
   }
 
-  const handleTableChange = (
+  const handleTableChange: any = (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue>,
     sorter: SorterResult<any>
   ) => {
     setTableParams({
+      ...pagination,
+      ...filters,
+      ...sorter,
       pagination,
       filters,
-      ...sorter,
     })
+
+    const params = convertTableParams({
+      current: pagination.current,
+      pageSize: pagination.pageSize,
+    })
+
+    router.push(`?${params}`)
 
     // `dataSource` is useless since `pageSize` changed
     if (pagination.pageSize !== tableParams.pagination?.pageSize) {
       setData([])
     }
   }
+
   const onSearch: any = (value: string) => {
     console.log(value)
     return data
   }
+
+  const convertTableParams = (data: TablePaginationConfig) => {
+    const params = new URLSearchParams()
+
+    Object.entries(data).forEach(([key, value]) => {
+      params.append(key, value)
+    })
+    // const queryParams = params.toString()
+    // return queryParams
+    return params
+  }
+
   return (
     <div className="table-container">
       <TableHeader
@@ -105,12 +145,10 @@ const CustomTable: React.FC<ICustomTable> = ({
           pagination={tableParams.pagination}
           loading={loading}
           rowKey={(data) => data?._id}
-
-          // onChange={handleTableChange}
+          onChange={handleTableChange}
         />
       </div>
     </div>
   )
 }
-
-export default CustomTable
+export default React.memo(CustomTable)

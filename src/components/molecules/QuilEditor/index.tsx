@@ -35,6 +35,7 @@ const QuilEditor = (props: IProps) => {
         value={value}
         onChange={handleChange}
         placeholder={props?.placeholder}
+        
       />
     )
 

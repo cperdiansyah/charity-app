@@ -1,5 +1,4 @@
 'use client'
-
 import {
   Button,
   Descriptions,
@@ -11,12 +10,15 @@ import {
 } from 'antd'
 import dayjs from 'dayjs'
 import Link from 'next/link'
-import React, { Dispatch, SetStateAction, useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import { useSearchParams } from 'next/navigation'
 
 import CustomTable from 'components/organisms/Table'
 import { getBannerClient } from 'services/banner/clientService'
 import useUpdated from 'hooks/useUpdated'
+import { IModalTable } from './banner.interface'
+import { NAVIGATION_LINK } from 'utils/link'
 
 function getColumns(showModal: any) {
   return [
@@ -59,7 +61,10 @@ function getColumns(showModal: any) {
         return (
           <div className="flex items-center">
             <Tooltip placement="bottomRight" title="Edit Banner">
-              <Link href={`banner/edit/${value._id}`} className="px-3 py-2">
+              <Link
+                href={`${NAVIGATION_LINK.BannerEdit}${value._id}`}
+                className="px-3 py-2"
+              >
                 <EditOutlined />
               </Link>
             </Tooltip>
@@ -78,18 +83,31 @@ function getColumns(showModal: any) {
   ]
 }
 
+const MemoizeModalTable = React.memo(ModalTable)
+
 const AdminBanner = () => {
+  const searchParams = useSearchParams()
   const [visible, setVisible] = useState(false)
   const [bannerData, setBannerData] = useState<any>()
 
-  useEffect(() => {
-    init()
-  }, [])
+  const current = searchParams.get('current')
+  const pageSize = searchParams.get('pageSize')
+
+  const queryParams = {
+    page: current || 1,
+    rows: pageSize || 10,
+  }
 
   const init = async () => {
-    const dataBanner = await getBannerClient()
-    return dataBanner.banner
+    const dataBanner = await getBannerClient(queryParams)
+
+    const result = {
+      data: dataBanner.banner,
+      meta: dataBanner.meta,
+    }
+    return result
   }
+
   const showModal = (record: any) => {
     setBannerData(record)
     setVisible(true)
@@ -97,8 +115,9 @@ const AdminBanner = () => {
 
   return (
     <div>
+      {/* <CustomTable columns={getColumns(showModal)} init={init} /> */}
       <CustomTable columns={getColumns(showModal)} init={init} />
-      <ModalTable
+      <MemoizeModalTable
         open={visible}
         setOpen={setVisible}
         data={bannerData}
@@ -108,14 +127,7 @@ const AdminBanner = () => {
   )
 }
 
-interface IModalTable extends ModalFuncProps {
-  open: boolean
-  setOpen?: Dispatch<SetStateAction<boolean>>
-  data: any
-  setData?: any
-}
-
-const ModalTable = (props: IModalTable) => {
+function ModalTable(props: IModalTable) {
   if (props?.data === undefined) return <></>
 
   const handleCancel = (e: any) => {

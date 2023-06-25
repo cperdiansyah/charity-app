@@ -1,5 +1,5 @@
-import { RangePickerProps } from "antd/es/date-picker"
-import dayjs from "dayjs"
+import { RangePickerProps } from 'antd/es/date-picker'
+import dayjs from 'dayjs'
 
 /* Disabled date  for datepicker andtd */
 export const disabledDate: RangePickerProps['disabledDate'] = (current) => {
@@ -12,3 +12,5 @@ export const disabledCurrentDate: RangePickerProps['disabledDate'] = (
 ) => {
   return current && current < dayjs().endOf('day')
 }
+
+export const dateFormat = 'D MMMM YYYY'

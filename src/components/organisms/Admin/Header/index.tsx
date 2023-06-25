@@ -38,6 +38,7 @@ const AdminHeader: React.FC = () => {
       label: `${userData.name.split(' ')[0]}`,
       key: 'navigationHeader',
       icon: <UserOutlined />,
+      className: 'ml-auto',
       children: [
         {
           key: 'setting',
@@ -84,13 +85,13 @@ const AdminHeader: React.FC = () => {
         )}
         <DynamicBreadcrumbs />
       </div>
-      <div className="header-right flex h-full items-center lg:pl-5">
+      <div className="header-right ml-auto flex h-full w-1/4 items-center lg:pl-5">
         <Menu
           onClick={onClick}
           selectable={false}
           mode="horizontal"
           items={menuItems}
-          className="w-full"
+          className=" w-full"
         />
       </div>
     </Header>
