@@ -18,7 +18,8 @@ import {
 } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
-import { useRouter } from 'next/navigation'
+import { useParams, useRouter } from 'next/navigation'
+import { debounce } from 'lodash'
 
 /* Component */
 import CustomButton from 'components/atoms/Button'
@@ -26,7 +27,7 @@ import QuilEditor from 'components/molecules/QuilEditor'
 import useTextEditor from 'stores/textEditor'
 
 /* Utils */
-import { disabledDate } from 'utils/disableDate'
+import { disabledDate, dateFormat } from 'utils/date'
 import { api } from 'utils/clientSideFetch'
 import { SERVICE } from 'utils/api'
 import { notify } from 'helpers/notify'
@@ -37,8 +38,9 @@ import {
   IFormCharity,
   mediaContentSource,
   ICharityMedia,
+  InitialValue,
 } from './campaign.interfce'
-import { debounce } from 'lodash'
+import useUserData from 'stores/userData'
 
 const { RangePicker } = DatePicker
 
@@ -255,6 +257,159 @@ export const FormAddCharity = () => {
   )
 }
 
+export const FormEditCharity = () => {
+  const [form] = Form.useForm()
+  const router = useRouter()
+  const params = useParams()
+  const { id: idCharity } = params
+
+  const [userData, setUserData] = useUserData()
+
+  const [editorValue, setEditorValue] = useTextEditor()
+  const [charityValue, setChairtyValue] = useState<InitialValue>()
+
+  const [errorEditor, setErrorEditor] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [uploadFileUrl, setUploadFileUrl] = useState([])
+  // const uploadFileUrl = useRef([''])
+
+  const [fileList, setFileList] = useState<UploadFile[]>()
+
+  const editorEmptyLogic =
+    editorValue.length === 0 ||
+    editorValue === '<p><br></p>' ||
+    editorValue === '<p></p>'
+
+  useEffect(() => {
+    handleResetForm()
+    getCharityData(idCharity)
+  }, [])
+
+  useEffect(() => {
+    if (errorEditor) {
+      if (!editorEmptyLogic) {
+        setErrorEditor(false)
+      }
+    }
+  }, [editorValue.length])
+
+  const getCharityData = async (id: string) => {
+    setLoading(true)
+    try {
+      const resCharity = await api.get(`${SERVICE.charity}/${id}`)
+      const dataCharity = resCharity.data.charity
+      const initialValue: InitialValue = {
+        title: dataCharity?.title,
+        draft: dataCharity?.draft,
+        target: dataCharity?.donation_target,
+        media: {
+          media_content: dataCharity?.media[0].content,
+        },
+        dateCampaign: [
+          dayjs(dataCharity?.start_date),
+          dayjs(dataCharity?.end_date),
+        ],
+      }
+      setChairtyValue(initialValue)
+      setEditorValue(dataCharity.description)
+
+      setLoading(false)
+    } catch (error: any) {
+      console.error(error)
+      const errorResponse = error.response
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse?.data?.error?.error?.message || '',
+        'bottomRight'
+      )
+      setLoading(false)
+    }
+  }
+
+  const handleResetForm = () => {
+    form.resetFields()
+    setEditorValue('')
+    setUploadFileUrl([])
+  }
+
+  const handlSubmit: any = async (values: any) => {
+    checkEditorValue()
+    setLoading(true)
+
+    try {
+      let media: ICharityMedia[] | undefined
+
+      if (values.media_source !== 'url') {
+        // mediaUrl = await uploadFileWithUrl(uploadFileUrl)
+      } else {
+        media = [
+          {
+            content: values.media.media_content,
+            content_type: 'image',
+          },
+        ]
+      }
+
+      const dataCharity = {
+        title: values.title,
+        description: editorValue,
+        donation_target: values.target,
+        start_date: dayjs(values.dateCampaign[0]),
+        end_date: dayjs(values.dateCampaign[1]),
+        is_draft: values.draft,
+        media,
+      }
+      await api.patch(`${SERVICE.charity}/${idCharity}`, dataCharity)
+      notify(
+        'success',
+        'Update Campaign Successful',
+        `campaign updaetd successfully${
+          userData.role !== 'admin' && ', please wait for admin verification'
+        }`,
+        'bottomRight'
+      )
+      setTimeout(() => {
+        return router.replace(NAVIGATION_LINK.CampaignList)
+      }, 500)
+    } catch (error: any) {
+      console.error(error)
+      const errorResponse = error.response
+      console.log(errorResponse)
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse?.data?.error?.error?.message ||
+          errorResponse?.data?.error?.message ||
+          '',
+        'bottomRight'
+      )
+      setLoading(false)
+    }
+  }
+  const checkOnFailed = () => {
+    checkEditorValue()
+  }
+
+  const checkEditorValue = () => {
+    if (editorEmptyLogic) {
+      setErrorEditor(true)
+    }
+  }
+
+  return (
+    <FormCharity
+      loading={loading}
+      form={form}
+      onFinish={handlSubmit}
+      onFinishFailed={checkOnFailed}
+      errorEditor={errorEditor}
+      initialValue={charityValue}
+      buttonSubmitText="Update"
+    />
+  )
+}
+
 export const FormCharity: React.FC<IFormCharity> = (props) => {
   const [mediaContentSource, setMediaContentSource] =
     useState<mediaContentSource>('url')
@@ -264,7 +419,7 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
   useEffect(() => {
     if (props.initialValue) {
       props.form.setFieldsValue(props.initialValue)
-      //  setImageUrl(props.initialValue.media.media_content)
+      setImageUrl(props.initialValue.media.media_content)
     }
   }, [props.initialValue])
 
@@ -323,7 +478,7 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                   { required: true, message: 'Date Campaign is required' },
                 ]}
               >
-                <RangePicker disabledDate={disabledDate} />
+                <RangePicker disabledDate={disabledDate} format={dateFormat} />
               </Form.Item>
             </Col>
 
@@ -461,7 +616,7 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                   buttontype="primary"
                   className="mt-2 !rounded-lg"
                 >
-                  Save
+                  {props.buttonSubmitText || 'Save'}
                 </CustomButton>
               </Form.Item>
             </Col>

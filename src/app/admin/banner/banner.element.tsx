@@ -18,7 +18,7 @@ import { useParams, useRouter } from 'next/navigation'
 import dayjs from 'dayjs'
 
 import { notify } from 'helpers/notify'
-import { disabledDate } from 'utils/disableDate'
+import { disabledDate, dateFormat } from 'utils/date'
 import { api } from 'utils/clientSideFetch'
 import { SERVICE } from 'utils/api'
 import { NAVIGATION_LINK } from 'utils/link'
@@ -32,7 +32,6 @@ import {
 } from './banner.interface'
 
 const { RangePicker } = DatePicker
-const dateFormat = 'DD/MM/YYYY'
 
 export const FormAddBanner = (props: IFormAddBanner) => {
   const [form] = Form.useForm()
@@ -180,7 +179,7 @@ export const FormEditBanner = (props: IFormAddBanner) => {
 export const FormBanner = (props: IFormBanner) => {
   const [mediaContentSource, setMediaContentSource] =
     useState<mediaContentSource>('url')
-  
+
   const [imageUrl, setImageUrl] = useState('')
 
   useEffect(() => {

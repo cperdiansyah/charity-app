@@ -33,7 +33,6 @@ const columns: ColumnsType<any> = [
       const campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
         (item) => item.label === status
       )
-      console.log(campaignStatus)
 
       if (campaignStatus) {
         if (!isCampaignStillRunning) {

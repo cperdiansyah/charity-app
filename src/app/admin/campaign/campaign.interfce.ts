@@ -8,7 +8,7 @@ export interface IFormCharity {
   onFinish: VoidFunction
   onFinishFailed?: VoidFunction
   buttonSubmitText?: string
-  initialValue?: initialValue
+  initialValue?: InitialValue
 
   //
   errorEditor?: boolean
@@ -19,14 +19,14 @@ export interface ICharityMedia {
   content_type: 'image' | 'video'
 }
 
-interface initialValue {
+export interface InitialValue {
   title: string
   target: number
   media: {
     media_content: string
   }
-  media_source: string
+  media_source?: string
   draft: boolean
-  dateBanner?: string[] | Dayjs[]
-  description: string
+  dateCampaign?: string[] | Dayjs[]
+  description?: string
 }
