@@ -4,7 +4,7 @@ import { Breadcrumb } from 'antd'
 import Navlink from '@/components/atoms/Navlink'
 import { usePathname } from 'next/navigation'
 import { NAVIGATION_LINK } from '@/utils/link'
-import { removeAdminPath } from 'helpers'
+import { removeAdminPath } from '@/helpers'
 
 export const DynamicBreadcrumbs = () => {
   const pathname = usePathname()

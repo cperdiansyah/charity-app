@@ -10,7 +10,7 @@ import { useSearchParams } from 'next/navigation'
 import CustomTable from '@/components/organisms/Table'
 
 /* Utils */
-import { currencyFormat } from 'helpers'
+import { currencyFormat } from '@/helpers'
 import { getCharityClient } from '@/services/charity/clientService'
 import { NAVIGATION_LINK } from '@/utils/link'
 import { CAMPAIGN_STATUS_WITH_COLORS } from './campaign'

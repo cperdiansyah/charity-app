@@ -22,7 +22,7 @@ import { adminSidebar } from '@/utils/menu'
 
 // styles
 import styles from './sidebar.module.scss'
-import { sidebarWidth } from 'helpers'
+import { sidebarWidth } from '@/helpers'
 import useUpdated from '@/hooks/useUpdated'
 
 const item: IMenuItem[] = adminSidebar
