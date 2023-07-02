@@ -1,7 +1,7 @@
 'use client'
 import { useState, useEffect } from 'react'
 
-import useUpdated from 'hooks/useUpdated'
+import useUpdated from '@/hooks/useUpdated'
 
 const useScreenWidth = (): number => {
   const [screenWidth, setScreenWidth] = useState(0)

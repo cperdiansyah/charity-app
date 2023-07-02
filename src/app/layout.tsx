@@ -8,17 +8,17 @@ const poppins = Poppins({
 
 // styles
 import './globals.css'
-import '../../public/css/bootstrap.min.css'
-import '../../public/css/font-awesome.min.css'
-import '../../public/css/xsIcon.css'
-import '../../public/css/isotope.css'
-import '../../public/css/magnific-popup.css'
-import '../../public/css/owl.carousel.min.css'
-import '../../public/css/owl.theme.default.min.css'
-import '../../public/css/animate.css'
-import '../../public/css/plugins.css'
-import '../../public/css/style.css'
-import '../../public/css/responsive.css'
+import '@public/css/bootstrap.min.css'
+import '@public/css/font-awesome.min.css'
+import '@public/css/xsIcon.css'
+import '@public/css/isotope.css'
+import '@public/css/magnific-popup.css'
+import '@public/css/owl.carousel.min.css'
+import '@public/css/owl.theme.default.min.css'
+import '@public/css/animate.css'
+import '@public/css/plugins.css'
+import '@public/css/style.css'
+import '@public/css/responsive.css'
 import Loading from './loading'
 
 export const metadata = {
@@ -35,8 +35,9 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className={poppins.className}>
-        <Loading/>
-        {children}</body>
+        <Loading />
+        {children}
+      </body>
     </html>
   )
 }

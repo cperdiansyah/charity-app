@@ -8,8 +8,8 @@ import { usePathname, useRouter } from 'next/navigation'
 const { Sider } = Layout
 
 // Custom hooks
-import useScreenWidth from 'hooks/useScreenWidth'
-import useSidebarCollapsed from 'stores/toogle'
+import useScreenWidth from '@/hooks/useScreenWidth'
+import useSidebarCollapsed from '@/stores/toogle'
 
 // Utils, Interface, functions
 import { IMenuItem } from './sidebar.interface'
@@ -18,12 +18,12 @@ import {
   findItemByPathname,
   generateItem,
 } from './sidebar.function'
-import { adminSidebar } from 'utils/menu'
+import { adminSidebar } from '@/utils/menu'
 
 // styles
 import styles from './sidebar.module.scss'
-import { sidebarWidth } from 'helpers'
-import useUpdated from 'hooks/useUpdated'
+import { sidebarWidth } from '@/helpers'
+import useUpdated from '@/hooks/useUpdated'
 
 const item: IMenuItem[] = adminSidebar
 const menuItems = generateItem(item)

@@ -7,14 +7,14 @@ import React, { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
 /* Component */
-import CustomTable from 'components/organisms/Table'
+import CustomTable from '@/components/organisms/Table'
 
 /* Utils */
-import { currencyFormat } from 'helpers'
-import { getCharityClient } from 'services/charity/clientService'
-import { NAVIGATION_LINK } from 'utils/link'
+import { currencyFormat } from '@/helpers'
+import { getCharityClient } from '@/services/charity/clientService'
+import { NAVIGATION_LINK } from '@/utils/link'
 import { CAMPAIGN_STATUS_WITH_COLORS } from './campaign'
-import useUpdated from 'hooks/useUpdated'
+import useUpdated from '@/hooks/useUpdated'
 import { IModalTable } from './campaign.interfce'
 import _ from 'lodash'
 

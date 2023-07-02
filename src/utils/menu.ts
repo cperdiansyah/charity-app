@@ -5,7 +5,7 @@ import {
   AuditOutlined,
   PrinterOutlined,
 } from '@ant-design/icons'
-import { NAVIGATION_LINK } from 'utils/link'
+import { NAVIGATION_LINK } from '@/utils/link'
 
 export const SidebarMenu = {
   dashboard: {

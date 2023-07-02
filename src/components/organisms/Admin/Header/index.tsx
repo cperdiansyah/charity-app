@@ -12,18 +12,18 @@ import {
 } from '@ant-design/icons'
 
 // Components
-import { DynamicBreadcrumbs } from 'components/molecules/DynamicBreadcrumb'
+import { DynamicBreadcrumbs } from '@/components/molecules/DynamicBreadcrumb'
 
 // custom hooks
-import useScreenWidth from 'hooks/useScreenWidth'
-import useUserData from 'stores/userData'
+import useScreenWidth from '@/hooks/useScreenWidth'
+import useUserData from '@/stores/userData'
 
 // Global State
-import useSidebarCollapsed from 'stores/toogle'
+import useSidebarCollapsed from '@/stores/toogle'
 
 // Styles
 import styles from './header.module.scss'
-import useLogout from 'hooks/useLogout'
+import useLogout from '@/hooks/useLogout'
 
 const { Header } = Layout
 

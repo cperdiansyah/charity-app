@@ -14,11 +14,11 @@ import React, { useState } from 'react'
 import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { useSearchParams } from 'next/navigation'
 
-import CustomTable from 'components/organisms/Table'
-import { getBannerClient } from 'services/banner/clientService'
-import useUpdated from 'hooks/useUpdated'
+import CustomTable from '@/components/organisms/Table'
+import { getBannerClient } from '@/services/banner/clientService'
+import useUpdated from '@/hooks/useUpdated'
 import { IModalTable } from './banner.interface'
-import { NAVIGATION_LINK } from 'utils/link'
+import { NAVIGATION_LINK } from '@/utils/link'
 
 function getColumns(showModal: any) {
   return [

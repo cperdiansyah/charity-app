@@ -4,17 +4,20 @@ import { Checkbox, Form, Input, Spin } from 'antd'
 import _ from 'lodash'
 import { useRouter } from 'next/navigation'
 
-import Navlink from 'components/atoms/Navlink'
-import CustomButton from 'components/atoms/Button'
+import Navlink from '@/components/atoms/Navlink'
+import CustomButton from '@/components/atoms/Button'
 
 // Utils
-import { NAVIGATION_LINK } from 'utils/link'
-import { notify } from 'helpers/notify'
+import { NAVIGATION_LINK } from '@/utils/link'
+import { notify } from '@/helpers/notify'
 // styles
 import styles from './login.module.scss'
-import useUserData from 'stores/userData'
-import { loginService } from 'services/auth'
-import { IErrorResponse, ISubmitLoginForm } from 'services/auth/index.interface'
+import useUserData from '@/stores/userData'
+import { loginService } from '@/services/auth'
+import {
+  IErrorResponse,
+  ISubmitLoginForm,
+} from '@/services/auth/index.interface'
 
 const LoginForm = () => {
   const [form] = Form.useForm()

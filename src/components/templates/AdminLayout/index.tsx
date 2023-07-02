@@ -1,15 +1,15 @@
 'use client'
 import React from 'react'
 import { Layout, Spin, theme } from 'antd'
-import AdminSidebar from 'components/organisms/Admin/Sidebar'
+import AdminSidebar from '@/components/organisms/Admin/Sidebar'
 // Components
-import AdminHeader from 'components/organisms/Admin/Header'
-import AdminFooter from 'components/organisms/Admin/Footer'
+import AdminHeader from '@/components/organisms/Admin/Header'
+import AdminFooter from '@/components/organisms/Admin/Footer'
 
 // styles
 import styles from './adminLayout.module.scss'
-import useSpinnerLayout from 'stores/spinnerLayout'
-import HeaderBack from 'components/molecules/Admin/HeaderBack'
+import useSpinnerLayout from '@/stores/spinnerLayout'
+import HeaderBack from '@/components/molecules/Admin/HeaderBack'
 
 const { Content } = Layout
 

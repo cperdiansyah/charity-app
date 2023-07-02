@@ -1,4 +1,4 @@
-import useScreenWidth from 'hooks/useScreenWidth'
+import useScreenWidth from '@/hooks/useScreenWidth'
 
 export const sidebarWidth = () => {
   // const router = useRouter()
@@ -14,7 +14,6 @@ export const currencyFormat = (money: number) => {
     minimumFractionDigits: 0,
   }).format(money)
 }
-
 
 export const removeAdminPath = (path: string) => {
   const adminRegex = /^\/admin\/(.*)$/
