@@ -5,20 +5,20 @@ import { MenuFoldOutlined, MenuUnfoldOutlined } from '@ant-design/icons'
 import _ from 'lodash'
 
 // component
-import Navlink from 'components/atoms/Navlink'
+import Navlink from '@/components/atoms/Navlink'
 
 // custom hooks
-import useScreenWidth from 'hooks/useScreenWidth'
-import useAuth from 'hooks/useAuth'
+import useScreenWidth from '@/hooks/useScreenWidth'
+import useAuth from '@/hooks/useAuth'
 
 // styles
 import styles from './header.module.scss'
 
 // utils
-import { NAVIGATION_LINK } from 'utils/link'
-import useUserData from 'stores/userData'
+import { NAVIGATION_LINK } from '@/utils/link'
+import useUserData from '@/stores/userData'
 import { INavlinkData, NavigationDekstop, NavigationMobile } from './Navigaton'
-import useLogout from 'hooks/useLogout'
+import useLogout from '@/hooks/useLogout'
 
 const navLinkData: INavlinkData[] = [
   {

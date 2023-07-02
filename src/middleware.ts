@@ -1,6 +1,6 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
-import { NAVIGATION_LINK } from 'utils/link'
+import { NAVIGATION_LINK } from '@/utils/link'
 
 const AUTH_PAGES = [NAVIGATION_LINK.Login, NAVIGATION_LINK.Signup]
 

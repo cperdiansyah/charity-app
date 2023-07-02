@@ -6,13 +6,13 @@ import { UserOutlined, LogoutOutlined } from '@ant-design/icons'
 import _ from 'lodash'
 
 // component
-import Navlink from 'components/atoms/Navlink'
-import CustomButton from 'components/atoms/Button'
+import Navlink from '@/components/atoms/Navlink'
+import CustomButton from '@/components/atoms/Button'
 
 // styles
 import styles from './header.module.scss'
-import { NAVIGATION_LINK } from 'utils/link'
-import { IUserData } from 'stores/userData'
+import { NAVIGATION_LINK } from '@/utils/link'
+import { IUserData } from '@/stores/userData'
 
 export interface INavlinkData {
   name: string

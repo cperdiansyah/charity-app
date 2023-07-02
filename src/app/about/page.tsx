@@ -6,7 +6,7 @@ import {
   PopupVideoSection,
   WeDoSection,
 } from './about.elements'
-import UserTemplate from 'components/templates/UserLayout'
+import UserTemplate from '@/components/templates/UserLayout'
 
 const About = () => {
   return (

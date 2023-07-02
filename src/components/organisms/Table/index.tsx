@@ -5,11 +5,8 @@ import type { ColumnsType, TablePaginationConfig } from 'antd/es/table'
 import { FilterValue, SorterResult } from 'antd/es/table/interface'
 
 import { ICustomTable, TableParams } from './table.interface'
-import {
-  usePathname,
-  useRouter,
-} from 'next/navigation'
-import useLogoutSessionExpired from 'hooks/useLogoutSessionExpired'
+import { usePathname, useRouter } from 'next/navigation'
+import useLogoutSessionExpired from '@/hooks/useLogoutSessionExpired'
 import TableHeader from './tableHeader'
 
 const CustomTable: React.FC<ICustomTable> = ({

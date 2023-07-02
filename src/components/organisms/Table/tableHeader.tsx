@@ -1,7 +1,7 @@
 import { PlusOutlined } from '@ant-design/icons'
 import { Input } from 'antd'
 
-import CustomButton from 'components/atoms/Button'
+import CustomButton from '@/components/atoms/Button'
 import React from 'react'
 
 const { Search } = Input

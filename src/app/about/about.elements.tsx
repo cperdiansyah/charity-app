@@ -1,4 +1,4 @@
-import Navlink from 'components/atoms/Navlink'
+import Navlink from '@/components/atoms/Navlink'
 import React from 'react'
 
 import styles from './about.module.scss'

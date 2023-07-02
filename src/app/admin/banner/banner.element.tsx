@@ -17,13 +17,13 @@ import _, { debounce } from 'lodash'
 import { useParams, useRouter } from 'next/navigation'
 import dayjs from 'dayjs'
 
-import { notify } from 'helpers/notify'
-import { disabledDate, dateFormat } from 'utils/date'
-import { api } from 'utils/clientSideFetch'
-import { SERVICE } from 'utils/api'
-import { NAVIGATION_LINK } from 'utils/link'
+import { notify } from '@/helpers/notify'
+import { disabledDate, dateFormat } from '@/utils/date'
+import { api } from '@/utils/clientSideFetch'
+import { SERVICE } from '@/utils/api'
+import { NAVIGATION_LINK } from '@/utils/link'
 
-import CustomButton from 'components/atoms/Button'
+import CustomButton from '@/components/atoms/Button'
 import {
   IFormAddBanner,
   IFormBanner,

@@ -3,7 +3,7 @@ import React, { useEffect, useState } from 'react'
 const ReactQuill = dynamic(() => import('react-quill'), { ssr: false })
 import dynamic from 'next/dynamic'
 import 'react-quill/dist/quill.snow.css'
-import useTextEditor from 'stores/textEditor'
+import useTextEditor from '@/stores/textEditor'
 import { Spin } from 'antd'
 
 interface IProps {
@@ -35,7 +35,6 @@ const QuilEditor = (props: IProps) => {
         value={value}
         onChange={handleChange}
         placeholder={props?.placeholder}
-        
       />
     )
 

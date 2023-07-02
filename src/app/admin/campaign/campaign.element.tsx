@@ -22,16 +22,16 @@ import { useParams, useRouter } from 'next/navigation'
 import _, { debounce } from 'lodash'
 
 /* Component */
-import CustomButton from 'components/atoms/Button'
-import QuilEditor from 'components/molecules/QuilEditor'
-import useTextEditor from 'stores/textEditor'
+import CustomButton from '@/components/atoms/Button'
+import QuilEditor from '@/components/molecules/QuilEditor'
+import useTextEditor from '@/stores/textEditor'
 
 /* Utils */
-import { disabledDate, dateFormat } from 'utils/date'
-import { api } from 'utils/clientSideFetch'
-import { SERVICE } from 'utils/api'
-import { notify } from 'helpers/notify'
-import { NAVIGATION_LINK } from 'utils/link'
+import { disabledDate, dateFormat } from '@/utils/date'
+import { api } from '@/utils/clientSideFetch'
+import { SERVICE } from '@/utils/api'
+import { notify } from '@/helpers/notify'
+import { NAVIGATION_LINK } from '@/utils/link'
 
 /* Interface */
 import {
@@ -40,7 +40,7 @@ import {
   ICharityMedia,
   InitialValue,
 } from './campaign.interfce'
-import useUserData from 'stores/userData'
+import useUserData from '@/stores/userData'
 
 const { RangePicker } = DatePicker
 
