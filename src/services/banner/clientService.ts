@@ -1,6 +1,6 @@
 import _ from 'lodash'
-import { SERVICE } from 'utils/api'
-import { api } from 'utils/clientSideFetch'
+import { SERVICE } from '@/utils/api'
+import { api } from '@/utils/clientSideFetch'
 
 interface IGetBannersQuery {
   page?: number | string

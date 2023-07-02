@@ -1,10 +1,10 @@
-import { notify } from 'helpers/notify'
+import { notify } from '@/helpers/notify'
 import _ from 'lodash'
 import { usePathname, useRouter } from 'next/navigation'
-import { logoutServices } from 'services/auth'
-import { IErrorResponse } from 'services/auth/index.interface'
-import useSpinnerLayout from 'stores/spinnerLayout'
-import { NAVIGATION_LINK } from 'utils/link'
+import { logoutServices } from '@/services/auth'
+import { IErrorResponse } from '@/services/auth/index.interface'
+import useSpinnerLayout from '@/stores/spinnerLayout'
+import { NAVIGATION_LINK } from '@/utils/link'
 
 const useLogout = () => {
   const router = useRouter()

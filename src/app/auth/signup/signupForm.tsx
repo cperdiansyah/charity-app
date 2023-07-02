@@ -4,21 +4,21 @@ import { Form, Input, Spin } from 'antd'
 import _ from 'lodash'
 import { useRouter } from 'next/navigation'
 
-import Navlink from 'components/atoms/Navlink'
-import CustomButton from 'components/atoms/Button'
+import Navlink from '@/components/atoms/Navlink'
+import CustomButton from '@/components/atoms/Button'
 
 // Utils
-import { NAVIGATION_LINK } from 'utils/link'
-import { notify } from 'helpers/notify'
-import { signupService } from 'services/auth'
+import { NAVIGATION_LINK } from '@/utils/link'
+import { notify } from '@/helpers/notify'
+import { signupService } from '@/services/auth'
 import {
   IErrorResponse,
   ISubmitSignupForm,
-} from 'services/auth/index.interface'
+} from '@/services/auth/index.interface'
 
 // styles
 import styles from './signup.module.scss'
-import useUserData from 'stores/userData'
+import useUserData from '@/stores/userData'
 
 const SignupForm = () => {
   const [form] = Form.useForm()

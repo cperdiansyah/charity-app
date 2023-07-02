@@ -1,7 +1,6 @@
-import UserTemplate from 'components/templates/UserLayout'
+import UserTemplate from '@/components/templates/UserLayout'
 import LoginForm from './loginForm'
-// import LoginForm from 'components/organisms/Auth/LoginForm'
-
+// import LoginForm from '@/components/organisms/Auth/LoginForm'
 
 const Login = () => {
   return (

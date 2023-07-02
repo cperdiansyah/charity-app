@@ -1,4 +1,4 @@
-import UserLayout from 'components/templates/UserLayout'
+import UserLayout from '@/components/templates/UserLayout'
 import React from 'react'
 
 const Profile = () => {

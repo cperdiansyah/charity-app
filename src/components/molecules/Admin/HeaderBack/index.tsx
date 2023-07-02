@@ -3,8 +3,8 @@ import { Button } from 'antd'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 
 import { usePathname, useRouter } from 'next/navigation'
-import { removeAdminPath } from 'helpers'
-import { toCapitalize } from 'helpers/capitalize'
+import { removeAdminPath } from '@/helpers'
+import { toCapitalize } from '@/helpers/capitalize'
 
 const HeaderBack = (props: { style?: CSSProperties }) => {
   const pathname = usePathname()

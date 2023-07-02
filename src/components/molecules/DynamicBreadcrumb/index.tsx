@@ -1,10 +1,10 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import { Breadcrumb } from 'antd'
-import Navlink from 'components/atoms/Navlink'
+import Navlink from '@/components/atoms/Navlink'
 import { usePathname } from 'next/navigation'
-import { NAVIGATION_LINK } from 'utils/link'
-import { removeAdminPath } from 'helpers'
+import { NAVIGATION_LINK } from '@/utils/link'
+import { removeAdminPath } from '@/helpers'
 
 export const DynamicBreadcrumbs = () => {
   const pathname = usePathname()
@@ -17,8 +17,6 @@ export const DynamicBreadcrumbs = () => {
   useEffect(() => {
     generateBreadcrumbItems(pathname)
   }, [pathname])
-
-  
 
   const generateBreadcrumbItems = (pathname: string) => {
     const clearPathname = removeAdminPath(pathname)

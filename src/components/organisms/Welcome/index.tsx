@@ -1,7 +1,7 @@
 'use client'
 import React, { useEffect, useState } from 'react'
 import styles from './welcome.module.scss'
-import { FETCH_OPTIONS, SERVICE } from 'utils/api'
+import { FETCH_OPTIONS, SERVICE } from '@/utils/api'
 const Welcome = () => {
   const [data, setData] = useState(null)
   const [isLoading, setLoading] = useState(false)
