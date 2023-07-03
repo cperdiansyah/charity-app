@@ -16,6 +16,7 @@ export const NAVIGATION_LINK = {
   Homepage: '/',
   About: '/about',
   Contact: '/contact',
+  Donate: '/donate',
   Profile: '/user/profile',
   Login: '/auth/login',
   Signup: '/auth/signup',

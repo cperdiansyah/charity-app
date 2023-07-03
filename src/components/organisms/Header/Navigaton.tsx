@@ -46,7 +46,7 @@ export const NavigationDekstop = (props: {
           <li>
             <CustomButton
               buttontype="primary"
-              href="#popularcause"
+              href={NAVIGATION_LINK.Donate}
               className={`${styles['btn-donation']}`}
             >
               <span className="badge">
