@@ -135,7 +135,8 @@ export const NavigationMobile = (props: {
           <CustomButton
             buttontype="primary"
             className={`mb-5 text-white ${styles['button-primary']}`}
-            href="#popularcause"
+            // href="#popularcause"
+            href={NAVIGATION_LINK.Donate}
           >
             <span className="badge">
               <i className="fa fa-heart" />

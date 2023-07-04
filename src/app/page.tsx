@@ -1,3 +1,4 @@
+import CharityList from '@/components/organisms/CharityList'
 import Header from '@/components/organisms/Header'
 import Info from '@/components/organisms/Info'
 import Welcome from '@/components/organisms/Welcome'
@@ -25,7 +26,7 @@ export default async function Home() {
   return (
     <UserLayout>
       <Welcome />
-
+      <CharityList />
       <Info />
     </UserLayout>
   )

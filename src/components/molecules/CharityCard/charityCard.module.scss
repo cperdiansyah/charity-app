@@ -1,0 +1,5 @@
+.button-primary {
+  height: unset;
+  // padding: 12px 20px !important;
+  @apply mx-auto flex w-fit px-5 py-3 text-base;
+}
