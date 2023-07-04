@@ -1,8 +1,9 @@
-'use server'
+// 'use server'
 import _ from 'lodash'
 import { methodType, responseRefreshToken } from './utils.interface'
 import { cookies } from 'next/headers'
 import { FETCH_OPTIONS, SERVICE } from './api'
+import Cookies from 'next-cookies-universal'
 import { setCookie, getCookie, deleteCookie } from 'cookies-next'
 
 export const fetchData = async (
@@ -28,17 +29,29 @@ export const fetchData = async (
 }
 
 // Fetch with interceptor function
-export async function nextFetch(
-  endpoint: string,
-  options?: RequestInit,
-  method?: methodType,
+export async function nextFetch({
+  endpoint,
+  options,
+  method,
+  token,
+}: {
+  endpoint: string
+  options?: RequestInit
+  method?: methodType
   token?: string
-) {
+}) {
+  const cookies = Cookies('server')
+  const myToken = cookies.get('token')
+
   const url = [process.env.NEXT_PUBLIC_BASE_URL, endpoint].join('')
   // const accessToken = localStorage.getItem('accessToken')
-  const accessToken = _.isEmpty(getCookie('token')) ? token : getCookie('token')
+  const accessToken = _.isEmpty(myToken) ? token : myToken
 
-  const requestOptions = options || FETCH_OPTIONS
+  // const requestOptions = options || FETCH_OPTIONS
+  const requestOptions = {
+    ...FETCH_OPTIONS,
+    ...options,
+  }
 
   // If the access token is not present, throw an error or handle as per your requirement
   if (!accessToken) {
