@@ -1,11 +1,12 @@
+import _ from 'lodash'
+
 import { ICharityCard } from '@/components/molecules/CharityCard'
 import CharityList from '@/components/organisms/CharityList'
 import Info from '@/components/organisms/Info'
 import Welcome from '@/components/organisms/Welcome'
 import UserLayout from '@/components/templates/UserLayout'
 import { SERVICE } from '@/utils/api'
-import { fetchData, nextFetch } from '@/utils/serverSideFetch'
-import _ from 'lodash'
+import { nextFetch } from '@/utils/serverSideFetch'
 
 const getCharity = async () => {
   try {
@@ -22,7 +23,6 @@ const getCharity = async () => {
 
 export default async function Home() {
   const dataCharity = await getCharity()
-  // console.log(data)
   const { charity } = dataCharity
 
   const filteredCharity: ICharityCard[] = charity?.map((item: any) => ({
