@@ -48,6 +48,8 @@ const CharityCard = (props: ICharityCard) => {
             <a href="">{charity.category}</a>
           </li>
         </ul> */}
+          
+          
 
           <a href="#" className="xs-post-title xs-mb-30">
             {title}
