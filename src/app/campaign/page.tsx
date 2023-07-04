@@ -10,11 +10,12 @@ const UserDonation = () => {
       <div className="container">
         <CharityCard
           author="Chandra"
-          donated={120000}
+          donated={200000}
           endDate={'2023/07/20'}
           image="http://dev.laptop.org/~reuben/Donate3.jpg"
           target={200000}
           title="Lalalala"
+          slug='lalala'
         />
       </div>
     </UserLayout>

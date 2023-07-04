@@ -7,6 +7,8 @@ import {
 import CustomButton from '@/components/atoms/Button'
 
 import styles from './charityCard.module.scss'
+import Link from 'next/link'
+import { NAVIGATION_LINK } from '@/utils/link'
 
 export interface ICharityCard {
   image: string
@@ -15,21 +17,26 @@ export interface ICharityCard {
   title: string
   endDate: string | Date
   author: string
+  slug: string
 }
 const CharityCard = (props: ICharityCard) => {
-  const { image, target, donated, title, endDate, author } = props
+  const { image, target, donated, title, endDate, author, slug } = props
   const calculateFund = calculateFunded(donated, target)
   return (
     <div className="col-lg-4 col-md-6">
       <div className="xs-popular-item xs-box-shadow">
         <div className="xs-item-header">
-          <img src={image} alt="" />
+          <img
+            src={image}
+            alt={title}
+            className={` ${styles['charity-card-image']}`}
+          />
 
           <div className="xs-skill-bar">
             <div
               className="xs-skill-track"
               style={{
-                width: `${calculateFund}%`,
+                width: `${calculateFund === 0 ? 11 : calculateFund}%`,
               }}
             >
               <p>
@@ -48,12 +55,13 @@ const CharityCard = (props: ICharityCard) => {
             <a href="">{charity.category}</a>
           </li>
         </ul> */}
-          
-          
 
-          <a href="#" className="xs-post-title xs-mb-30">
-            {title}
-          </a>
+          <Link
+            href={`${NAVIGATION_LINK.Campaign}/${slug}`}
+            title={title}
+            className="xs-post-title xs-mb-30"
+          />
+          {/* </Link> */}
 
           <ul className="xs-list-with-content">
             <li className="pledged">
@@ -95,7 +103,8 @@ const CharityCard = (props: ICharityCard) => {
           <CustomButton
             buttontype="primary"
             className="btn btn-primary btn-block"
-            href="#popularcause"
+            // href="#popularcause"
+            href={`${NAVIGATION_LINK.Campaign}/${slug}`}
           >
             Donate This Cause
           </CustomButton>
