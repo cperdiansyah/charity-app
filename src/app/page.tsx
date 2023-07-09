@@ -36,7 +36,7 @@ export default async function Home() {
     author: item.author.name,
     slug: item.slug,
   }))
-  console.log(filteredCharity)
+  // console.log(filteredCharity)
 
   return (
     <UserLayout>

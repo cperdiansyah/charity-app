@@ -9,7 +9,10 @@ import styles from './campaign.module.scss'
 
 const UserDonation = () => {
   return (
-    <UserLayout paddingTop={150} className="relative" headerColor="black">
+    <UserLayout
+      className="relative pt-[90px] md:pt-[150px] "
+      headerColor="black"
+    >
       <div className={`top-bg ${styles['campaign-page']}`}></div>
       <div className="container">
         <SwiperBanner className="mb-5" />

@@ -15,7 +15,8 @@ html {
   scroll-behavior: smooth;
 }
 
-.swiper-pagination-bullet-active {
+.swiper-pagination-bullet-active,
+.ant-progress-bg {
   background-color: var(--primary-color) !important;
 }
 

@@ -1,0 +1,35 @@
+.campaign {
+  @apply w-full md:w-[70vw];
+  &-content {
+    &-image {
+      img {
+        @apply m-auto h-full   object-cover md:h-[80vh] md:w-[70vw];
+      }
+    }
+    &-button {
+      @apply sticky bottom-2 mt-3;
+      .campaign-button {
+        @apply h-fit px-3 py-2 md:px-4 md:py-3;
+        span {
+          @apply text-base;
+        }
+      }
+    }
+    &-info {
+      &__campaign-count {
+        ul {
+          @apply flex flex-wrap;
+          li {
+            flex: 0 0 25%;
+            // max-width: 25%;
+            @apply max-w-[50vw] flex-[0_0_50%]  md:max-w-[25vw] md:flex-[0_0_25%];
+
+            // @media only screen and (max-width: 768px) {
+            //   flex: 0 0 50%;
+            // }
+          }
+        }
+      }
+    }
+  }
+}
