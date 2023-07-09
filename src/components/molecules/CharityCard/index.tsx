@@ -1,4 +1,3 @@
-// 'use client'
 import React from 'react'
 import {
   calculateDaysRemaining,
@@ -10,6 +9,7 @@ import CustomButton from '@/components/atoms/Button'
 import styles from './charityCard.module.scss'
 import Link from 'next/link'
 import { NAVIGATION_LINK } from '@/utils/link'
+import useScreenWidth from '@/hooks/useScreenWidth'
 
 export interface ICharityCard {
   image: string
@@ -23,11 +23,17 @@ export interface ICharityCard {
 const CharityCard = (props: ICharityCard) => {
   const { image, target, donated, title, endDate, author, slug } = props
   // console.log(props)
+
   const calculateFund = calculateFunded(donated, target)
+
+  const progressBar = calculateFund === 0 ? 8 : calculateFund
+
   return (
     <div className="col-lg-4 col-md-6 col-6 px-2">
-      <div className="xs-popular-item xs-box-shadow">
-        <div className="xs-item-header">
+      <div
+        className={`xs-popular-item xs-box-shadow ${styles['charity-card']}`}
+      >
+        <div className={`xs-item-header ${styles['card-header']}`}>
           <img
             src={image}
             alt={title}
@@ -36,12 +42,12 @@ const CharityCard = (props: ICharityCard) => {
 
           <div className="xs-skill-bar">
             <div
-              className="xs-skill-track"
+              className={`xs-skill-track ${styles['charity-skill-bar']}`}
               style={{
-                width: `${calculateFund === 0 ? 11 : calculateFund}%`,
+                width: `${calculateFund}%`,
               }}
             >
-              <p className="!md:h-[40px] !md:w-[40px] !h-[25px] !w-[25px]">
+              <p className={`${styles['percentage-funded']}`}>
                 <span className="number-percentage-count number-percentage ">
                   {calculateFund}
                 </span>
@@ -51,7 +57,9 @@ const CharityCard = (props: ICharityCard) => {
           </div>
         </div>
         {/* <!-- .xs-item-header END --> */}
-        <div className="xs-item-content p-[12px] md:p-5">
+        <div
+          className={`xs-item-content p-[12px] md:p-5 ${styles['card-content']} `}
+        >
           {/* <ul className="xs-simple-tag xs-mb-20">
           <li>
             <a href="">{charity.category}</a>
@@ -60,13 +68,13 @@ const CharityCard = (props: ICharityCard) => {
 
           <Link
             href={`${NAVIGATION_LINK.Campaign}/${slug}`}
-            className="xs-post-title xs-mb-30 text-black"
+            className="xs-post-title mb-3 text-xl text-black md:mb-7 md:text-2xl"
           >
             {title}
           </Link>
           {/* </Link> */}
 
-          <ul className="xs-list-with-content">
+          <ul className="xs-list-with-content mb-3 ">
             <li className="pledged">
               {currencyFormat(donated)}
               <span className={`${styles['font-label']}`}>Pledged</span>
@@ -105,7 +113,7 @@ const CharityCard = (props: ICharityCard) => {
           </div>
           <CustomButton
             buttontype="primary"
-            className="btn btn-primary btn-block"
+            className={`btn btn-primary btn-block ${styles['card-button']} `}
             // href="#popularcause"
             href={`${NAVIGATION_LINK.Campaign}/${slug}`}
           >

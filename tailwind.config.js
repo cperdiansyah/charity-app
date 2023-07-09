@@ -18,7 +18,7 @@ module.exports = {
         // 'secondary-color': 'var(--secondary-color)',
       },
     },
-    screen: {
+    screens: {
       sm: '576px',
       // => @media (min-width: 576px) { ... }
 
@@ -31,7 +31,7 @@ module.exports = {
       xl: '1200px',
       // => @media (min-width: 1200px) { ... }
 
-      '2xl': '1320px',
+      // '2xl': '1320px',
       // => @media (min-width: 1320px) { ... }
     },
   },

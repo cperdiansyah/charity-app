@@ -11,9 +11,28 @@
   object-fit: cover;
 }
 
-.font-value {
-  @apply text-xs md:text-lg;
-}
-.font-label {
-  @apply text-xs md:text-lg;
+.charity-card {
+  .card-header {
+    p.percentage-funded {
+      @apply left-0  flex h-[25px] w-[25px] md:h-[30px] md:w-[30px];
+    }
+    // .charity-skill-bar {
+    //   @apply left-2 md:left-0;
+    // }
+  }
+
+  .card-content {
+    span.font-value {
+      @apply text-xs md:text-lg;
+    }
+    span.font-label {
+      @apply text-xs md:text-lg;
+    }
+    a.card-button {
+      @apply h-fit px-3 py-2 md:px-4 md:py-3;
+      span {
+        @apply text-base md:text-lg;
+      }
+    }
+  }
 }
