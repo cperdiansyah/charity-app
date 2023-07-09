@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, Key } from 'react'
 import _ from 'lodash'
 
 import CharityCard, { ICharityCard } from '@/components/molecules/CharityCard'
@@ -43,12 +43,11 @@ const CampaignList = (props: ICampaignList) => {
       return error
     }
   }
-  console.log(charity)
 
   return (
     <div className={`row   ${[props?.className]?.join(' ')}`}>
-      {charity?.map((charity: ICharityCard) => {
-        return <CharityCard {...charity} />
+      {charity?.map((charity: ICharityCard, index: Key) => {
+        return <CharityCard {...charity} key={index} />
       })}
     </div>
   )
