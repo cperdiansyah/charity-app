@@ -1,7 +1,7 @@
 'use client'
 // Import Swiper React components
 import { useState, useEffect, Key } from 'react'
-import { Navigation, Pagination, Autoplay } from 'swiper/modules'
+import {  Pagination, Autoplay } from 'swiper/modules'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 
@@ -39,25 +39,18 @@ const SwiperBanner = (props: ISwiperList) => {
   return (
     <Swiper
       // install Swiper modules
-      modules={[Navigation, Pagination, Autoplay]}
+      modules={[Pagination, Autoplay]}
       spaceBetween={50}
       slidesPerView={1}
       centeredSlides={true}
-      // autoplay={{
-      //   delay: 2500,
-      //   disableOnInteraction: false,
-      // }}
-      // navigation
+      autoplay={{
+        delay: 2500,
+        disableOnInteraction: false,
+      }}
       pagination={{ clickable: true }}
-      // scrollbar={{ draggable: true }}
-      // onSwiper={(swiper) => console.log(swiper)}
-      // onSlideChange={() => console.log('slide change')}
       className={[props.className].join(' ')}
     >
-      {/* <SwiperSlide>Slide 1</SwiperSlide>
-      <SwiperSlide>Slide 2</SwiperSlide>
-      <SwiperSlide>Slide 3</SwiperSlide>
-      <SwiperSlide>Slide 4</SwiperSlide> */}
+      
       {banner?.map((item: any, index: Key) => (
         <SwiperSlide key={index}>
           <BannerItem

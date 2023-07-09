@@ -15,8 +15,8 @@ const BannerItem = (props: IBannerItem) => {
     <a
       href={props.href}
       className={`${styles['banner-link']}`}
-      target="_blank"
-      rel="noopener noreferrer"
+      // target="_blank"
+      // rel="noopener noreferrer"
     >
       <img
         src={props.imgSrc}
