@@ -96,6 +96,17 @@ $breakpoint-tablet: 1000px;
   color: #fff !important;
 }
 
+.header-color-scheme {
+  &-black {
+    ul li a {
+      color: #000 !important;
+      #header-with-button,
+      span {
+        color: #fff !important;
+      }
+    }
+  }
+}
 // .menu-profile {
 //   @apply ml-auto  w-1/2;
 // }

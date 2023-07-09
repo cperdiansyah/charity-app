@@ -9,15 +9,17 @@ const UserLayout = ({
   children,
   paddingTop,
   className,
+  headerColor,
 }: {
   children: React.ReactNode
   paddingTop?: number
   className?: string
+  headerColor?: 'white' | 'black'
 }) => {
   const [spinnerLayout, setSpinnerLayout] = useSpinnerLayout()
   return (
     <Spin spinning={spinnerLayout}>
-      <Header />
+      <Header headerColor={headerColor} />
       <div className={[className].join(' ')} style={{ paddingTop }}>
         {children}
       </div>

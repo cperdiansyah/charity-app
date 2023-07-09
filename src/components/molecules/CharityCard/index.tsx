@@ -1,3 +1,4 @@
+// 'use client'
 import React from 'react'
 import {
   calculateDaysRemaining,
@@ -21,9 +22,10 @@ export interface ICharityCard {
 }
 const CharityCard = (props: ICharityCard) => {
   const { image, target, donated, title, endDate, author, slug } = props
+  // console.log(props)
   const calculateFund = calculateFunded(donated, target)
   return (
-    <div className="col-lg-4 col-md-6">
+    <div className="col-lg-4 col-md-6 col-6 px-2">
       <div className="xs-popular-item xs-box-shadow">
         <div className="xs-item-header">
           <img
@@ -39,8 +41,8 @@ const CharityCard = (props: ICharityCard) => {
                 width: `${calculateFund === 0 ? 11 : calculateFund}%`,
               }}
             >
-              <p>
-                <span className="number-percentage-count number-percentage">
+              <p className="!md:h-[40px] !md:w-[40px] !h-[25px] !w-[25px]">
+                <span className="number-percentage-count number-percentage ">
                   {calculateFund}
                 </span>
                 %
@@ -49,7 +51,7 @@ const CharityCard = (props: ICharityCard) => {
           </div>
         </div>
         {/* <!-- .xs-item-header END --> */}
-        <div className="xs-item-content">
+        <div className="xs-item-content p-[12px] md:p-5">
           {/* <ul className="xs-simple-tag xs-mb-20">
           <li>
             <a href="">{charity.category}</a>
@@ -58,15 +60,16 @@ const CharityCard = (props: ICharityCard) => {
 
           <Link
             href={`${NAVIGATION_LINK.Campaign}/${slug}`}
-            title={title}
-            className="xs-post-title xs-mb-30"
-          />
+            className="xs-post-title xs-mb-30 text-black"
+          >
+            {title}
+          </Link>
           {/* </Link> */}
 
           <ul className="xs-list-with-content">
             <li className="pledged">
               {currencyFormat(donated)}
-              <span>Pledged</span>
+              <span className={`${styles['font-label']}`}>Pledged</span>
             </li>
             <li>
               <span
@@ -76,30 +79,30 @@ const CharityCard = (props: ICharityCard) => {
               >
                 {calculateFund}
               </span>
-              %<span>Funded</span>
+              %<span className={`${styles['font-label']}`}>Funded</span>
             </li>
             <li>
               {calculateDaysRemaining(endDate)}
-              <span>Days to go</span>
+              <span className={`${styles['font-label']}`}>Days to go</span>
             </li>
           </ul>
+          <div className="charity-user  hidden md:block">
+            <span className="xs-separetor" />
 
-          <span className="xs-separetor" />
-
-          <div className="row xs-margin-0">
-            {/* <div className="xs-round-avatar">
+            <div className="row xs-margin-0">
+              {/* <div className="xs-round-avatar">
             <img src={profile_photo} alt="" />
           </div> */}
-            <div className="xs-avatar-title">
-              <a href="#">
-                <span>By</span>
-                {author}
-              </a>
+              <div className="xs-avatar-title">
+                <a href="#">
+                  <span>By</span>
+                  {author}
+                </a>
+              </div>
             </div>
+
+            <span className="xs-separetor" />
           </div>
-
-          <span className="xs-separetor" />
-
           <CustomButton
             buttontype="primary"
             className="btn btn-primary btn-block"

@@ -7,7 +7,6 @@ const poppins = Poppins({
 })
 
 // styles
-import './globals.css'
 import '@public/css/bootstrap.min.css'
 import '@public/css/font-awesome.min.css'
 import '@public/css/xsIcon.css'
@@ -19,6 +18,8 @@ import '@public/css/animate.css'
 import '@public/css/plugins.css'
 import '@public/css/style.css'
 import '@public/css/responsive.css'
+import './globals.css'
+
 import Loading from './loading'
 
 export const metadata = {

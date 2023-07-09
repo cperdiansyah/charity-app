@@ -10,3 +10,10 @@
   height: 100vh !important;
   object-fit: cover;
 }
+
+.font-value {
+  @apply text-xs md:text-lg;
+}
+.font-label {
+  @apply text-xs md:text-lg;
+}

@@ -49,7 +49,7 @@ export const NavigationDekstop = (props: {
               href={NAVIGATION_LINK.Campaign}
               className={`${styles['btn-donation']}`}
             >
-              <span className="badge">
+              <span className="badge" id="header-with-button">
                 <i className="fa fa-heart" />
                 Donate Now
               </span>
@@ -138,7 +138,7 @@ export const NavigationMobile = (props: {
             // href="#popularcause"
             href={NAVIGATION_LINK.Campaign}
           >
-            <span className="badge">
+            <span className="badge" id="header-with-button">
               <i className="fa fa-heart" />
               Donate Now
             </span>

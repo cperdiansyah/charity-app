@@ -38,7 +38,7 @@ const navLinkData: INavlinkData[] = [
   },
 ]
 
-const Header = () => {
+const Header = ({ headerColor }: { headerColor?: string }) => {
   // custom hooks
   const screenWidth = useScreenWidth()
   const token = useAuth()
@@ -73,7 +73,11 @@ const Header = () => {
       <div className="container">
         <nav className="xs-menus">
           {/* <!-- .nav-header END --> */}
-          <div className="nav-menus-wrapper row">
+          <div
+            className={`nav-menus-wrapper row ${
+              headerColor ? styles[`header-color-scheme-${headerColor}`] : ''
+            }`}
+          >
             <div
               className={`xs-logo-wraper col-lg-2 xs-padding-0  ${styles['nav-wrapper']} `}
             >

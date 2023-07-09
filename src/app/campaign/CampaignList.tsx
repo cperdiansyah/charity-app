@@ -8,7 +8,10 @@ import CharityCard, { ICharityCard } from '@/components/molecules/CharityCard'
 import { api } from '@/utils/clientSideFetch'
 import { SERVICE } from '@/utils/api'
 
-const CampaignList = () => {
+interface ICampaignList {
+  className?: string
+}
+const CampaignList = (props: ICampaignList) => {
   const [charity, setCharity] = useState<ICharityCard[]>([])
 
   useEffect(() => {
@@ -40,9 +43,10 @@ const CampaignList = () => {
       return error
     }
   }
+  console.log(charity)
 
   return (
-    <div className="row">
+    <div className={`row   ${[props?.className]?.join(' ')}`}>
       {charity?.map((charity: ICharityCard) => {
         return <CharityCard {...charity} />
       })}
