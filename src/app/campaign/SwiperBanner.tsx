@@ -1,7 +1,7 @@
 'use client'
 // Import Swiper React components
 import { useState, useEffect, Key } from 'react'
-import {  Pagination, Autoplay } from 'swiper/modules'
+import { Pagination, Autoplay } from 'swiper/modules'
 
 import { Swiper, SwiperSlide } from 'swiper/react'
 
@@ -12,6 +12,8 @@ import 'swiper/css/scrollbar'
 import { api } from '@/utils/clientSideFetch'
 import { SERVICE } from '@/utils/api'
 import BannerItem from '@/components/molecules/Banner'
+
+import styles from './campaign.module.scss'
 
 interface ISwiperList {
   className?: string
@@ -48,9 +50,8 @@ const SwiperBanner = (props: ISwiperList) => {
         disableOnInteraction: false,
       }}
       pagination={{ clickable: true }}
-      className={[props.className].join(' ')}
+      className={` ${styles['swiper-banner']} ${[props.className].join(' ')}`}
     >
-      
       {banner?.map((item: any, index: Key) => (
         <SwiperSlide key={index}>
           <BannerItem

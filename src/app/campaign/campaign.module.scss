@@ -11,3 +11,7 @@
   @apply absolute top-0 w-full;
 }
  */
+
+.swiper-banner {
+  @apply max-h-52 w-full overflow-hidden rounded-lg;
+}
