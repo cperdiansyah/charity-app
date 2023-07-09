@@ -46,10 +46,10 @@ export const NavigationDekstop = (props: {
           <li>
             <CustomButton
               buttontype="primary"
-              href="#popularcause"
+              href={NAVIGATION_LINK.Campaign}
               className={`${styles['btn-donation']}`}
             >
-              <span className="badge">
+              <span className="badge" id="header-with-button">
                 <i className="fa fa-heart" />
                 Donate Now
               </span>
@@ -135,9 +135,10 @@ export const NavigationMobile = (props: {
           <CustomButton
             buttontype="primary"
             className={`mb-5 text-white ${styles['button-primary']}`}
-            href="#popularcause"
+            // href="#popularcause"
+            href={NAVIGATION_LINK.Campaign}
           >
-            <span className="badge">
+            <span className="badge" id="header-with-button">
               <i className="fa fa-heart" />
               Donate Now
             </span>

@@ -1,4 +1,5 @@
 import useScreenWidth from '@/hooks/useScreenWidth'
+import dayjs from 'dayjs'
 
 export const sidebarWidth = () => {
   // const router = useRouter()
@@ -11,6 +12,7 @@ export const sidebarWidth = () => {
 export const currencyFormat = (money: number) => {
   return new Intl.NumberFormat('id-ID', {
     currency: 'IDR',
+    style: 'currency',
     minimumFractionDigits: 0,
   }).format(money)
 }
@@ -20,4 +22,16 @@ export const removeAdminPath = (path: string) => {
   const match = path.match(adminRegex)
 
   return match ? '/' + match[1] : path
+}
+
+export function calculateDaysRemaining(date_end: Date | string) {
+  const currentDay = dayjs()
+  const campaignDate = dayjs(date_end)
+
+  const diffDays = campaignDate.diff(currentDay, 'days')
+  return diffDays
+}
+
+export function calculateFunded(pledged: number, target: number) {
+  return Math.round((1 / (target / pledged)) * 100)
 }

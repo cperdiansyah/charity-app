@@ -2,6 +2,10 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --primary-color: #18bfc3;
+}
+
 @import url('https: //fonts.googleapis.com/css?family=Poppins:300,400,500,600,700%7CRoboto+Slab:400,700');
 
 body {
@@ -9,6 +13,11 @@ body {
 }
 html {
   scroll-behavior: smooth;
+}
+
+.swiper-pagination-bullet-active,
+.ant-progress-bg {
+  background-color: var(--primary-color) !important;
 }
 
 /* 

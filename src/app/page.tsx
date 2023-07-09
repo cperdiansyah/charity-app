@@ -1,31 +1,47 @@
-import Header from '@/components/organisms/Header'
+import _ from 'lodash'
+
+import { ICharityCard } from '@/components/molecules/CharityCard'
+import CharityList from '@/components/organisms/CharityList'
 import Info from '@/components/organisms/Info'
 import Welcome from '@/components/organisms/Welcome'
 import UserLayout from '@/components/templates/UserLayout'
-import Image from 'next/image'
-// import { NEXT_PUBLIC_BASE_URL as BASE_URL } from '@/utils/api'
+import { SERVICE } from '@/utils/api'
+import { nextFetch } from '@/utils/serverSideFetch'
 
 const getCharity = async () => {
   try {
-    const data = await fetch(
-      `${process.env.NEXT_PUBLIC_BASE_URL}/api/v1/charity`,
-      {
-        next: { revalidate: 10 },
-      }
-    )
-
-    const response = await data.json()
-    return response
+    const dataCharity = await nextFetch({
+      endpoint: SERVICE.charity,
+      method: 'GET',
+      token: '',
+    })
+    return dataCharity
   } catch (error) {
     return error
   }
 }
 
 export default async function Home() {
+  const dataCharity = await getCharity()
+  const { charity } = dataCharity
+
+  const filteredCharity: ICharityCard[] = charity?.map((item: any) => ({
+    image:
+      _.get(item, 'media[0].content') ||
+      'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930',
+    target: item.donation_target,
+    donated: 0,
+    title: item.title,
+    endDate: item.end_date,
+    author: item.author.name,
+    slug: item.slug,
+  }))
+  // console.log(filteredCharity)
+
   return (
     <UserLayout>
       <Welcome />
-
+      <CharityList dataCharity={filteredCharity} maxCharity={3} />
       <Info />
     </UserLayout>
   )

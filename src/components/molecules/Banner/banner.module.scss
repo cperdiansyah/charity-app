@@ -1,0 +1,6 @@
+.banner-link {
+  @apply block h-full w-full ;
+  .banner-image {
+    @apply w-full object-cover object-center;
+  }
+}
