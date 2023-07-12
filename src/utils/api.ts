@@ -13,6 +13,7 @@ export const SERVICE = {
   uploadMediaTemp: '/api/v1/media/upload',
   // Charity
   charity: '/api/v1/charity',
+  charityBySlug: '/api/v1/charity/slug',
   detailCharity: '/api/v1/charity/:id',
   acceptCharity: '/api/v1/charity/:id/status',
   mediaUpload: '/api/v1/charity/upload',
