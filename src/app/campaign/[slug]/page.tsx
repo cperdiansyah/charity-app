@@ -1,19 +1,21 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Progress, Spin } from 'antd'
+import { Button, Modal, Progress, Spin } from 'antd'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeftOutlined } from '@ant-design/icons'
+import _isEmpty from 'lodash/isEmpty'
 
 import UserLayout from '@/components/templates/UserLayout'
 import CustomButton from '@/components/atoms/Button'
 
-import { calculateDaysRemaining, currencyFormat } from '@/helpers'
+import { calculateDaysRemaining, calculateFunded, currencyFormat } from '@/helpers'
 
 import styles from './campaignDetail.module.scss'
 import { api } from '@/utils/clientSideFetch'
 import { SERVICE } from '@/utils/api'
 import dayjs from 'dayjs'
+import useUpdated from '@/hooks/useUpdated'
 
 const CampaignDetail = () => {
   const router = useRouter()
@@ -22,28 +24,73 @@ const CampaignDetail = () => {
 
   const [isExpand, setIsExpand] = useState(false)
   const [loading, setLoading] = useState(false)
+  const [isModalOpen, setIsModalOpen] = useState(false)
+
   const [campaignData, setCampaignData] = useState<any>()
+  const [paymentData, setPaymentData] = useState<any>()
+  const [amount, setAmount] = useState<number>(0)
+
+  const percentage = calculateFunded(amount, campaignData?.donation_target || 0)
 
   const today = dayjs()
   const endDate = dayjs(campaignData?.end_date || today)
   useEffect(() => {
     // console.log(params)
-    getCampaignData()
+    const getData = async () => {
+      setLoading(true)
+      await getCampaignData()
+      setLoading(false)
+    }
+    getData()
   }, [])
 
+  useUpdated(() => {
+    if (!_isEmpty(campaignData)) {
+      setLoading(true)
+      getPaymentData()
+      setLoading(false)
+    }
+  }, [campaignData?._id])
+
   const getCampaignData = async () => {
-    setLoading(true)
+    // setLoading(true)
     try {
       const resDetailCharity = await api.get(
         `${SERVICE.charityBySlug}/${slugcharity}`
       )
-      const dataCharity = resDetailCharity.data.charity[0]
+      const dataCharity = resDetailCharity.data.charity
       setCampaignData(dataCharity)
-      setLoading(false)
+      // setLoading(false)
     } catch (error) {
       console.log(error)
       setLoading(false)
     }
+  }
+
+  const getPaymentData = async () => {
+    try {
+      const resPaymentCharity = await api.get(
+        `${SERVICE.PaymentCharity}/user/${campaignData?._id}?getAll=true&status=paid`
+      )
+      const dataPaymentCharity = resPaymentCharity.data.campaignPayment
+      setPaymentData(dataPaymentCharity)
+
+      const totalAmount = calculateTotalAmount(dataPaymentCharity)
+      setAmount(totalAmount)
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
+    }
+  }
+
+  function calculateTotalAmount(campaignPayment: any) {
+    let totalAmount = 0
+    for (let i = 0; i < campaignPayment.length; i++) {
+      const payment = campaignPayment[i]
+      totalAmount += payment.amount
+    }
+
+    return totalAmount
   }
 
   const handleClick = () => {
@@ -52,6 +99,14 @@ const CampaignDetail = () => {
 
   const handleSubmit = () => {
     console.log('asdasd')
+    setIsModalOpen(true)
+  }
+  const handleOk = () => {
+    setIsModalOpen(false)
+  }
+
+  const handleCancel = () => {
+    setIsModalOpen(false)
   }
 
   return (
@@ -97,10 +152,14 @@ const CampaignDetail = () => {
               <div
                 className={`mb-3 ${styles['campaign-content-info__campaign-count']}`}
               >
-                <Progress percent={50} status="active" showInfo={false} />
+                <Progress
+                  percent={percentage}
+                  status="active"
+                  showInfo={false}
+                />
                 <ul className="xs-list-with-content mb-3 ">
                   <li className="pledged ">
-                    {currencyFormat(120000)}
+                    {currencyFormat(amount)}
                     <span className={`${styles['font-label']}`}>Pledged</span>
                   </li>
                   <li className="target ">
@@ -113,8 +172,7 @@ const CampaignDetail = () => {
                       data-value="90"
                       data-animation-duration="3500"
                     >
-                      {/* {calculateFund} */}
-                      {0}
+                      {percentage}
                     </span>
                     %<span className={`${styles['font-label']}`}>Funded</span>
                   </li>
@@ -166,6 +224,19 @@ const CampaignDetail = () => {
           </div>
         </div>
       </Spin>
+      <Modal
+        title="Basic Modal"
+        open={isModalOpen}
+        onOk={handleOk}
+        onCancel={handleCancel}
+        className="z-auto"
+        centered
+        footer={null}
+      >
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+        <p>Some contents...</p>
+      </Modal>
     </UserLayout>
   )
 }

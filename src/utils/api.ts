@@ -23,6 +23,8 @@ export const SERVICE = {
   createBanner: '/api/v1/banner/create',
   detailBanner: '/api/v1/banner/:id',
   // acceptBanner: '/api/v1/banner/:id/status',
+  //Payment
+  PaymentCharity: '/api/v1/payment/charity/',
 }
 
 export const BASE_HEADERS = {
