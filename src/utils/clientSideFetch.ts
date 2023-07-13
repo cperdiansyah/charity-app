@@ -3,6 +3,7 @@ import axios from 'axios'
 import _ from 'lodash'
 import { BASE_HEADERS, SERVICE } from './api'
 import { responseRefreshToken } from './utils.interface'
+import Cookies from 'next-cookies-universal'
 
 export const api = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
@@ -41,6 +42,7 @@ api.interceptors.response.use(
 export async function clientRefreshToken(
   isAnonymousToken: boolean = false
 ): Promise<responseRefreshToken> {
+  const cookies = Cookies('client')
   try {
     const resRefresh = await api.post(SERVICE.refreshToken, {
       isAnonymous: isAnonymousToken,
@@ -50,6 +52,9 @@ export async function clientRefreshToken(
 
     nookies.destroy(null, 'token')
     nookies.set(null, 'token', dataRefreshToken.accessToken, {
+      path: '/',
+    })
+    cookies.set('token', dataRefreshToken.accessToken, {
       path: '/',
     })
     return dataRefreshToken.accessToken

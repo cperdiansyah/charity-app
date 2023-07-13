@@ -7,12 +7,11 @@ export const getCharity = async () => {
   const token = cookieStore.get('token')
 
   try {
-    const charity = await nextFetch(
-      SERVICE.charity,
-      undefined,
-      'GET',
-      token?.value
-    )
+    const charity = await nextFetch({
+      endpoint: SERVICE.charity,
+      method: 'GET',
+      token: token?.value,
+    })
     // console.log(charity)
     // .then((response) => response.json())
     return charity

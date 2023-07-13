@@ -1,0 +1,35 @@
+.button-primary {
+  height: unset;
+  // padding: 12px 20px !important;
+  @apply mx-auto flex w-fit px-5 py-3 text-base;
+}
+
+.charity-card-image {
+  max-height: 250px;
+  width: 100%;
+  height: 100vh !important;
+  object-fit: cover;
+}
+
+.charity-card {
+  .card-header {
+    p.percentage-funded {
+      @apply left-0 hidden h-[25px] w-[25px] md:flex md:h-[30px] md:w-[30px];
+    }
+  }
+
+  .card-content {
+    span.font-value {
+      @apply text-xs md:text-lg;
+    }
+    span.font-label {
+      @apply text-xs md:text-lg;
+    }
+    a.card-button {
+      @apply h-fit px-3 py-2 md:px-4 md:py-3;
+      span {
+        @apply text-base;
+      }
+    }
+  }
+}

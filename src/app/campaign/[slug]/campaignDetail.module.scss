@@ -1,0 +1,81 @@
+.campaign {
+  @apply w-full md:w-[70vw];
+  &-content {
+    &-image {
+      img {
+        @apply m-auto h-full   object-cover md:h-[80vh] md:w-[70vw];
+      }
+    }
+    &-button {
+      @apply sticky bottom-2 mt-3;
+      .campaign-button {
+        @apply h-fit px-3 py-2 md:px-4 md:py-3;
+        span {
+          @apply text-base;
+        }
+      }
+    }
+    &-info {
+      &__campaign {
+        &-count {
+          ul {
+            @apply flex flex-wrap;
+            li {
+              @apply max-w-[50vw] flex-[0_0_50%]  md:max-w-[25vw] md:flex-[0_0_25%];
+            }
+          }
+        }
+        &-title {
+          span {
+            @apply my-3 block capitalize;
+          }
+          @apply mb-3;
+        }
+        &-description {
+          &-content {
+            max-height: 10rem;
+            // overflow: ;
+            @apply relative h-full overflow-hidden text-xl;
+            &::after {
+              content: '';
+              height: 104px;
+              background: -webkit-linear-gradient(
+                top,
+                rgba(255, 255, 255, 0) 0%,
+                #fff 100%
+              );
+              background: -moz-linear-gradient(
+                top,
+                rgba(255, 255, 255, 0) 0%,
+                #fff 100%
+              );
+              background: -o-linear-gradient(
+                top,
+                rgba(255, 255, 255, 0) 0%,
+                #fff 100%
+              );
+              background: linear-gradient(
+                180deg,
+                rgba(255, 255, 255, 0) 0%,
+                #fff 100%
+              );
+              position: absolute;
+              bottom: 0;
+              left: 0;
+              top: 60px;
+              width: 100%;
+            }
+            &-expand {
+              @apply relative h-full text-xl;
+
+              max-height: none;
+            }
+          }
+          &__expand-button {
+            @apply relative  mt-3 rounded-lg border border-gray-500 px-2 py-1;
+          }
+        }
+      }
+    }
+  }
+}
