@@ -9,7 +9,12 @@ import _isEmpty from 'lodash/isEmpty'
 import UserLayout from '@/components/templates/UserLayout'
 import CustomButton from '@/components/atoms/Button'
 
-import { calculateDaysRemaining, calculateFunded, calculateTotalAmount, currencyFormat } from '@/helpers'
+import {
+  calculateDaysRemaining,
+  calculateFunded,
+  calculateTotalAmount,
+  currencyFormat,
+} from '@/helpers'
 
 import styles from './campaignDetail.module.scss'
 import { api } from '@/utils/clientSideFetch'
@@ -31,7 +36,8 @@ const CampaignDetail = () => {
   const [amount, setAmount] = useState<number>(0)
 
   const percentage = calculateFunded(amount, campaignData?.donation_target || 0)
-
+  // const percentage = 102
+  console.log(percentage)
   const today = dayjs()
   const endDate = dayjs(campaignData?.end_date || today)
   useEffect(() => {
@@ -82,8 +88,6 @@ const CampaignDetail = () => {
       setLoading(false)
     }
   }
-
-  
 
   const handleClick = () => {
     router.back()
@@ -209,8 +213,11 @@ const CampaignDetail = () => {
                 onClick={handleSubmit}
                 // href="#popularcause"
                 // href={`${NAVIGATION_LINK.Campaign}/${slug}`}
+                disabled={percentage >= 100}
               >
-                Donate This Cause
+                {percentage >= 100
+                  ? 'All donations have been collected'
+                  : ' Donate This Cause'}
               </CustomButton>
             </div>
           </div>
