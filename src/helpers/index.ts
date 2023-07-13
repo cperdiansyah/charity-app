@@ -35,3 +35,13 @@ export function calculateDaysRemaining(date_end: Date | string) {
 export function calculateFunded(pledged: number, target: number) {
   return Math.round((1 / (target / pledged)) * 100)
 }
+
+export function calculateTotalAmount(campaignPayment: any) {
+  let totalAmount = 0
+  for (let i = 0; i < campaignPayment.length; i++) {
+    const payment = campaignPayment[i]
+    totalAmount += payment.amount
+  }
+
+  return totalAmount
+}

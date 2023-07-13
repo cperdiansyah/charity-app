@@ -14,7 +14,7 @@
 .charity-card {
   .card-header {
     p.percentage-funded {
-      @apply left-0  flex h-[25px] w-[25px] md:h-[30px] md:w-[30px];
+      @apply left-0 hidden h-[25px] w-[25px] md:flex md:h-[30px] md:w-[30px];
     }
   }
 

@@ -13,6 +13,7 @@ export const SERVICE = {
   uploadMediaTemp: '/api/v1/media/upload',
   // Charity
   charity: '/api/v1/charity',
+  charityBySlug: '/api/v1/charity/slug',
   detailCharity: '/api/v1/charity/:id',
   acceptCharity: '/api/v1/charity/:id/status',
   mediaUpload: '/api/v1/charity/upload',
@@ -22,6 +23,8 @@ export const SERVICE = {
   createBanner: '/api/v1/banner/create',
   detailBanner: '/api/v1/banner/:id',
   // acceptBanner: '/api/v1/banner/:id/status',
+  //Payment
+  PaymentCharity: '/api/v1/payment/charity/',
 }
 
 export const BASE_HEADERS = {

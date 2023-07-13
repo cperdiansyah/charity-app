@@ -11,6 +11,10 @@ $hover-color: #041d57;
   box-sizing: border-box;
   height: 46px;
   background-color: var(--primary-color);
+  &:disabled {
+    opacity: 1;
+    @apply bg-slate-500;
+  }
 
   span {
     i {

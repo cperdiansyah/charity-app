@@ -2,27 +2,41 @@
 
 import React, { useEffect, useState, Key } from 'react'
 import _ from 'lodash'
+import _isEmpty from 'lodash/isEmpty'
+import _filter from 'lodash/filter'
 
 import CharityCard, { ICharityCard } from '@/components/molecules/CharityCard'
 
 import { api } from '@/utils/clientSideFetch'
 import { SERVICE } from '@/utils/api'
+import useUpdated from '@/hooks/useUpdated'
+import { calculateTotalAmount } from '@/helpers'
 
 interface ICampaignList {
   className?: string
 }
 const CampaignList = (props: ICampaignList) => {
   const [charity, setCharity] = useState<ICharityCard[]>([])
+  const [paymentData, setPaymentData] = useState<any>()
+  const [amount, setAmount] = useState<number>(0)
+  const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     getCharity()
   }, [])
+  // console.log(charity)
 
+  useUpdated(() => {
+    if (!_isEmpty(charity)) {
+      setLoading(true)
+      getPaymentData()
+      setLoading(false)
+    }
+  }, [charity?.length])
   const getCharity = async () => {
     try {
       const dataCharity = await api.get(SERVICE.charity)
       const { charity } = dataCharity.data
-
       const filteredCharity: ICharityCard[] = charity?.map((item: any) => ({
         image:
           _.get(item, 'media[0].content') ||
@@ -33,6 +47,7 @@ const CampaignList = (props: ICampaignList) => {
         endDate: item?.end_date,
         author: item?.author.name,
         slug: item?.slug,
+        id: item?._id,
       }))
 
       setCharity(filteredCharity)
@@ -41,6 +56,40 @@ const CampaignList = (props: ICampaignList) => {
       setCharity([])
       console.log(error)
       return error
+    }
+  }
+
+  const getPaymentData = async () => {
+    try {
+      const listIdCharity: string[] = []
+      charity?.length !== 0 &&
+        charity?.forEach((item: any) => {
+          listIdCharity.push(item.id)
+        })
+      const resPaymentCharity = await api.get(
+        `${
+          SERVICE.PaymentCharity
+        }list?status=paid&getAll=true&id_charities[]=${listIdCharity.join(
+          '&id_charities[]='
+        )}`
+      )
+      const dataPayment = resPaymentCharity.data.campaignPayment
+
+      const updatedCharity: ICharityCard[] = charity?.map((item: any) => {
+        const filteredCharityCard = dataPayment?.filter(
+          (data: any) => data?.id_charity._id === item.id
+        )
+        const totalAmount = calculateTotalAmount(filteredCharityCard)
+
+        return {
+          ...item,
+          donated: totalAmount,
+        }
+      })
+      setCharity(updatedCharity)
+    } catch (error) {
+      console.log(error)
+      setLoading(false)
     }
   }
 

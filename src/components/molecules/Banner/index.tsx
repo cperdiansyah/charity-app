@@ -10,7 +10,7 @@ export interface IBannerItem {
 }
 
 const BannerItem = (props: IBannerItem) => {
-  console.log(props)
+  // console.log(props)
   return (
     <a
       href={props.href}

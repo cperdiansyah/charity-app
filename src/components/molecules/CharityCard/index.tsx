@@ -19,14 +19,16 @@ export interface ICharityCard {
   endDate: string | Date
   author: string
   slug: string
+  id: string
 }
 const CharityCard = (props: ICharityCard) => {
   const { image, target, donated, title, endDate, author, slug } = props
   // console.log(props)
 
-  const calculateFund = calculateFunded(donated, target)
-
-  const progressBar = calculateFund === 0 ? 8 : calculateFund
+  const calculateFund =
+    calculateFunded(donated, target) > 100
+      ? 100
+      : calculateFunded(donated, target)
 
   return (
     <div className="col-lg-4 col-md-6 col-6 px-2">
@@ -47,7 +49,12 @@ const CharityCard = (props: ICharityCard) => {
                 width: `${calculateFund}%`,
               }}
             >
-              <p className={`${styles['percentage-funded']}`}>
+              <p
+                className={`${styles['percentage-funded']} `}
+                style={{
+                  marginLeft: `${calculateFund >= 100 ? 92 : calculateFund}%`,
+                }}
+              >
                 <span className="number-percentage-count number-percentage ">
                   {calculateFund}
                 </span>
@@ -74,7 +81,7 @@ const CharityCard = (props: ICharityCard) => {
           </Link>
           {/* </Link> */}
 
-          <ul className="xs-list-with-content mb-3 ">
+          <ul className="xs-list-with-content mb-3 flex flex-col flex-wrap md:flex-row">
             <li className="pledged">
               {currencyFormat(donated)}
               <span className={`${styles['font-label']}`}>Pledged</span>
