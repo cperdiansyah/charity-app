@@ -9,7 +9,7 @@ import _isEmpty from 'lodash/isEmpty'
 import UserLayout from '@/components/templates/UserLayout'
 import CustomButton from '@/components/atoms/Button'
 
-import { calculateDaysRemaining, calculateFunded, currencyFormat } from '@/helpers'
+import { calculateDaysRemaining, calculateFunded, calculateTotalAmount, currencyFormat } from '@/helpers'
 
 import styles from './campaignDetail.module.scss'
 import { api } from '@/utils/clientSideFetch'
@@ -70,7 +70,7 @@ const CampaignDetail = () => {
   const getPaymentData = async () => {
     try {
       const resPaymentCharity = await api.get(
-        `${SERVICE.PaymentCharity}/user/${campaignData?._id}?getAll=true&status=paid`
+        `${SERVICE.PaymentCharity}charity/${campaignData?._id}?getAll=true&status=paid`
       )
       const dataPaymentCharity = resPaymentCharity.data.campaignPayment
       setPaymentData(dataPaymentCharity)
@@ -83,15 +83,7 @@ const CampaignDetail = () => {
     }
   }
 
-  function calculateTotalAmount(campaignPayment: any) {
-    let totalAmount = 0
-    for (let i = 0; i < campaignPayment.length; i++) {
-      const payment = campaignPayment[i]
-      totalAmount += payment.amount
-    }
-
-    return totalAmount
-  }
+  
 
   const handleClick = () => {
     router.back()
