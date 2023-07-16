@@ -1,7 +1,16 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Form, Input, InputNumber, Modal, Progress, Spin } from 'antd'
+import {
+  Alert,
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Progress,
+  Spin,
+} from 'antd'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import _isEmpty from 'lodash/isEmpty'
@@ -48,7 +57,6 @@ const CampaignDetail = () => {
   const today = dayjs()
   const endDate = dayjs(campaignData?.end_date || today)
   useEffect(() => {
-    // console.log(params)
     const getData = async () => {
       setLoading(true)
       await getCampaignData()
@@ -83,7 +91,7 @@ const CampaignDetail = () => {
   const getPaymentData = async () => {
     try {
       const resPaymentCharity = await api.get(
-        `${SERVICE.PaymentCharity}charity/${campaignData?._id}?getAll=true&status=paid`
+        `${SERVICE.Transaction}/charity/${campaignData?._id}?getAll=true&status=settlement`
       )
       const dataPaymentCharity = resPaymentCharity.data.campaignPayment
       setPaymentData(dataPaymentCharity)
@@ -108,7 +116,12 @@ const CampaignDetail = () => {
     setIsModalOpen(true)
   }
   const handleCancel = () => {
+    // setIsModalOpen(false)
+    handleReset()
+  }
+  const handleReset = () => {
     setIsModalOpen(false)
+    form.resetFields()
   }
 
   const handleSubmitDonation = async (values: any) => {
@@ -129,15 +142,18 @@ const CampaignDetail = () => {
         `${SERVICE.Transaction}/charge`,
         transactionData
       )
-      const dataCreateTransaction = resCreateTransaction.data
-      console.log(dataCreateTransaction)
+      const dataCreateTransaction = resCreateTransaction.data.content
+      const { redirect_url, token } = dataCreateTransaction?.response_midtrans
+      console.log(redirect_url)
+      handleReset()
       setLoadingSubmit(false)
     } catch (error: any) {
-      const resError: IErrorResponse = _get(error, 'error', {
+      const resError: IErrorResponse = _get(error, 'response.data.error', {
         code: 400,
         message: '',
       })
       setLoadingSubmit(false)
+      console.log(error)
 
       notify(
         'error',
@@ -211,7 +227,11 @@ const CampaignDetail = () => {
                       data-value="90"
                       data-animation-duration="3500"
                     >
-                      {percentage}
+                      {percentage
+                        ? percentage >= 100
+                          ? '>100'
+                          : percentage
+                        : 0}
                     </span>
                     %<span className={`${styles['font-label']}`}>Funded</span>
                   </li>
@@ -254,8 +274,6 @@ const CampaignDetail = () => {
                 buttontype="primary"
                 className={`btn btn-primary btn-block ${styles['campaign-button']} `}
                 onClick={handleOpen}
-                // href="#popularcause"
-                // href={`${NAVIGATION_LINK.Campaign}/${slug}`}
                 disabled={percentage >= 100}
               >
                 {percentage >= 100
@@ -301,14 +319,29 @@ const CampaignDetail = () => {
                   const donationTarget = campaignData?.donation_target
                   if (value > donationTarget) {
                     return Promise.reject()
+                  } else {
+                    return Promise.resolve()
                   }
                 },
-                warningOnly: true,
+                // warningOnly: true,
+              },
+              {
+                message: 'Your donation exceeds the target',
+                validator(_, value) {
+                  const donationTarget = campaignData?.donation_target
+                  const donation = value + amount
+                  if (donationTarget - donation >= 0) {
+                    return Promise.resolve()
+                  } else {
+                    return Promise.reject()
+                  }
+                },
               },
             ]}
             style={{
               width: '100%',
             }}
+            className="mb-3"
           >
             <InputNumber
               prefix="Rp."
@@ -321,12 +354,27 @@ const CampaignDetail = () => {
               }}
             />
           </Form.Item>
+          <Form.Item>
+            {campaignData?.donation_target > amount && (
+              <Alert
+                message={`You can still make a donation of Rp. ${currencyFormat(
+                  campaignData?.donation_target - amount
+                )}`}
+                type="info"
+              />
+            )}
+            {campaignData?.donation_target < amount && (
+              <Alert
+                message={`The donation has exceeded the target`}
+                type="error"
+              />
+            )}
+          </Form.Item>
 
           <Form.Item>
             <CustomButton
               buttontype="primary"
               className={`btn btn-primary btn-block ${styles['campaign-button']} `}
-              // onClick={handleSubmitDonation}
               htmlType="submit"
               loading={loadingSubmit}
             >

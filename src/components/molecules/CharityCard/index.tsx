@@ -92,7 +92,7 @@ const CharityCard = (props: ICharityCard) => {
                 data-value="90"
                 data-animation-duration="3500"
               >
-                {calculateFund}
+                {calculateFund >= 100 ? '>100' : calculateFund}
               </span>
               %<span className={`${styles['font-label']}`}>Funded</span>
             </li>

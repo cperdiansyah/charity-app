@@ -119,7 +119,7 @@ const CustomTable: React.FC<ICustomTable> = ({
   const convertTableParams = (data: TablePaginationConfig) => {
     const params = new URLSearchParams()
 
-    Object.entries(data).forEach(([key, value]) => {
+    Object.entries(data)?.forEach(([key, value]) => {
       params.append(key, value)
     })
     // const queryParams = params.toString()
