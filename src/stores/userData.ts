@@ -5,6 +5,7 @@ export interface IUserData {
   name: string
   role: string
   email: string
+  id: string
 }
 
 const useUserData = createStore<IUserData>({
@@ -13,6 +14,7 @@ const useUserData = createStore<IUserData>({
     name: '',
     role: '',
     email: '',
+    id: ''
   }, // <- (Required) initial state
   persistor: withLocalStoragePersistor(),
 })

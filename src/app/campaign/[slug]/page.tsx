@@ -1,10 +1,20 @@
 'use client'
 
 import React, { useEffect, useState } from 'react'
-import { Button, Modal, Progress, Spin } from 'antd'
+import {
+  Alert,
+  Button,
+  Form,
+  Input,
+  InputNumber,
+  Modal,
+  Progress,
+  Spin,
+} from 'antd'
 import { useParams, useRouter } from 'next/navigation'
 import { ArrowLeftOutlined } from '@ant-design/icons'
 import _isEmpty from 'lodash/isEmpty'
+import _get from 'lodash/get'
 
 import UserLayout from '@/components/templates/UserLayout'
 import CustomButton from '@/components/atoms/Button'
@@ -21,27 +31,32 @@ import { api } from '@/utils/clientSideFetch'
 import { SERVICE } from '@/utils/api'
 import dayjs from 'dayjs'
 import useUpdated from '@/hooks/useUpdated'
+import useUserData from '@/stores/userData'
+import { notify } from '@/helpers/notify'
+import { IErrorResponse } from '@/services/auth/index.interface'
 
 const CampaignDetail = () => {
+  const [form] = Form.useForm()
   const router = useRouter()
   const params = useParams()
   const { slug: slugcharity } = params
 
+  const [userData, setUserData] = useUserData()
+
   const [isExpand, setIsExpand] = useState(false)
   const [loading, setLoading] = useState(false)
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const [loadingSubmit, setLoadingSubmit] = useState(false)
 
   const [campaignData, setCampaignData] = useState<any>()
   const [paymentData, setPaymentData] = useState<any>()
   const [amount, setAmount] = useState<number>(0)
 
   const percentage = calculateFunded(amount, campaignData?.donation_target || 0)
-  // const percentage = 102
-  console.log(percentage)
+
   const today = dayjs()
   const endDate = dayjs(campaignData?.end_date || today)
   useEffect(() => {
-    // console.log(params)
     const getData = async () => {
       setLoading(true)
       await getCampaignData()
@@ -76,7 +91,7 @@ const CampaignDetail = () => {
   const getPaymentData = async () => {
     try {
       const resPaymentCharity = await api.get(
-        `${SERVICE.PaymentCharity}charity/${campaignData?._id}?getAll=true&status=paid`
+        `${SERVICE.Transaction}/charity/${campaignData?._id}?getAll=true&status=settlement`
       )
       const dataPaymentCharity = resPaymentCharity.data.campaignPayment
       setPaymentData(dataPaymentCharity)
@@ -93,16 +108,60 @@ const CampaignDetail = () => {
     router.back()
   }
 
-  const handleSubmit = () => {
-    console.log('asdasd')
-    setIsModalOpen(true)
-  }
   const handleOk = () => {
     setIsModalOpen(false)
   }
 
+  const handleOpen = () => {
+    setIsModalOpen(true)
+  }
   const handleCancel = () => {
+    // setIsModalOpen(false)
+    handleReset()
+  }
+  const handleReset = () => {
     setIsModalOpen(false)
+    form.resetFields()
+  }
+
+  const handleSubmitDonation = async (values: any) => {
+    setLoadingSubmit(true)
+    try {
+      const donation = values.donation
+      const campaignId = campaignData._id
+      const userId = userData.id
+
+      const transactionData = {
+        user_id: userId,
+        campaign_id: campaignId,
+        amount: donation,
+        transaction_type: 'campaign',
+      }
+
+      const resCreateTransaction = await api.post(
+        `${SERVICE.Transaction}/charge`,
+        transactionData
+      )
+      const dataCreateTransaction = resCreateTransaction.data.content
+      const { redirect_url, token } = dataCreateTransaction?.response_midtrans
+      console.log(redirect_url)
+      handleReset()
+      setLoadingSubmit(false)
+    } catch (error: any) {
+      const resError: IErrorResponse = _get(error, 'response.data.error', {
+        code: 400,
+        message: '',
+      })
+      setLoadingSubmit(false)
+      console.log(error)
+
+      notify(
+        'error',
+        'Something went wrong',
+        resError?.message || '',
+        'bottomRight'
+      )
+    }
   }
 
   return (
@@ -168,7 +227,11 @@ const CampaignDetail = () => {
                       data-value="90"
                       data-animation-duration="3500"
                     >
-                      {percentage}
+                      {percentage
+                        ? percentage >= 100
+                          ? '>100'
+                          : percentage
+                        : 0}
                     </span>
                     %<span className={`${styles['font-label']}`}>Funded</span>
                   </li>
@@ -210,9 +273,7 @@ const CampaignDetail = () => {
               <CustomButton
                 buttontype="primary"
                 className={`btn btn-primary btn-block ${styles['campaign-button']} `}
-                onClick={handleSubmit}
-                // href="#popularcause"
-                // href={`${NAVIGATION_LINK.Campaign}/${slug}`}
+                onClick={handleOpen}
                 disabled={percentage >= 100}
               >
                 {percentage >= 100
@@ -224,17 +285,103 @@ const CampaignDetail = () => {
         </div>
       </Spin>
       <Modal
-        title="Basic Modal"
+        title="Input Donation"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
         className="z-auto"
         centered
         footer={null}
+        destroyOnClose
       >
-        <p>Some contents...</p>
-        <p>Some contents...</p>
-        <p>Some contents...</p>
+        <Form
+          form={form}
+          name="donation-form"
+          initialValues={{ remember: true }}
+          onFinish={handleSubmitDonation}
+          autoComplete="off"
+          layout="vertical"
+        >
+          <Form.Item
+            label="Donation"
+            name="donation"
+            shouldUpdate={(prevValues, curValues) =>
+              prevValues.mediaSources !== curValues.mediaSources
+            }
+            rules={[
+              {
+                required: true,
+                message: 'Please input your doantion!',
+              },
+              {
+                message: 'Donations given exceed the limit',
+                validator(_, value) {
+                  const donationTarget = campaignData?.donation_target
+                  if (value > donationTarget) {
+                    return Promise.reject()
+                  } else {
+                    return Promise.resolve()
+                  }
+                },
+                // warningOnly: true,
+              },
+              {
+                message: 'Your donation exceeds the target',
+                validator(_, value) {
+                  const donationTarget = campaignData?.donation_target
+                  const donation = value + amount
+                  if (donationTarget - donation >= 0) {
+                    return Promise.resolve()
+                  } else {
+                    return Promise.reject()
+                  }
+                },
+              },
+            ]}
+            style={{
+              width: '100%',
+            }}
+            className="mb-3"
+          >
+            <InputNumber
+              prefix="Rp."
+              formatter={(value) =>
+                `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+              }
+              parser={(value) => value!.replace(/\$\s?|(,*)/g, '')}
+              style={{
+                width: '100%',
+              }}
+            />
+          </Form.Item>
+          <Form.Item>
+            {campaignData?.donation_target > amount && (
+              <Alert
+                message={`You can still make a donation of Rp. ${currencyFormat(
+                  campaignData?.donation_target - amount
+                )}`}
+                type="info"
+              />
+            )}
+            {campaignData?.donation_target < amount && (
+              <Alert
+                message={`The donation has exceeded the target`}
+                type="error"
+              />
+            )}
+          </Form.Item>
+
+          <Form.Item>
+            <CustomButton
+              buttontype="primary"
+              className={`btn btn-primary btn-block ${styles['campaign-button']} `}
+              htmlType="submit"
+              loading={loadingSubmit}
+            >
+              Submit Donation
+            </CustomButton>
+          </Form.Item>
+        </Form>
       </Modal>
     </UserLayout>
   )

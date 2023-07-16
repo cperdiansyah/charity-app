@@ -17,14 +17,11 @@ interface ICampaignList {
 }
 const CampaignList = (props: ICampaignList) => {
   const [charity, setCharity] = useState<ICharityCard[]>([])
-  const [paymentData, setPaymentData] = useState<any>()
-  const [amount, setAmount] = useState<number>(0)
   const [loading, setLoading] = useState(false)
 
   useEffect(() => {
     getCharity()
   }, [])
-  // console.log(charity)
 
   useUpdated(() => {
     if (!_isEmpty(charity)) {
@@ -68,16 +65,17 @@ const CampaignList = (props: ICampaignList) => {
         })
       const resPaymentCharity = await api.get(
         `${
-          SERVICE.PaymentCharity
-        }list?status=paid&getAll=true&id_charities[]=${listIdCharity.join(
-          '&id_charities[]='
+          SERVICE.Transaction
+        }/list?status=settlement&getAll=true&campaign_ids[]=${listIdCharity.join(
+          '&campaign_ids[]='
         )}`
       )
       const dataPayment = resPaymentCharity.data.campaignPayment
 
+
       const updatedCharity: ICharityCard[] = charity?.map((item: any) => {
         const filteredCharityCard = dataPayment?.filter(
-          (data: any) => data?.id_charity._id === item.id
+          (data: any) => data?.campaign_id._id === item.id
         )
         const totalAmount = calculateTotalAmount(filteredCharityCard)
 

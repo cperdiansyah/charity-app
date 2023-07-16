@@ -13,6 +13,12 @@
         span {
           @apply text-base;
         }
+        &:disabled {
+          &::before,
+          &::after {
+            background-color: unset;
+          }
+        }
       }
     }
     &-info {
