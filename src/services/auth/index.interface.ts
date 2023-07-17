@@ -21,6 +21,7 @@ export interface IResponseDataAuth {
   email: string
   name: string
   role: string
+  id: string
 }
 
 export interface IResponseDefault {

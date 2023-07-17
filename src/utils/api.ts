@@ -25,6 +25,7 @@ export const SERVICE = {
   // acceptBanner: '/api/v1/banner/:id/status',
   //Payment
   PaymentCharity: '/api/v1/payment/charity/',
+  Transaction: '/api/v1/transaction',
 }
 
 export const BASE_HEADERS = {
