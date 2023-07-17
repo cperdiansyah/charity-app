@@ -34,6 +34,7 @@ import useUpdated from '@/hooks/useUpdated'
 import useUserData from '@/stores/userData'
 import { notify } from '@/helpers/notify'
 import { IErrorResponse } from '@/services/auth/index.interface'
+import useMidtransSnap from '@/hooks/useMidtransSnap'
 
 const CampaignDetail = () => {
   const [form] = Form.useForm()
@@ -42,6 +43,8 @@ const CampaignDetail = () => {
   const { slug: slugcharity } = params
 
   const [userData, setUserData] = useUserData()
+  const {token, setToken} = useMidtransSnap()
+
 
   const [isExpand, setIsExpand] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -145,6 +148,7 @@ const CampaignDetail = () => {
       const dataCreateTransaction = resCreateTransaction.data.content
       const { redirect_url, token } = dataCreateTransaction?.response_midtrans
       console.log(redirect_url)
+      setToken(token)
       handleReset()
       setLoadingSubmit(false)
     } catch (error: any) {
