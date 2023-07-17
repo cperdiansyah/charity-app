@@ -1,8 +1,12 @@
 import React from 'react'
+import UserTemplate from '@/components/templates/UserLayout'
+import ForgotPasswordForm from './forgotPasswordForm'
 
 const ForgotPassword = () => {
   return (
-    <div>ForgotPassword</div>
+    <UserTemplate>
+      <ForgotPasswordForm />
+    </UserTemplate>
   )
 }
 
