@@ -87,3 +87,54 @@ export const logoutServices = async (): Promise<IResponseDefault> => {
     return Promise.reject(resError)
   }
 }
+
+export const checkAccountService = async (formData: {
+  email: string
+}): Promise<IResponseDataAuth | IErrorResponse> => {
+  try {
+    const resLogin = await api
+      .post(SERVICE.checkAccount, {
+        email: formData.email,
+      })
+      .then((res) => {
+        const { data } = res
+
+        return data
+      })
+
+    return resLogin
+  } catch (error) {
+    const resError: IErrorResponse = _.get(error, 'response.data', {
+      code: 400,
+      message: '',
+    })
+
+    return Promise.reject(resError)
+  }
+}
+export const resetPasswordService = async (formData: {
+  email: string, 
+  password: string
+}): Promise<IResponseDataAuth | IErrorResponse> => {
+  try {
+    const resLogin = await api
+      .post(SERVICE.resetPassword, {
+        email: formData.email,
+        newPassword: formData.password,
+      })
+      .then((res) => {
+        const { data } = res
+
+        return data
+      })
+
+    return resLogin
+  } catch (error) {
+    const resError: IErrorResponse = _.get(error, 'response.data', {
+      code: 400,
+      message: '',
+    })
+
+    return Promise.reject(resError)
+  }
+}

@@ -8,6 +8,8 @@ export const SERVICE = {
   login: '/api/v1/auth/login',
   register: '/api/v1/auth/register',
   logout: '/api/v1/auth/logout',
+  checkAccount: '/api/v1/auth/check-account',
+  resetPassword: '/api/v1/auth/reset-password',
   refreshToken: '/api/v1/auth/refresh',
   // Media Temp
   uploadMediaTemp: '/api/v1/media/upload',
