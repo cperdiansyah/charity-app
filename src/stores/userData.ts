@@ -6,7 +6,7 @@ export interface IUserData {
   role: string
   email: string
   id: string
-  is_verified: string
+  is_verified: boolean
 }
 
 const useUserData = createStore<IUserData>({
@@ -16,7 +16,7 @@ const useUserData = createStore<IUserData>({
     role: '',
     email: '',
     id: '',
-    is_verified: '',
+    is_verified: false,
   }, // <- (Required) initial state
   persistor: withLocalStoragePersistor(),
 })

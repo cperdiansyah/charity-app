@@ -28,7 +28,7 @@ const CampaignList = () => {
   const [loading, setLoading] = useState(false)
   const [pagination, setPagination] = useState({
     current: 1,
-    pageSize: 3,
+    pageSize: 10,
   })
   useEffect(() => {
     getCharity(pagination.current, pagination.pageSize)
@@ -143,7 +143,7 @@ const CampaignList = () => {
               `${range[0]}-${range[1]} of ${total} items`
             }
             showSizeChanger={true}
-            pageSizeOptions={['3', '10', '20', '50', '100']}
+            pageSizeOptions={['10', '20', '50', '100']}
             defaultPageSize={pagination.pageSize}
             onChange={onChange}
             current={pagination.current}

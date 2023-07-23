@@ -4,6 +4,7 @@ import React, { useEffect, useState, Key } from 'react'
 import _ from 'lodash'
 import _isEmpty from 'lodash/isEmpty'
 import _filter from 'lodash/filter'
+import { Empty, Spin } from 'antd'
 
 import CharityCard, {
   ICharityCard,
@@ -16,8 +17,6 @@ import useUpdated from '@/hooks/useUpdated'
 import { calculateTotalAmount } from '@/helpers'
 import CustomButton from '@/components/atoms/Button'
 import { NAVIGATION_LINK } from '@/utils/link'
-import { Empty, Spin } from 'antd'
-import useUserData from '@/stores/userData'
 
 interface ICampaignList {
   className?: string
@@ -33,11 +32,9 @@ const CampaignList = (props: ICampaignList) => {
     },
   })
   const [loading, setLoading] = useState(true)
-  const [userData, setUserData] = useUserData()
 
   useEffect(() => {
     getCharity()
-    console.log(userData)
   }, [])
 
   useUpdated(() => {
@@ -123,7 +120,6 @@ const CampaignList = (props: ICampaignList) => {
       setLoading(false)
     }
   }
-  // ;<AuditOutlined />
   return (
     <Spin tip="Loading" size="small" spinning={loading}>
       <div className={`row   ${[props?.className]?.join(' ')}`}>
@@ -132,7 +128,7 @@ const CampaignList = (props: ICampaignList) => {
             return <CharityCard {...item} key={index} />
           })
         ) : (
-          <Empty description="Campaigns not available" />
+          <Empty description="Campaigns not available" className='mx-auto' />
         )}
       </div>
       {charity.meta.total > (charity?.charity?.length || 0) && (

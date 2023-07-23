@@ -28,6 +28,10 @@ export const SERVICE = {
   //Payment
   PaymentCharity: '/api/v1/payment/charity/',
   Transaction: '/api/v1/transaction',
+
+  // Approval
+  Approval: '/api/v1/approval',
+  ApprovalUser: '/api/v1/approval/approval-user',
 }
 
 export const BASE_HEADERS = {
