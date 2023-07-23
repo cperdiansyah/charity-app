@@ -1,40 +1,38 @@
 'use client'
-
-import React, { useEffect, useState, Key } from 'react'
-import _ from 'lodash'
+import UserLayout from '@/components/templates/UserLayout'
+import React, { useState, useEffect, Key } from 'react'
 import _isEmpty from 'lodash/isEmpty'
-import _filter from 'lodash/filter'
+import _get from 'lodash/get'
 
+import styles from '../campaign.module.scss'
 import CharityCard, {
   ICharityCard,
   ICharityList,
 } from '@/components/molecules/CharityCard'
-
-import { api } from '@/utils/clientSideFetch'
-import { SERVICE } from '@/utils/api'
 import useUpdated from '@/hooks/useUpdated'
+import { SERVICE } from '@/utils/api'
+import { api } from '@/utils/clientSideFetch'
 import { calculateTotalAmount } from '@/helpers'
-import CustomButton from '@/components/atoms/Button'
-import { NAVIGATION_LINK } from '@/utils/link'
+import { Pagination, PaginationProps, Spin } from 'antd'
 
-interface ICampaignList {
-  className?: string
-}
-const CampaignList = (props: ICampaignList) => {
+const CampaignList = () => {
   const [charity, setCharity] = useState<ICharityList>({
     charity: null,
     meta: {
       page: 1,
-      rows: 6,
+      rows: 10,
       totalPages: 1,
       total: 0,
     },
   })
   const [loading, setLoading] = useState(false)
-
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 3,
+  })
   useEffect(() => {
-    getCharity()
-  }, [])
+    getCharity(pagination.current, pagination.pageSize)
+  }, [pagination.current, pagination.pageSize])
 
   useUpdated(() => {
     if (!_isEmpty(charity.charity)) {
@@ -43,16 +41,21 @@ const CampaignList = (props: ICampaignList) => {
       setLoading(false)
     }
   }, [charity?.charity?.length])
-  const getCharity = async () => {
+
+  const getCharity = async (page?: number, pageSize?: number) => {
+    setLoading(true)
+
     try {
-      const dataCharity = await api.get(`${SERVICE.charity}?rows=6`)
-      // const { charity } = dataCharity.data
+      const dataCharity = await api.get(
+        `${SERVICE.charity}?page=${page || 1}&rows=${pageSize || 6}`
+      )
+
       const charity = dataCharity.data
 
       const filteredCharity: ICharityList = charity?.charity?.map(
         (item: any) => ({
           image:
-            _.get(item, 'media[0].content') ||
+            _get(item, 'media[0].content') ||
             'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930',
           target: item?.donation_target,
           donated: 0,
@@ -68,8 +71,12 @@ const CampaignList = (props: ICampaignList) => {
         ...charity,
         charity: filteredCharity,
       })
+      setLoading(false)
+
       return dataCharity
     } catch (error) {
+      setLoading(false)
+
       setCharity({ ...charity, charity: null })
       console.log(error)
       return error
@@ -113,23 +120,38 @@ const CampaignList = (props: ICampaignList) => {
       setLoading(false)
     }
   }
+  const onChange: PaginationProps['onChange'] = (page, pageSize) => {
+    setPagination({ current: page, pageSize })
+  }
 
   return (
-    <div className={`row   ${[props?.className]?.join(' ')}`}>
-      {charity?.charity?.map((item: ICharityCard, index: Key) => {
-        return <CharityCard {...item} key={index} />
-      })}
-      {/* {charity.meta.total > (charity?.charity?.length || 0) && ( */}
-      {charity.meta.total > 3 && (
-        <CustomButton
-          buttontype="primary"
-          className={`btn btn-primary btn-block mb-5 rounded-lg !px-4 !py-3 text-base`}
-          href={`${NAVIGATION_LINK.CampaignList}`}
-        >
-          See More
-        </CustomButton>
-      )}
-    </div>
+    <UserLayout
+      className="relative pt-[90px] md:pt-[150px] "
+      headerColor="black"
+    >
+      <div className={`top-bg ${styles['campaign-page']}`}></div>
+      <div className="container">
+        <Spin tip="Loading" size="small" spinning={loading}>
+          <div className="row">
+            {charity?.charity?.map((item: ICharityCard, index: Key) => {
+              return <CharityCard {...item} key={index} />
+            })}
+          </div>
+          <Pagination
+            total={charity.meta.total}
+            showTotal={(total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`
+            }
+            showSizeChanger={true}
+            pageSizeOptions={['3', '10', '20', '50', '100']}
+            defaultPageSize={pagination.pageSize}
+            onChange={onChange}
+            current={pagination.current}
+            className="mb-3"
+          />
+        </Spin>
+      </div>
+    </UserLayout>
   )
 }
 

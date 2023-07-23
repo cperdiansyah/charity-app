@@ -11,6 +11,16 @@ import Link from 'next/link'
 import { NAVIGATION_LINK } from '@/utils/link'
 import useScreenWidth from '@/hooks/useScreenWidth'
 
+export interface ICharityList {
+  charity?: ICharityCard[] | null
+  meta: {
+    page: number
+    rows: number
+    totalPages: number
+    total: number
+  }
+}
+
 export interface ICharityCard {
   image: string
   target: number
@@ -23,7 +33,6 @@ export interface ICharityCard {
 }
 const CharityCard = (props: ICharityCard) => {
   const { image, target, donated, title, endDate, author, slug } = props
-  // console.log(props)
 
   const calculateFund =
     calculateFunded(donated, target) > 100
