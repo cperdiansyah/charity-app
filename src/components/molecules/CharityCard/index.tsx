@@ -12,7 +12,7 @@ import { NAVIGATION_LINK } from '@/utils/link'
 import useScreenWidth from '@/hooks/useScreenWidth'
 
 export interface ICharityList {
-  charity?: ICharityCard[] | null
+  charity?: ICharityCard[] | []
   meta: {
     page: number
     rows: number

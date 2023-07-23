@@ -16,13 +16,15 @@ import useUpdated from '@/hooks/useUpdated'
 import { calculateTotalAmount } from '@/helpers'
 import CustomButton from '@/components/atoms/Button'
 import { NAVIGATION_LINK } from '@/utils/link'
+import { Empty, Spin } from 'antd'
+import useUserData from '@/stores/userData'
 
 interface ICampaignList {
   className?: string
 }
 const CampaignList = (props: ICampaignList) => {
   const [charity, setCharity] = useState<ICharityList>({
-    charity: null,
+    charity: [],
     meta: {
       page: 1,
       rows: 6,
@@ -30,20 +32,24 @@ const CampaignList = (props: ICampaignList) => {
       total: 0,
     },
   })
-  const [loading, setLoading] = useState(false)
+  const [loading, setLoading] = useState(true)
+  const [userData, setUserData] = useUserData()
 
   useEffect(() => {
     getCharity()
+    console.log(userData)
   }, [])
 
   useUpdated(() => {
     if (!_isEmpty(charity.charity)) {
-      setLoading(true)
+      // setLoading(true)
       getPaymentData()
       setLoading(false)
     }
   }, [charity?.charity?.length])
   const getCharity = async () => {
+    // setLoading(true)
+
     try {
       const dataCharity = await api.get(`${SERVICE.charity}?rows=6`)
       // const { charity } = dataCharity.data
@@ -68,9 +74,13 @@ const CampaignList = (props: ICampaignList) => {
         ...charity,
         charity: filteredCharity,
       })
+      setLoading(false)
+
       return dataCharity
     } catch (error) {
-      setCharity({ ...charity, charity: null })
+      setLoading(false)
+
+      setCharity({ ...charity, charity: [] })
       console.log(error)
       return error
     }
@@ -113,23 +123,29 @@ const CampaignList = (props: ICampaignList) => {
       setLoading(false)
     }
   }
-
+  // ;<AuditOutlined />
   return (
-    <div className={`row   ${[props?.className]?.join(' ')}`}>
-      {charity?.charity?.map((item: ICharityCard, index: Key) => {
-        return <CharityCard {...item} key={index} />
-      })}
-      {/* {charity.meta.total > (charity?.charity?.length || 0) && ( */}
-      {charity.meta.total > 3 && (
+    <Spin tip="Loading" size="small" spinning={loading}>
+      <div className={`row   ${[props?.className]?.join(' ')}`}>
+        {charity?.charity && charity?.charity?.length > 0 && !loading ? (
+          charity?.charity?.map((item: ICharityCard, index: Key) => {
+            return <CharityCard {...item} key={index} />
+          })
+        ) : (
+          <Empty description="Campaigns not available" />
+        )}
+      </div>
+      {charity.meta.total > (charity?.charity?.length || 0) && (
+        // {charity.meta.total > 3 && (
         <CustomButton
           buttontype="primary"
-          className={`btn btn-primary btn-block mb-5 rounded-lg !px-4 !py-3 text-base`}
+          className={`btn btn-primary btn-block mx-auto mb-5 w-fit rounded-lg !px-4 !py-3 text-base`}
           href={`${NAVIGATION_LINK.CampaignList}`}
         >
           See More
         </CustomButton>
       )}
-    </div>
+    </Spin>
   )
 }
 

@@ -17,7 +17,7 @@ import { Pagination, PaginationProps, Spin } from 'antd'
 
 const CampaignList = () => {
   const [charity, setCharity] = useState<ICharityList>({
-    charity: null,
+    charity: [],
     meta: {
       page: 1,
       rows: 10,
@@ -77,7 +77,7 @@ const CampaignList = () => {
     } catch (error) {
       setLoading(false)
 
-      setCharity({ ...charity, charity: null })
+      setCharity({ ...charity, charity: [] })
       console.log(error)
       return error
     }
