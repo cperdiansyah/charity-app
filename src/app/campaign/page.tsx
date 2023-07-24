@@ -1,11 +1,11 @@
 import React from 'react'
-import _ from 'lodash'
-import UserLayout from '@/components/templates/UserLayout'
 
+import UserLayout from '@/components/templates/UserLayout'
 import CampaignList from './CampaignList'
 import SwiperBanner from './SwiperBanner'
 
 import styles from './campaign.module.scss'
+import ApprovalUser from './ApprovalUser'
 
 const UserDonation = () => {
   return (
@@ -17,6 +17,7 @@ const UserDonation = () => {
       <div className="container">
         <SwiperBanner className="mb-5" />
         <CampaignList />
+        <ApprovalUser className="my-3" />
       </div>
     </UserLayout>
   )

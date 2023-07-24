@@ -163,7 +163,7 @@ const FormFillPassword = (props: IFormAccountCheck) => {
     >
       <div className="form-item-wrapper">
         <Form.Item
-          label="Password"
+          label="New Password"
           name="password"
           className={`antd-form-item ${styles['antd-form-item']}`}
           rules={[{ required: true, message: 'Please input your password!' }]}
@@ -171,7 +171,7 @@ const FormFillPassword = (props: IFormAccountCheck) => {
           <Input type="password" placeholder="input your Password" />
         </Form.Item>
         <Form.Item
-          label="Confirm Password"
+          label="Confirm New Password"
           name="confirm-password"
           dependencies={['password']}
           className={`antd-form-item ${styles['antd-form-item']}`}

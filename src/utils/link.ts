@@ -17,6 +17,7 @@ export const NAVIGATION_LINK = {
   About: '/about',
   Contact: '/contact',
   Campaign: '/campaign',
+  CampaignList: '/campaign/list',
   CampaignDetail: '/campaign/:slug',
   Profile: '/user/profile',
   Login: '/auth/login',

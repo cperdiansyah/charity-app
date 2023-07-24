@@ -5,12 +5,14 @@ import { logoutServices } from '@/services/auth'
 import { IErrorResponse } from '@/services/auth/index.interface'
 import useSpinnerLayout from '@/stores/spinnerLayout'
 import { NAVIGATION_LINK } from '@/utils/link'
+import useUserData from '@/stores/userData'
 
 const useLogout = () => {
   const router = useRouter()
   const pathname = usePathname()
 
   const [, setSpinnerLayout] = useSpinnerLayout()
+  const [, setUserData] = useUserData()
 
   const logout = async () => {
     setSpinnerLayout(true)
@@ -20,6 +22,13 @@ const useLogout = () => {
       // console.log(response)
       if ('status' in response) {
         notify('success', 'Logout successful', '', 'bottomRight')
+        setUserData({
+          email: '',
+          id: '',
+          is_verified: false,
+          name: '',
+          role: '',
+        })
         setTimeout(() => {
           if (pathname !== NAVIGATION_LINK.Homepage)
             router.push(NAVIGATION_LINK.Homepage)

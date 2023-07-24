@@ -35,7 +35,8 @@ const SignupForm = () => {
           name: response.name,
           email: response.email,
           role: response.role,
-          id: response?.id
+          id: response?.id,
+          is_verified: response.is_verified,
         })
 
         notify('success', 'Register successful', '', 'bottomRight')
