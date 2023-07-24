@@ -13,6 +13,8 @@ import { IErrorResponse } from '@/services/auth/index.interface'
 import { notify } from '@/helpers/notify'
 import useTextEditor from '@/stores/textEditor'
 import QuilEditor from '@/components/molecules/QuilEditor'
+import Title from 'antd/es/typography/Title'
+import useUpdated from '@/hooks/useUpdated'
 
 interface IApprovalUser {
   className: string
@@ -87,6 +89,12 @@ const ApprovalUser = (props: IApprovalUser) => {
     }
   }, [userData.id])
 
+  useUpdated(() => {
+    if (!_isEmpty(approvalData.userApprovalData) && isModalOpen) {
+      setEditorValue(approvalData.userApprovalData.description)
+    }
+  }, [isModalOpen])
+
   /* Fetching Data */
   const getApprovalUser = async () => {
     try {
@@ -107,7 +115,6 @@ const ApprovalUser = (props: IApprovalUser) => {
         setApprovalData((user: any) => ({
           ...user,
           userVerified: userData.is_verified,
-          status: dataApproval.data.status,
           approvalData: !_isEmpty(dataApproval) ? dataApproval.data : null,
           userApprovalData: !_isEmpty(dataApprovalUser)
             ? dataApprovalUser
@@ -144,16 +151,26 @@ const ApprovalUser = (props: IApprovalUser) => {
         approval_id: approvalData.approvalData?._id,
         description: editorValue,
       }
+      let resApprovalUser: any
       if (_isEmpty(approvalData.userApprovalData)) {
-        await api.post(`${SERVICE.ApprovalUser}/create`, dataSubmitRequest)
+        resApprovalUser = await api.post(
+          `${SERVICE.ApprovalUser}/create`,
+          dataSubmitRequest
+        )
       } else {
-        await api.patch(
+        resApprovalUser = await api.patch(
           `${SERVICE.ApprovalUser}/update/${approvalData.userApprovalData._id}`,
           dataSubmitRequest
         )
       }
 
+      setApprovalData((user: any) => ({
+        ...user,
+        userApprovalData: resApprovalUser?.data.content,
+      }))
+
       handleReset()
+      handleResetForm()
       setLoadingSubmit(false)
 
       const titleNoiify = _isEmpty(approvalData.userApprovalData)
@@ -198,7 +215,6 @@ const ApprovalUser = (props: IApprovalUser) => {
     }
   }
 
-  console.log(approvalData)
   const userNotRequestCampaign =
     !approvalData.userVerified &&
     approvalData?.approvalData?.status === 'pending' &&
@@ -213,18 +229,20 @@ const ApprovalUser = (props: IApprovalUser) => {
       <Spin tip="Loading" size="small" spinning={loading}>
         {userData?.is_verified === false && (
           <>
-            <CustomButton
-              buttontype="primary"
-              className={`btn btn-primary btn-block mx-auto mb-5  rounded-lg !px-4 !py-3 text-base`}
-              disabled={loading}
-              onClick={showModal}
-            >
-              <AuditOutlined />
-              {userNotRequestCampaign
-                ? 'Make a Campaign Request'
-                : userRequestCampaignButNotApprovedYet &&
-                  'Your request is being reviewed, please wait'}
-            </CustomButton>
+            {userData?.id && (
+              <CustomButton
+                buttontype="primary"
+                className={`btn btn-primary btn-block mx-auto mb-5  rounded-lg !px-4 !py-3 text-base`}
+                disabled={loading}
+                onClick={showModal}
+              >
+                <AuditOutlined />
+                {userNotRequestCampaign
+                  ? 'Make a Campaign Request'
+                  : userRequestCampaignButNotApprovedYet &&
+                    'Your request is being reviewed, please wait'}
+              </CustomButton>
+            )}
 
             {(userNotRequestCampaign ||
               userRequestCampaignButNotApprovedYet) && (
@@ -246,12 +264,16 @@ const ApprovalUser = (props: IApprovalUser) => {
                   layout="vertical"
                   onFinishFailed={checkEditorValue}
                 >
-                  <Form.Item>
-                    <QuilEditor placeholder="Give us a reason why you want to create a campaign" />
-                    {errorEditor && (
-                      <Alert message="Text Editor is Required" type="error" />
-                    )}
-                  </Form.Item>
+                  <Spin tip="Loading" size="small" spinning={loadingSubmit}>
+                    <Form.Item>
+                      <Title level={5}>Request Reason</Title>
+                      <QuilEditor placeholder="Give us a reason why you want to create a campaign" />
+                      {errorEditor && (
+                        <Alert message="Text Editor is Required" type="error" />
+                      )}
+                    </Form.Item>
+                  </Spin>
+
                   <Form.Item>
                     <CustomButton
                       buttontype="primary"
