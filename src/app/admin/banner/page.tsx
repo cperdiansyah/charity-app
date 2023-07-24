@@ -32,7 +32,8 @@ function getColumns(showModal: any) {
       key: 'status',
       render: (value: any) => {
         const { status, end_date } = value
-        const isStatusActive = dayjs(end_date) > dayjs() && status === 'active'
+        const isStatusActive = dayjs(end_date) > dayjs() && status === 'accept'
+        // console.log(isStatusActive)
         const color = isStatusActive ? 'green' : 'volcano'
         const text = isStatusActive ? 'ACTIVE' : 'INACTIVE'
 

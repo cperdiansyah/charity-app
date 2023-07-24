@@ -1,5 +1,5 @@
 export const CAMPAIGN_STATUS = {
-  ACCEPT: 'accept', //GREEN
+  ACCEPT: 'active', //GREEN
   PENDING: 'pending', //GRAY
   REJECTED: 'rejected', //RED
   COMPLETED: 'completed', //BLUE

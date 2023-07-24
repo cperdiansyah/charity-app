@@ -1,6 +1,6 @@
 'use client'
 import CharityCard, { ICharityCard } from '@/components/molecules/CharityCard'
-import React from 'react'
+import React, { Key } from 'react'
 
 interface ICharityList {
   dataCharity?: ICharityCard[]
@@ -30,8 +30,8 @@ const CharityList = (props: ICharityList) => {
         {/* <!-- .row end --> */}
         <div className="row">
           {props?.dataCharity &&
-            filteredCharity?.map((charity: ICharityCard) => {
-              return <CharityCard {...charity} />
+            filteredCharity?.map((charity: ICharityCard, index:Key) => {
+              return <CharityCard {...charity} key={index} />
             })}
         </div>
         {/* <!-- .row end --> */}

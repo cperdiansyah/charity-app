@@ -16,7 +16,7 @@ export const SidebarMenu = {
   charity: {
     label: 'Campaign',
     icon: DeploymentUnitOutlined,
-    pathname: NAVIGATION_LINK.CampaignList,
+    pathname: NAVIGATION_LINK.AdminCampaignList,
   },
   banner: {
     label: 'Banner',
@@ -24,9 +24,13 @@ export const SidebarMenu = {
     pathname: NAVIGATION_LINK.BannerList,
   },
   contentModeration: {
-    label: 'Content Moderation',
+    label: 'Moderation',
     icon: AuditOutlined,
-    children: [{ label: 'Charity' }, { label: 'User' }],
+    children: [
+      { label: 'Campaign', pathname: NAVIGATION_LINK.ApprovalCampaign },
+      { label: 'Banner', pathname: NAVIGATION_LINK.ApprovalBanner },
+      { label: 'User', pathname: NAVIGATION_LINK.ApprovalUser },
+    ],
   },
   report: {
     label: 'Report',

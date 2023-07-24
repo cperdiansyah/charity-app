@@ -32,10 +32,11 @@ function getColumns(showModal: any) {
       width: 100,
       render: (value: any) => {
         const { status, end_date } = value
+
         const isCampaignStillRunning = dayjs(end_date) > dayjs()
 
         let campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
-          (item) => item.label === status
+          (item) => item.status === status
         )
 
         if (campaignStatus) {
@@ -83,7 +84,7 @@ function getColumns(showModal: any) {
           <div className="flex items-center">
             <Tooltip placement="bottomRight" title="Edit Banner">
               <Link
-                href={`${NAVIGATION_LINK.CampaignEdit}${value._id}`}
+                href={`${NAVIGATION_LINK.AdminCampaignEdit}${value._id}`}
                 className="px-3 py-2"
               >
                 <EditOutlined />
