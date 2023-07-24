@@ -223,13 +223,12 @@ const ApprovalUser = (props: IApprovalUser) => {
     !approvalData.userVerified &&
     approvalData?.approvalData?.status === 'pending' &&
     approvalData.userApprovalData !== null
-
   return (
     <div className={`${[props.className].join(' ')}`}>
       <Spin tip="Loading" size="small" spinning={loading}>
         {userData?.is_verified === false && (
           <>
-            {userData?.id && (
+            {!_isEmpty(userData?.id) && userData?.id !== '' && (
               <CustomButton
                 buttontype="primary"
                 className={`btn btn-primary btn-block mx-auto mb-5  rounded-lg !px-4 !py-3 text-base`}
