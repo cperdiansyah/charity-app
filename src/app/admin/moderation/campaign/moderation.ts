@@ -1,5 +1,5 @@
 export const MODERATION_STATUS = {
-  ACCEPT: 'active', //GREEN
+  ACCEPT: 'accept', //GREEN
   PENDING: 'pending', //GRAY
   REJECTED: 'rejected', //RED
   COMPLETED: 'completed', //BLUE

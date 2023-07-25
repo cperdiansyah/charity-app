@@ -1,8 +1,21 @@
 'use client'
-import { Button, Descriptions, Image, Modal, Space, Tag, Tooltip } from 'antd'
+import {
+  Button,
+  Descriptions,
+  Image,
+  Modal,
+  Space,
+  Spin,
+  Tag,
+  Tooltip,
+} from 'antd'
 import dayjs from 'dayjs'
 import _get from 'lodash/get'
-import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import {
+  EditOutlined,
+  InfoCircleOutlined,
+  CheckOutlined,
+} from '@ant-design/icons'
 import React, { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
@@ -15,8 +28,16 @@ import useUpdated from '@/hooks/useUpdated'
 import { getApprovalCharity } from '@/services/moderation/clientService'
 import { IModalTable } from '../../campaign/campaign.interfce'
 import { CAMPAIGN_STATUS_WITH_COLORS } from '../../campaign/campaign'
+import { updateCharityStatus } from '@/services/charity/clientService'
+import { notify } from '@/helpers/notify'
 
-function getColumns(showModal: any) {
+type Status = 'accept' | 'rejected'
+
+function getColumns(
+  showModal: any,
+  approvalCampaign: (data?: string, status?: Status) => VoidFunction,
+  rejectedCampaign?: VoidFunction
+) {
   return [
     {
       dataIndex: ['foreign_data', 'title'],
@@ -73,14 +94,26 @@ function getColumns(showModal: any) {
         return (
           <div className="flex items-center">
             <Tooltip placement="bottomRight" title="Approve Campaign">
-              {/* <Link
-                href={`${NAVIGATION_LINK.AdminCampaignEdit}${value._id}`}
-                className="px-3 py-2"
+              <Button
+                style={{ color: '#87d068', border: 'solid 0px' }}
+                onClick={() => approvalCampaign(value, 'accept')}
+                disabled={value.status === 'accept'}
               >
-            </Link> */}
-              <EditOutlined />
+                <CheckOutlined />
+              </Button>
             </Tooltip>
-            <Tooltip placement="bottomRight" title="Detail Banner">
+            <Tooltip placement="bottomRight" title="Reject Campaign">
+              <Button
+                style={{ color: '#f50', border: 'solid 0px' }}
+                onClick={() => approvalCampaign(value, 'rejected')}
+                disabled={
+                  value.status === 'accept' || value.status === 'rejected'
+                }
+              >
+                <CheckOutlined />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="bottomRight" title="Detail Approval Campaign">
               <Button
                 style={{ color: '#1890ff', border: 'solid 0px' }}
                 onClick={() => showModal(record)}
@@ -101,35 +134,65 @@ const ModerationCampaign = () => {
   const searchParams = useSearchParams()
   const [visible, setVisible] = useState<boolean>(false)
   const [campaignData, setCampaignData] = useState<any>()
+  const [loading, setLoading] = useState<boolean>(false)
   const current = searchParams.get('current')
   const pageSize = searchParams.get('pageSize')
   const queryParams = {
     page: current || 1,
     rows: pageSize || 10,
   }
+
   const init = async () => {
     const dataCharity = await getApprovalCharity(queryParams)
     const result = {
       data: dataCharity.data,
       meta: dataCharity.meta,
     }
-    console.log(result)
     return result
   }
+
   const showModal = (record: any) => {
     setCampaignData(record)
     setVisible(true)
   }
 
+  const approvalCampaign: any = async (data?: any, status?: Status) => {
+    try {
+      setLoading(true)
+      const dataApproval = {
+        id: data.foreign_data._id,
+        status,
+      }
+      await updateCharityStatus(dataApproval)
+      setLoading(false)
+    } catch (error: any) {
+      setLoading(false)
+      console.log(error)
+      const errorResponse = error.response
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse?.data?.error?.error?.message || '',
+        'bottomRight'
+      )
+    }
+  }
+
   return (
     <div>
-      <CustomTable columns={getColumns(showModal)} init={init} />
-      <MemoizeModalTable
-        open={visible}
-        setOpen={setVisible}
-        data={campaignData}
-        setData={setCampaignData}
-      />
+      <Spin tip="Loading" spinning={loading}>
+        <CustomTable
+          columns={getColumns(showModal, approvalCampaign)}
+          init={init}
+          loading={loading}
+        />
+        <MemoizeModalTable
+          open={visible}
+          setOpen={setVisible}
+          data={campaignData}
+          setData={setCampaignData}
+        />
+      </Spin>
     </div>
   )
 }

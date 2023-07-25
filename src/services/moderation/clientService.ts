@@ -9,6 +9,7 @@ interface IGetApprovalCampaignQuery {
 }
 type refModel = 'User' | 'Charity' | 'Banner'
 
+/* Get Approval */
 export const getApprovalClient = async (
   query?: IGetApprovalCampaignQuery,
   refModel?: refModel
@@ -27,4 +28,15 @@ export const getApprovalClient = async (
 export const getApprovalCharity = async (query?: IGetApprovalCampaignQuery) => {
   const dataApprovalCharity = await getApprovalClient(query, 'Charity')
   return dataApprovalCharity
+}
+
+/* Update Approval */
+export const updateApprovalClient = async (data: any) => {
+  try {
+    const resCharity = await api.patch(`${SERVICE.Approval}/update/${data.id}`)
+    const dataCharity = _get(resCharity, 'data')
+    return dataCharity
+  } catch (error) {
+    return Promise.reject(error)
+  }
 }

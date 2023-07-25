@@ -8,11 +8,13 @@ import { ICustomTable, TableParams } from './table.interface'
 import { usePathname, useRouter } from 'next/navigation'
 import useLogoutSessionExpired from '@/hooks/useLogoutSessionExpired'
 import TableHeader from './tableHeader'
+import useUpdated from '@/hooks/useUpdated'
 
 const CustomTable: React.FC<ICustomTable> = ({
   columns,
   init,
   placeholder,
+  loading: loadingProps,
 }) => {
   const pathname = usePathname()
   const router = useRouter()
@@ -45,11 +47,23 @@ const CustomTable: React.FC<ICustomTable> = ({
     ...columns,
   ])
 
-  useEffect(() => {
+  /*   useEffect(() => {
+    if (!loading) {
+      MemoGetData()
+    }
+  }, []) */
+
+  useUpdated(() => {
     if (!loading) {
       MemoGetData()
     }
   }, [])
+
+  useUpdated(() => {
+    if (!loadingProps) {
+      MemoGetData()
+    }
+  }, [loadingProps])
 
   const MemoGetData = useCallback(async () => {
     return await getData()
