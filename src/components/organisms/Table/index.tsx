@@ -76,12 +76,15 @@ const CustomTable: React.FC<ICustomTable> = ({
     return await getData()
   }, [])
 
-  async function getData() {
+  async function getData(
+    current?: number | string,
+    pageSize?: number | string
+  ) {
     try {
       setLoading(true)
-      const tableData = await init()
+      const tableData = await init(current, pageSize)
+      // console.log(tableData)
       if (!_.isEmpty(tableData)) {
-        // console.log(tableData)
         setData(tableData.data)
         setTableParams({
           ...tableParams,
@@ -106,18 +109,28 @@ const CustomTable: React.FC<ICustomTable> = ({
     }
   }
 
-  const handleTableChange: any = (
+  const handleTableChange: any = async (
     pagination: TablePaginationConfig,
     filters: Record<string, FilterValue>,
     sorter: SorterResult<any>
   ) => {
-    setTableParams({
-      ...pagination,
-      ...filters,
-      ...sorter,
-      pagination,
+    await getData(
+      tableParams.pagination?.pageSize !== pagination.pageSize
+        ? 1
+        : pagination.current,
+      pagination.pageSize
+    )
+    setTableParams((state) => ({
+      // ...state.pagination,
+      // ...state.filters,
+      ...state,
+      sorter,
       filters,
-    })
+      pagination: {
+        ...state.pagination,
+        ...pagination,
+      },
+    }))
 
     const params = convertTableParams({
       current: pagination.current,
@@ -127,9 +140,9 @@ const CustomTable: React.FC<ICustomTable> = ({
     router.push(`?${params}`)
 
     // `dataSource` is useless since `pageSize` changed
-    if (pagination.pageSize !== tableParams.pagination?.pageSize) {
-      setData([])
-    }
+    // if (pagination.pageSize !== tableParams.pagination?.pageSize) {
+    //   setData([])
+    // }
   }
 
   const onSearch: any = (value: string) => {

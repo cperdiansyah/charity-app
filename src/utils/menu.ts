@@ -50,5 +50,6 @@ export const adminSidebar = [
 export const userVerfiedSidebar = [
   SidebarMenu.dashboard,
   SidebarMenu.charity,
+  SidebarMenu.banner,
   SidebarMenu.report,
 ]

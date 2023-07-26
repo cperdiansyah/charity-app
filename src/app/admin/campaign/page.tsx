@@ -114,12 +114,15 @@ const AdminCharity = () => {
 
   const current = searchParams.get('current')
   const pageSize = searchParams.get('pageSize')
-  const queryParams = {
-    page: Number(current) || 1,
-    rows: Number(pageSize) || 10,
-  }
 
-  const init = async () => {
+  const init = async (
+    current?: number | string,
+    pageSize?: number | string
+  ) => {
+    const queryParams = {
+      page: Number(current) || 1,
+      rows: Number(pageSize) || 10,
+    }
     const dataCharity = await getCharityClient(queryParams)
     const result = {
       data: dataCharity.charity,

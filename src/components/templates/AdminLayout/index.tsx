@@ -1,5 +1,5 @@
 'use client'
-import React from 'react'
+import React, { useEffect } from 'react'
 import { Layout, Spin, theme } from 'antd'
 import AdminSidebar from '@/components/organisms/Admin/Sidebar'
 // Components
@@ -10,11 +10,28 @@ import AdminFooter from '@/components/organisms/Admin/Footer'
 import styles from './adminLayout.module.scss'
 import useSpinnerLayout from '@/stores/spinnerLayout'
 import HeaderBack from '@/components/molecules/Admin/HeaderBack'
+import useUserData from '@/stores/userData'
+import useUpdated from '@/hooks/useUpdated'
+import { useRouter } from 'next/navigation'
+import { NAVIGATION_LINK } from '@/utils/link'
+import { notify } from '@/helpers/notify'
 
 const { Content } = Layout
 
 const AdminLayout = ({ children }: { children: React.ReactNode }) => {
+  const router = useRouter()
+
   const [spinnerLayout, setSpinnerLayout] = useSpinnerLayout()
+  const [userData, setUserData] = useUserData()
+
+  useUpdated(() => {
+    if (userData.id) {
+      if (!userData.is_verified && userData.role === 'user') {
+        router.replace(NAVIGATION_LINK.Homepage)
+        return notify('error', 'Unauthorized Access', '', 'bottomRight')
+      }
+    }
+  }, [userData.id])
 
   const {
     token: { colorBgContainer },

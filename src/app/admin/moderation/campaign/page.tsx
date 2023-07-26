@@ -129,12 +129,15 @@ const ModerationCampaign = () => {
   const [loading, setLoading] = useState<boolean>(false)
   const current = searchParams.get('current')
   const pageSize = searchParams.get('pageSize')
-  const queryParams = {
-    page: current || 1,
-    rows: pageSize || 10,
-  }
 
-  const init = async () => {
+  const init = async (
+    current?: number | string,
+    pageSize?: number | string
+  ) => {
+    const queryParams = {
+      page: current || 1,
+      rows: pageSize || 10,
+    }
     const dataCharity = await getApprovalCharity(queryParams)
     const result = {
       data: dataCharity.data,

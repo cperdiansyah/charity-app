@@ -98,7 +98,15 @@ const AdminBanner = () => {
     rows: Number(pageSize) || 10,
   }
 
-  const init = async () => {
+  const init = async (
+    current?: number | string,
+    pageSize?: number | string
+  ) => {
+    const queryParams = {
+      page: Number(current) || 1,
+      rows: Number(pageSize) || 10,
+    }
+
     const dataBanner = await getBannerClient(queryParams)
 
     const result = {

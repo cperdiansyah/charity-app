@@ -35,7 +35,7 @@ const useLogout = () => {
           router.refresh()
           return setSpinnerLayout(false)
           // return router.refresh()
-        }, 500)
+        }, 1500)
       }
     } catch (error: any) {
       const resError: IErrorResponse = _.get(error, 'error', {
