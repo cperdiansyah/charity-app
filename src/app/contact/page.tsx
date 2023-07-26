@@ -14,8 +14,8 @@ const Contact = () => {
         <div className="xs-black-overlay" />
         <div className="container">
           <div className="color-white xs-inner-banner-content">
-            <h2>Contact Us</h2>
-            <p>Give a helping hand for poor people</p>
+            <h2>Contact</h2>
+            <p>Berikan uluran tangan untuk beramal untuk sesama kita</p>
             <ul className="xs-breadcumb">
               <li className="badge badge-pill badge-primary">
                 <Navlink href="/" className="color-white" text=" Home /" />
@@ -34,7 +34,7 @@ const Contact = () => {
               <div className="row">
                 <div className="col-lg-6">
                   <div className="xs-contact-form-wraper">
-                    <h4>Drop us a line</h4>
+                    <h4>Hubungi Kami</h4>
                     <form
                       action="#"
                       method="POST"

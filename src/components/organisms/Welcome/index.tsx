@@ -8,15 +8,16 @@ const Welcome = () => {
         <div className={`xs-welcome-content ${styles['welcome-content']}`}>
           <div className="container">
             <div className="xs-welcome-wraper color-white">
-              <h2>Hunger is stalking the globe</h2>
+              <h2>Amal kita adalah kebahagiaan kita </h2>
               <p>
-                Hundreds of thousands of children experiencing or witnessing
-                assault
+                Kebahagiaan adalah titik balik di mana cinta, kedamaian, dan
+                keberuntungan bertemu
                 <br />
-                and other gender-based violence.
+                dalam pelukan satu-satunya momen yang benar-benar kita miliki
+                sekarang
               </p>
               <a href="#popularcause" className="btn btn-outline-primary">
-                View Causes
+                Lihat Campaign
               </a>
             </div>
           </div>

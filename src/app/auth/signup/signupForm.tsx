@@ -82,7 +82,9 @@ const SignupForm = () => {
               <div className="h-12 w-12 rounded-md bg-indigo-600 p-2">
                 <img src="https://cdn-icons-png.flaticon.com/512/124/124558.png" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-700">New Here ?</h1>
+              <h1 className="text-2xl font-bold text-gray-700">
+                Baru disini ?
+              </h1>
             </div>
             <div className="form-item-wrapper">
               <Form.Item
@@ -175,7 +177,7 @@ const SignupForm = () => {
             </CustomButton>
 
             <div className="w-full text-center text-sm text-gray-600">
-              Already have an account?
+              Sudah memiliki akun?
               <Navlink
                 className="text-medium ml-1 text-indigo-600 hover:underline"
                 href={NAVIGATION_LINK.Login}

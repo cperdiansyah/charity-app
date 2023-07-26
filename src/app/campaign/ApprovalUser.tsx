@@ -174,12 +174,12 @@ const ApprovalUser = (props: IApprovalUser) => {
       setLoadingSubmit(false)
 
       const titleNoiify = _isEmpty(approvalData.userApprovalData)
-        ? 'Campaign Submit Request Successful'
-        : 'Update Campaign Submit Request Successful'
+        ? 'Permintaan Permohonan Pembuatan Campaign Berhasil'
+        : 'Update Permohonan Pembuatan Campaign Berhasil'
       notify(
         'success',
         titleNoiify,
-        'please wait for it to be reviewed by the admin',
+        'mohon ditunggu reviewnya oleh admin',
         'bottomRight'
       )
     } catch (error) {
@@ -237,9 +237,9 @@ const ApprovalUser = (props: IApprovalUser) => {
               >
                 <AuditOutlined />
                 {userNotRequestCampaign
-                  ? 'Make a Campaign Request'
+                  ? 'Mau Coba Buat Campaign ?'
                   : userRequestCampaignButNotApprovedYet &&
-                    'Your request is being reviewed, please wait'}
+                    'Permintaan Anda sedang ditinjau, harap tunggu'}
               </CustomButton>
             )}
 
@@ -265,8 +265,8 @@ const ApprovalUser = (props: IApprovalUser) => {
                 >
                   <Spin tip="Loading" size="small" spinning={loadingSubmit}>
                     <Form.Item>
-                      <Title level={5}>Request Reason</Title>
-                      <QuilEditor placeholder="Give us a reason why you want to create a campaign" />
+                      <Title level={5}>Alasan Pengajuan</Title>
+                      <QuilEditor placeholder="Beri kami alasan mengapa Anda ingin membuat  campaign" />
                       {errorEditor && (
                         <Alert message="Text Editor is Required" type="error" />
                       )}
@@ -281,9 +281,9 @@ const ApprovalUser = (props: IApprovalUser) => {
                       loading={loadingSubmit}
                     >
                       {userNotRequestCampaign
-                        ? 'Submit Campaign Request'
+                        ? 'Kirim Pengajuan Pembuatan Camapaign'
                         : userRequestCampaignButNotApprovedYet &&
-                          'Update Campaign Request'}
+                          'Update Pengajuan Pembuatan Camapaign'}
                     </CustomButton>
                   </Form.Item>
                 </Form>

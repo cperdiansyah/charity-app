@@ -93,7 +93,7 @@ const CharityCard = (props: ICharityCard) => {
           <ul className="xs-list-with-content mb-3 flex flex-col flex-wrap md:flex-row">
             <li className="pledged">
               {currencyFormat(donated)}
-              <span className={`${styles['font-label']}`}>Pledged</span>
+              <span className={`${styles['font-label']}`}>Donasi</span>
             </li>
             <li>
               <span
@@ -103,11 +103,11 @@ const CharityCard = (props: ICharityCard) => {
               >
                 {calculateFund >= 100 ? '>100' : calculateFund}
               </span>
-              %<span className={`${styles['font-label']}`}>Funded</span>
+              %<span className={`${styles['font-label']}`}>Terkumpul</span>
             </li>
             <li>
               {calculateDaysRemaining(endDate)}
-              <span className={`${styles['font-label']}`}>Days to go</span>
+              <span className={`${styles['font-label']}`}>Hari Lagi</span>
             </li>
           </ul>
           <div className="charity-user  hidden md:block">
@@ -133,7 +133,7 @@ const CharityCard = (props: ICharityCard) => {
             // href="#popularcause"
             href={`${NAVIGATION_LINK.Campaign}/${slug}`}
           >
-            Donate This Cause
+            Donasi Sekarang
           </CustomButton>
         </div>
         {/* <!-- .xs-item-content END --> */}

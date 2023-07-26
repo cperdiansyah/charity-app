@@ -12,7 +12,7 @@ export const BannerSection = () => {
       <div className="container">
         <div className="color-white xs-inner-banner-content">
           <h2>About Us</h2>
-          <p>Give a helping hand for poor people</p>
+          <p>Berikan uluran tangan untuk beramal untuk sesama kita</p>
           <ul className="xs-breadcumb">
             <li className="badge badge-pill badge-primary">
               <Navlink href="/" className="color-white" text=" Home /" />

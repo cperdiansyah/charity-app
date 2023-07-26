@@ -222,7 +222,7 @@ const CampaignDetail = () => {
                 <ul className="xs-list-with-content mb-3 ">
                   <li className="pledged ">
                     {currencyFormat(amount)}
-                    <span className={`${styles['font-label']}`}>Pledged</span>
+                    <span className={`${styles['font-label']}`}>Donasi</span>
                   </li>
                   <li className="target ">
                     {currencyFormat(campaignData?.donation_target || 0)}
@@ -240,13 +240,12 @@ const CampaignDetail = () => {
                           : percentage
                         : 0}
                     </span>
-                    %<span className={`${styles['font-label']}`}>Funded</span>
+                    %
+                    <span className={`${styles['font-label']}`}>Terkumpul</span>
                   </li>
                   <li className="">
                     {endDate && endDate.diff(today, 'day')}
-                    <span className={`${styles['font-label']}`}>
-                      Days to go
-                    </span>
+                    <span className={`${styles['font-label']}`}>Hari Lagi</span>
                   </li>
                 </ul>
               </div>
@@ -272,7 +271,7 @@ const CampaignDetail = () => {
                   onClick={() => setIsExpand((prev) => !prev)}
                   className={`${styles['campaign-content-info__campaign-description__expand-button']}`}
                 >
-                  {isExpand ? 'Read More' : 'Read Less'}
+                  {isExpand ? 'Selengkapnya' : 'Lebih Sedikit'}
                 </button>
               </div>
             </div>
@@ -285,7 +284,7 @@ const CampaignDetail = () => {
               >
                 {percentage >= 100
                   ? 'All donations have been collected'
-                  : ' Donate This Cause'}
+                  : ' Donasi Sekarang'}
               </CustomButton>
             </div>
           </div>
