@@ -7,6 +7,7 @@ export interface ICustomTable {
   init: Function
   loading?: boolean
   placeholder?: string
+  hideAddButton?: boolean
 }
 
 export interface TableParams {

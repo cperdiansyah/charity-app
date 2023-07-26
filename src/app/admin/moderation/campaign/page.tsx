@@ -1,13 +1,5 @@
 'use client'
-import {
-  Button,
-  Descriptions,
-  Image,
-  Modal,
-  Spin,
-  Tag,
-  Tooltip,
-} from 'antd'
+import { Button, Descriptions, Image, Modal, Spin, Tag, Tooltip } from 'antd'
 import dayjs from 'dayjs'
 import _get from 'lodash/get'
 import {
@@ -185,6 +177,7 @@ const ModerationCampaign = () => {
           columns={getColumns(showModal, approvalCampaign)}
           init={init}
           loading={loading}
+          hideAddButton={true}
         />
         <MemoizeModalTable
           open={visible}

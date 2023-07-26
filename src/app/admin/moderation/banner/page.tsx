@@ -16,15 +16,12 @@ import CustomTable from '@/components/organisms/Table'
 /* Utils */
 import { currencyFormat } from '@/helpers'
 import useUpdated from '@/hooks/useUpdated'
-import {
-  getApprovalBanner,
-  getApprovalCharity,
-} from '@/services/moderation/clientService'
+import { getApprovalBanner } from '@/services/moderation/clientService'
 import { IModalTable } from '../../campaign/campaign.interfce'
 import { CAMPAIGN_STATUS_WITH_COLORS } from '../../campaign/campaign'
-import { updateCharityStatus } from '@/services/charity/clientService'
 import { notify } from '@/helpers/notify'
 import { updateBannerStatus } from '@/services/banner/clientService'
+import Link from 'next/link'
 
 type Status = 'accept' | 'rejected'
 
@@ -173,6 +170,7 @@ const ModerationBanner = () => {
           columns={getColumns(showModal, approvalBanner)}
           init={init}
           loading={loading}
+          hideAddButton={true}
         />
         <MemoizeModalTable
           open={visible}
@@ -205,9 +203,10 @@ function ModalTable(props: IModalTable) {
   }, [props.open])
 
   /* Status */
-  const { status } = props?.data?.foreign_data
+  const { status, end_date } = props?.data?.foreign_data
+
   let campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
-    (item) => item.label === status
+    (item) => item.status === status
   )
 
   return (
@@ -218,48 +217,33 @@ function ModalTable(props: IModalTable) {
       closable={true}
       maskClosable={true}
     >
-      {/* <Button>Detail</Button> */}
       <Descriptions bordered className="mt-4">
         <Descriptions.Item label="Title" span={24}>
-          {props?.data?.foreign_data?.title}
+          {props?.data?.foreign_data.title}
         </Descriptions.Item>
         <Descriptions.Item label="Image" span={24}>
           <Image
-            src={_get(props?.data, 'foreign_data.media[0].content')}
-            alt={props?.data?.foreign_data?.title}
+            src={props?.data?.foreign_data.image}
+            alt={props?.data?.foreign_data.title}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Descriptions.Item>
-        <Descriptions.Item label="Donation Target" span={24}>
-          {`${currencyFormat(props?.data?.foreign_data?.donation_target)}`}
-        </Descriptions.Item>
         <Descriptions.Item label="Status" span={24}>
-          {campaignStatus ? (
-            <Tag color={campaignStatus?.color}>
-              {campaignStatus?.status?.toUpperCase()}
-            </Tag>
-          ) : (
-            <Tag color="default">{status?.toUpperCase()}</Tag>
-          )}
+          <Tag color={campaignStatus?.color}>{campaignStatus?.label}</Tag>
         </Descriptions.Item>
-
         <Descriptions.Item label="Start Date" span={24}>
-          {dayjs(props?.data?.foreign_data?.start_date).format('DD MMMM YYYY')}
+          {dayjs(props?.data?.foreign_data.start_date).format('DD MMMM YYYY')}
         </Descriptions.Item>
         <Descriptions.Item label="End Date" span={24}>
-          {dayjs(props?.data?.foreign_data?.end_date).format('DD MMMM YYYY')}
+          {dayjs(props?.data?.foreign_data.end_date).format('DD MMMM YYYY')}
         </Descriptions.Item>
-        <Descriptions.Item label="Post Date" span={24}>
-          {props?.data?.foreign_data?.post_date
-            ? dayjs(props?.data?.foreign_data?.post_date).format('DD MMMM YYYY')
-            : '-'}
-        </Descriptions.Item>
-        <Descriptions.Item label="Description" span={24}>
-          <div
-            dangerouslySetInnerHTML={{
-              __html: props?.data?.foreign_data?.description,
-            }}
-          ></div>
+        <Descriptions.Item label="Redirection Link" span={24}>
+          <Link
+            href={props?.data?.foreign_data.redirection_link}
+            target="_blank"
+          >
+            {props?.data?.foreign_data.redirection_link}
+          </Link>
         </Descriptions.Item>
       </Descriptions>
     </Modal>
