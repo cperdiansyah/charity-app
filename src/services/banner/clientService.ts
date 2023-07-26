@@ -27,7 +27,7 @@ export const getBannerClient = async (query?: IGetBannersQuery) => {
 export const updateBannerStatus = async (data: any) => {
   try {
     const resCharity = await api.patch(
-      `${SERVICE.charity}/update-status/${data.id}`,
+      `${SERVICE.banner}/update-status/${data.id}`,
       data
     )
     const dataCharity = _get(resCharity, 'data')

@@ -136,7 +136,6 @@ const ModerationBanner = () => {
       data: dataCharity.data,
       meta: dataCharity.meta,
     }
-    console.log(result)
     return result
   }
 
@@ -152,6 +151,7 @@ const ModerationBanner = () => {
         id: data.foreign_data._id,
         status,
       }
+      // console.log(data)
       await updateBannerStatus(dataApproval)
       setLoading(false)
     } catch (error: any) {
