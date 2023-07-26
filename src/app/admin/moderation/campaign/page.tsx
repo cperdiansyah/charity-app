@@ -12,9 +12,9 @@ import {
 import dayjs from 'dayjs'
 import _get from 'lodash/get'
 import {
-  EditOutlined,
   InfoCircleOutlined,
   CheckOutlined,
+  CloseOutlined,
 } from '@ant-design/icons'
 import React, { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -110,7 +110,8 @@ function getColumns(
                   value.status === 'accept' || value.status === 'rejected'
                 }
               >
-                <CheckOutlined />
+                {/* <CheckOutlined /> */}
+                <CloseOutlined />
               </Button>
             </Tooltip>
             <Tooltip placement="bottomRight" title="Detail Approval Campaign">

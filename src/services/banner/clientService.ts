@@ -10,7 +10,10 @@ interface IGetBannersQuery {
 export const getBannerClient = async (query?: IGetBannersQuery) => {
   try {
     const resBanner = await api.get(SERVICE.banner, {
-      params: query,
+      params: {
+        ...query,
+        status: 'all',
+      },
     })
     const dataBanner = _.get(resBanner, 'data')
     return dataBanner

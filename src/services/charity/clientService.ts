@@ -11,7 +11,10 @@ interface IGetCharityQuery {
 export const getCharityClient = async (query?: IGetCharityQuery) => {
   try {
     const resCharity = await api.get(SERVICE.charity, {
-      params: query,
+      params: {
+        ...query,
+        status: 'all',
+      },
     })
     const dataCharity = _.get(resCharity, 'data')
     return dataCharity
