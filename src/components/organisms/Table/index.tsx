@@ -79,7 +79,7 @@ const CustomTable: React.FC<ICustomTable> = ({
   async function getData(
     current?: number | string,
     pageSize?: number | string
-  ) {
+  ) { 
     try {
       setLoading(true)
       const tableData = await init(current, pageSize)

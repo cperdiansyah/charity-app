@@ -24,12 +24,24 @@ const AdminLayout = ({ children }: { children: React.ReactNode }) => {
   const [spinnerLayout, setSpinnerLayout] = useSpinnerLayout()
   const [userData, setUserData] = useUserData()
 
+  useEffect(() => {
+    setTimeout(() => {
+      if (!userData.id) {
+        return router.replace(NAVIGATION_LINK.Login)
+      }
+    }, 1500)
+  }, [])
+
   useUpdated(() => {
     if (userData.id) {
       if (!userData.is_verified && userData.role === 'user') {
         router.replace(NAVIGATION_LINK.Homepage)
         return notify('error', 'Unauthorized Access', '', 'bottomRight')
       }
+    } else {
+      setTimeout(() => {
+        return router.replace(NAVIGATION_LINK.Login)
+      }, 1500)
     }
   }, [userData.id])
 

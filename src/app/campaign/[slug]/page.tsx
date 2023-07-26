@@ -35,6 +35,7 @@ import useUserData from '@/stores/userData'
 import { notify } from '@/helpers/notify'
 import { IErrorResponse } from '@/services/auth/index.interface'
 import useMidtransSnap from '@/hooks/useMidtransSnap'
+import { NAVIGATION_LINK } from '@/utils/link'
 
 const CampaignDetail = () => {
   const [form] = Form.useForm()
@@ -43,8 +44,7 @@ const CampaignDetail = () => {
   const { slug: slugcharity } = params
 
   const [userData, setUserData] = useUserData()
-  const {token, setToken} = useMidtransSnap()
-
+  const { token, setToken } = useMidtransSnap()
 
   const [isExpand, setIsExpand] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -116,6 +116,9 @@ const CampaignDetail = () => {
   }
 
   const handleOpen = () => {
+    if (!userData.id) {
+      return router.replace(NAVIGATION_LINK.Login)
+    }
     setIsModalOpen(true)
   }
   const handleCancel = () => {

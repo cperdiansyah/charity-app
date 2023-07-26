@@ -35,7 +35,7 @@ export const SidebarMenu = {
   report: {
     label: 'Report',
     icon: PrinterOutlined,
-    children: [{ label: 'Charity' }, { label: 'User' }],
+    children: [{ label: 'Campaign' }, { label: 'User' }],
   },
 }
 
