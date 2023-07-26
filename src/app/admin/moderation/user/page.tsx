@@ -24,6 +24,7 @@ import { IModalTable } from '../../campaign/campaign.interfce'
 import { CAMPAIGN_STATUS_WITH_COLORS } from '../../campaign/campaign'
 import { notify } from '@/helpers/notify'
 import { updateUserStatus } from '@/services/user/clientService'
+import Link from 'next/link'
 
 type Status = 'accept' | 'rejected'
 
@@ -214,7 +215,8 @@ function ModalTable(props: IModalTable) {
   }, [props.open])
 
   /* Status */
-  const { status } = props?.data?.foreign_data
+  const status = props?.data?.status
+
   let campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
     (item) => item.label === status
   )
@@ -242,10 +244,10 @@ function ModalTable(props: IModalTable) {
         </Descriptions.Item>
 
         <Descriptions.Item label="Username" span={24}>
-          {dayjs(props?.data?.foreign_data?.username).format('DD MMMM YYYY')}
+          {props?.data?.foreign_data?.username}
         </Descriptions.Item>
         <Descriptions.Item label="Email" span={24}>
-          {dayjs(props?.data?.foreign_data?.email).format('DD MMMM YYYY')}
+          {props?.data?.foreign_data?.email}
         </Descriptions.Item>
         <Descriptions.Item label="Register Date" span={24}>
           {dayjs(props?.data?.foreign_data?.start_date).format('DD MMMM YYYY')}
@@ -258,6 +260,17 @@ function ModalTable(props: IModalTable) {
             }}
           ></div>
         </Descriptions.Item>
+
+        {props?.data?.approval_user_data?.file_url && (
+          <Descriptions.Item label="Proposal File" span={24}>
+            <Link
+              href={props?.data?.approval_user_data?.file_url || ''}
+              target="_blank"
+            >
+              {props?.data?.approval_user_data?.file_url || ''}
+            </Link>
+          </Descriptions.Item>
+        )}
       </Descriptions>
     </Modal>
   )

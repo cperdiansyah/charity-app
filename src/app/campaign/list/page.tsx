@@ -86,8 +86,8 @@ const CampaignList = () => {
   const getPaymentData = async () => {
     try {
       const listIdCharity: string[] = []
-      charity.charity?.length !== 0 &&
-        charity.charity?.forEach((item: any) => {
+      charity?.charity?.length !== 0 &&
+        charity?.charity?.forEach((item: any) => {
           listIdCharity.push(item.id)
         })
       const resPaymentCharity = await api.get(
