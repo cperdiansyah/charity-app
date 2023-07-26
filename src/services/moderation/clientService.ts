@@ -33,6 +33,10 @@ export const getApprovalBanner = async (query?: IGetApprovalCampaignQuery) => {
   const dataApprovalCharity = await getApprovalClient(query, 'Banner')
   return dataApprovalCharity
 }
+export const getApprovalUser = async (query?: IGetApprovalCampaignQuery) => {
+  const dataApprovalCharity = await getApprovalClient(query, 'User')
+  return dataApprovalCharity
+}
 
 /* Update Approval */
 export const updateApprovalClient = async (data: any) => {

@@ -11,6 +11,7 @@ export const SERVICE = {
   checkAccount: '/api/v1/auth/check-account',
   resetPassword: '/api/v1/auth/reset-password',
   refreshToken: '/api/v1/auth/refresh',
+  user: '/api/v1/user',
   // Media Temp
   uploadMediaTemp: '/api/v1/media/upload',
   // Charity
