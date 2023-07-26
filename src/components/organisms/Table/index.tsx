@@ -48,17 +48,23 @@ const CustomTable: React.FC<ICustomTable> = ({
     ...columns,
   ])
 
-  /*   useEffect(() => {
-    if (!loading) {
-      MemoGetData()
-    }
-  }, []) */
-
-  useUpdated(() => {
+  useEffect(() => {
     if (!loading) {
       MemoGetData()
     }
   }, [])
+
+  // useUpdated(() => {
+  //   if (!loading) {
+  //     MemoGetData()
+  //   }
+  // }, [])
+
+  // useUpdated(() => {
+  //   if (!loading) {
+  //     MemoGetData()
+  //   }
+  // }, [pageSize, tableParams?.pagination?.current])
 
   useUpdated(() => {
     if (!loadingProps) {

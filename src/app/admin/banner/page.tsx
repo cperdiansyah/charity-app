@@ -93,10 +93,9 @@ const AdminBanner = () => {
 
   const current = searchParams.get('current')
   const pageSize = searchParams.get('pageSize')
-
   const queryParams = {
-    page: current || 1,
-    rows: pageSize || 10,
+    page: Number(current) || 1,
+    rows: Number(pageSize) || 10,
   }
 
   const init = async () => {
