@@ -61,7 +61,7 @@ const CampaignList = (props: ICampaignList) => {
           donated: 0,
           title: item?.title,
           endDate: item?.end_date,
-          author: item?.author.name,
+          author: item?.author?.name,
           slug: item?.slug,
           id: item?._id,
         })
@@ -128,7 +128,7 @@ const CampaignList = (props: ICampaignList) => {
             return <CharityCard {...item} key={index} />
           })
         ) : (
-          <Empty description="Campaigns not available" className='mx-auto' />
+          <Empty description="Campaigns not available" className="mx-auto" />
         )}
       </div>
       {charity.meta.total > (charity?.charity?.length || 0) && (

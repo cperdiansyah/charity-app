@@ -31,10 +31,10 @@ export default async function Home() {
       'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930',
     target: item.donation_target,
     donated: 0,
-    title: item.title,
-    endDate: item.end_date,
-    author: item.author.name,
-    slug: item.slug,
+    title: item?.title,
+    endDate: item?.end_date,
+    author: item?.author?.name,
+    slug: item?.slug,
   }))
   // console.log(filteredCharity)
 

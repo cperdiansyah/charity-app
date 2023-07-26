@@ -1,4 +1,6 @@
 import _ from 'lodash'
+import _get from 'lodash/get'
+
 import { SERVICE } from '@/utils/api'
 import { api } from '@/utils/clientSideFetch'
 
@@ -15,8 +17,21 @@ export const getBannerClient = async (query?: IGetBannersQuery) => {
         status: 'all',
       },
     })
-    const dataBanner = _.get(resBanner, 'data')
+    const dataBanner = _get(resBanner, 'data')
     return dataBanner
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+export const updateBannerStatus = async (data: any) => {
+  try {
+    const resCharity = await api.patch(
+      `${SERVICE.charity}/update-status/${data.id}`,
+      data
+    )
+    const dataCharity = _get(resCharity, 'data')
+    return dataCharity
   } catch (error) {
     return Promise.reject(error)
   }

@@ -61,7 +61,7 @@ const CampaignList = () => {
           donated: 0,
           title: item?.title,
           endDate: item?.end_date,
-          author: item?.author.name,
+          author: item?.author?.name,
           slug: item?.slug,
           id: item?._id,
         })
