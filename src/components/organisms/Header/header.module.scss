@@ -8,6 +8,7 @@ $breakpoint-tablet: 1000px;
   }
   .nav-brand {
     display: flex !important;
+    background-image: none;
     @media (max-width: $breakpoint-tablet) {
       margin: 0 !important;
       width: fit-content;
@@ -16,6 +17,7 @@ $breakpoint-tablet: 1000px;
       object-fit: contain;
       margin: 0 auto;
       margin-top: 1.2rem;
+      width: 120px;
       height: fit-content;
       @media (max-width: $breakpoint-tablet) {
         margin: 0;

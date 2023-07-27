@@ -18,15 +18,13 @@ import {
   findItemByPathname,
   generateItem,
 } from './sidebar.function'
-import { adminSidebar } from '@/utils/menu'
+import { adminSidebar, userVerfiedSidebar } from '@/utils/menu'
 
 // styles
 import styles from './sidebar.module.scss'
 import { sidebarWidth } from '@/helpers'
 import useUpdated from '@/hooks/useUpdated'
-
-const item: IMenuItem[] = adminSidebar
-const menuItems = generateItem(item)
+import useUserData from '@/stores/userData'
 
 const AdminSidebar: React.FC = () => {
   const router = useRouter()
@@ -34,6 +32,10 @@ const AdminSidebar: React.FC = () => {
   const screenWidth = useScreenWidth()
   const [collapsed, setCollapsed] = useSidebarCollapsed()
   const [activePathname, setActivePathname] = useState<string[]>(['1'])
+  const [userData, setUserData] = useUserData()
+  const item: IMenuItem[] =
+    userData.role === 'admin' ? adminSidebar : userVerfiedSidebar
+  const menuItems = generateItem(item)
 
   useEffect(() => {
     setActiveMenu()

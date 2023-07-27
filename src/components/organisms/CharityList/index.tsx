@@ -1,6 +1,6 @@
 'use client'
 import CharityCard, { ICharityCard } from '@/components/molecules/CharityCard'
-import React from 'react'
+import React, { Key } from 'react'
 
 interface ICharityList {
   dataCharity?: ICharityCard[]
@@ -16,13 +16,13 @@ const CharityList = (props: ICharityList) => {
       <div className="container">
         <div className="xs-heading row xs-mb-60">
           <div className="col-md-9 col-xl-9">
-            <h2 className="xs-title">Popular Causes</h2>
+            <h2 className="xs-title">Campaign Terdekat</h2>
             <span className="xs-separetor dashed" />
             <p>
-              FundPress has built a platform focused on aiding entrepreneurs,
-              startups, and
+              Campaign Donasi terdekat yang akan segera berakhir yang bisa kamu
+              salurkan
               <br />
-              companies raise capital from anyone.
+              melalui platform AmalKita
             </p>
           </div>
           {/* <!-- .xs-heading-title END --> */}
@@ -30,8 +30,8 @@ const CharityList = (props: ICharityList) => {
         {/* <!-- .row end --> */}
         <div className="row">
           {props?.dataCharity &&
-            filteredCharity?.map((charity: ICharityCard) => {
-              return <CharityCard {...charity} />
+            filteredCharity?.map((charity: ICharityCard, index: Key) => {
+              return <CharityCard {...charity} key={index} />
             })}
         </div>
         {/* <!-- .row end --> */}

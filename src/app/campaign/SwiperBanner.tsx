@@ -69,7 +69,7 @@ const SwiperBanner = (props: ISwiperList) => {
           ))
         ) : (
           <SwiperSlide>
-            <Empty description="Banners not available" />
+            <Empty description="Banners tidak tersedia" />
           </SwiperSlide>
         )}
       </Swiper>

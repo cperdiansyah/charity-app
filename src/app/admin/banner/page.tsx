@@ -32,7 +32,8 @@ function getColumns(showModal: any) {
       key: 'status',
       render: (value: any) => {
         const { status, end_date } = value
-        const isStatusActive = dayjs(end_date) > dayjs() && status === 'active'
+        const isStatusActive = dayjs(end_date) > dayjs() && status === 'accept'
+        // console.log(isStatusActive)
         const color = isStatusActive ? 'green' : 'volcano'
         const text = isStatusActive ? 'ACTIVE' : 'INACTIVE'
 
@@ -92,13 +93,20 @@ const AdminBanner = () => {
 
   const current = searchParams.get('current')
   const pageSize = searchParams.get('pageSize')
-
   const queryParams = {
-    page: current || 1,
-    rows: pageSize || 10,
+    page: Number(current) || 1,
+    rows: Number(pageSize) || 10,
   }
 
-  const init = async () => {
+  const init = async (
+    current?: number | string,
+    pageSize?: number | string
+  ) => {
+    const queryParams = {
+      page: Number(current) || 1,
+      rows: Number(pageSize) || 10,
+    }
+
     const dataBanner = await getBannerClient(queryParams)
 
     const result = {

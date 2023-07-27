@@ -61,7 +61,7 @@ const CampaignList = (props: ICampaignList) => {
           donated: 0,
           title: item?.title,
           endDate: item?.end_date,
-          author: item?.author.name,
+          author: item?.author?.name,
           slug: item?.slug,
           id: item?._id,
         })
@@ -86,8 +86,8 @@ const CampaignList = (props: ICampaignList) => {
   const getPaymentData = async () => {
     try {
       const listIdCharity: string[] = []
-      charity.charity?.length !== 0 &&
-        charity.charity?.forEach((item: any) => {
+      charity?.charity?.length !== 0 &&
+        charity?.charity?.forEach((item: any) => {
           listIdCharity.push(item.id)
         })
       const resPaymentCharity = await api.get(
@@ -128,7 +128,7 @@ const CampaignList = (props: ICampaignList) => {
             return <CharityCard {...item} key={index} />
           })
         ) : (
-          <Empty description="Campaigns not available" className='mx-auto' />
+          <Empty description="Campaigns Tidak Tersedia" className="mx-auto" />
         )}
       </div>
       {charity.meta.total > (charity?.charity?.length || 0) && (
@@ -138,7 +138,7 @@ const CampaignList = (props: ICampaignList) => {
           className={`btn btn-primary btn-block mx-auto mb-5 w-fit rounded-lg !px-4 !py-3 text-base`}
           href={`${NAVIGATION_LINK.CampaignList}`}
         >
-          See More
+          Lihat Lainnya
         </CustomButton>
       )}
     </Spin>

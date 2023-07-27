@@ -61,7 +61,7 @@ const CampaignList = () => {
           donated: 0,
           title: item?.title,
           endDate: item?.end_date,
-          author: item?.author.name,
+          author: item?.author?.name,
           slug: item?.slug,
           id: item?._id,
         })
@@ -86,8 +86,8 @@ const CampaignList = () => {
   const getPaymentData = async () => {
     try {
       const listIdCharity: string[] = []
-      charity.charity?.length !== 0 &&
-        charity.charity?.forEach((item: any) => {
+      charity?.charity?.length !== 0 &&
+        charity?.charity?.forEach((item: any) => {
           listIdCharity.push(item.id)
         })
       const resPaymentCharity = await api.get(

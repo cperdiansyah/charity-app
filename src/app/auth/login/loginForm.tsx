@@ -42,8 +42,8 @@ const LoginForm = () => {
 
         notify(
           'success',
-          'Login successful',
-          `You will be directed to the ${
+          'Login Berhasil',
+          `Anda akan diarahkan ke halaman ${
             response.role === 'admin' ? 'Dashboard' : 'Homepage'
           }`,
           'bottomRight'
@@ -82,7 +82,9 @@ const LoginForm = () => {
               <div className="h-12 w-12 rounded-md bg-indigo-600 p-2">
                 <img src="https://cdn-icons-png.flaticon.com/512/124/124558.png" />
               </div>
-              <h1 className="text-2xl font-bold text-gray-700">Welcome Back</h1>
+              <h1 className="text-2xl font-bold text-gray-700">
+                Selamat Datang kembali
+              </h1>
             </div>
             <div className="form-item-wrapper">
               <Form.Item
@@ -123,7 +125,7 @@ const LoginForm = () => {
               <Navlink
                 className="text-xs font-semibold uppercase tracking-wider text-gray-500"
                 href={NAVIGATION_LINK.ForgotPassword}
-                text="Forgot Password"
+                text="LUPA KATA SANDI"
               />
             </div>
             <CustomButton
@@ -135,7 +137,7 @@ const LoginForm = () => {
             </CustomButton>
 
             <div className="w-full text-center text-sm text-gray-600">
-              Don't have an account?
+              Belum punya akun?
               <Navlink
                 className="text-medium ml-1 text-indigo-600 hover:underline"
                 href={NAVIGATION_LINK.Signup}

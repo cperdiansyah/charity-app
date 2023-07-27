@@ -2,13 +2,21 @@ const AdminLink = {
   AdminHome: '/admin',
   Dashboard: '/admin/dashboard',
   // Campaign
-  CampaignList: '/admin/campaign',
-  CampaignAdd: '/admin/campaign/add',
-  CampaignEdit: '/admin/campaign/edit/',
+  AdminCampaignList: '/admin/campaign',
+  AdminCampaignAdd: '/admin/campaign/add',
+  AdminCampaignEdit: '/admin/campaign/edit/',
   // Banner
   BannerList: '/admin/banner',
   BannerAdd: '/admin/banner/add',
   BannerEdit: '/admin/banner/edit/',
+  /* Approval */
+  ApprovalCampaign: '/admin/moderation/campaign',
+  ApprovalBanner: '/admin/moderation/banner',
+  ApprovalUser: '/admin/moderation/user',
+  /* Report */
+  ReportCampaign: '/admin/report/campaign',
+  ReportBanner: '/admin/report/banner',
+  ReportUser: '/admin/report/user',
 }
 
 export const NAVIGATION_LINK = {
