@@ -9,13 +9,17 @@ const Footer = () => {
         <div className="xs-footer-top-layer">
           <div className="row">
             <div className="col-lg-3 col-md-6 footer-widget xs-pr-20">
-              <a href="/" className="xs-footer-logo">
-                <img src="/images/footer_logo.png" alt="" />
+              <a
+                href="/"
+                className="xs-footer-logo text-2xl font-semibold text-white"
+              >
+                {/* <img src="/images/footer_logo.png" alt="" /> */}
+                AmalKita
               </a>
               <p>
-                CharityPress online and raise money for charity and causes
-                you’re passionate about. CharityPress is an innovative,
-                cost-effective online.
+                Sebuah platform crowdfunding yang digagas oleh Yayasan Peduli
+                Yatim Piatu An-Nur dengan semangat Sejuta Kebaikan Dimulai Dari
+                Satu Langkah Bersama
               </p>
               <ul className="xs-social-list-v2">
                 <li>
@@ -69,15 +73,16 @@ const Footer = () => {
               <ul className="xs-info-list">
                 <li>
                   <i className="fa fa-home" />
-                  Sector # 48, 123 Street, miosya road VIC 28, Australia.
+                  Jl. Masjid An-Nur III No.28 RT.011/RW.01, Kelurahan Grogol
+                  Selatan, Jakarta Selatan
                 </li>
                 <li>
                   <i className="fa fa-phone" />
-                  (800) 123.456.7890 (800) 123.456.7890 +00 99 88 5647
+                  (+62) 882113483132
                 </li>
                 <li>
                   <i className="fa fa-envelope-o" />
-                  <a href="mailto:yourname@domain.com">yourname@domain.com</a>
+                  <a href="#">yatimpiatu.annurkebayoran@gmail.com</a>
                 </li>
               </ul>
               {/* <!-- .xs-list-with-icon END --> */}

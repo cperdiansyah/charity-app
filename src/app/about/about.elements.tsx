@@ -66,9 +66,13 @@ export const AboutVision = () => {
           <div className="col-lg-11 content-center">
             <div className="xs-heading xs-mb-100 text-center">
               <h2 className="xs-mb-0 xs-title">
-                We are an Globian non-profit organization that
-                <span className="color-green">supports</span>
-                good causes and positive change all over the world.
+                Lembaga non-profit yang digagas oleh
+                <span className="color-green">
+                  {' '}
+                  Yayasan Peduli Yatim Piatu An-Nur{' '}
+                </span>
+                dengan semangat Sejuta Kebaikan Dimulai Dari Satu Langkah
+                Bersama
               </h2>
             </div>
           </div>
@@ -77,21 +81,28 @@ export const AboutVision = () => {
         <div className="row">
           <div className="col-md-4">
             <div className="xs-about-feature">
-              <h3>Our Mission</h3>
+              <h3>Misi Kami</h3>
               <p className="lead">
-                The CharityPress community was named a “Top 25 Best Global
-                Philanthropist” by Barron’s. We beat Oprah. And, Mashable named
-                CharityPress something like that.
+                Kami bertujuan untuk menjadi pilar pendidikan dan pembinaan
+                agama yang berkualitas bagi anak yatim piatu, memperkaya
+                kehidupan mereka dengan program-program keterampilan yang
+                dirancang untuk meningkatkan kepercayaan diri dan kemandirian.
+                Kami berkomitmen untuk membangun dan memelihara hubungan dengan
+                komunitas dan pihak terkait untuk mendukung keberlanjutan
+                inisiatif kami, sekaligus melaksanakan advokasi sosial yang kuat
+                untuk meningkatkan pemahaman dan dukungan masyarakat terhadap
+                anak yatim piatu
               </p>
             </div>
           </div>
           <div className="col-md-4">
             <div className="xs-about-feature">
-              <h3>Our Vission</h3>
+              <h3>Visi Kami</h3>
               <p className="lead">
-                The Globian Fund for Charities seeks positive change around the
-                world through support of non-profit organizations dedicated to
-                social, cultural.
+                Menjadi lembaga pendorong pertumbuhan anak yatim piatu,
+                memberdayakan mereka melalui pendidikan dan pembinaan agama
+                serta keterampilan, untuk menciptakan generasi yang berdaya,
+                beretika, dan berakhlak mulia
               </p>
             </div>
           </div>
@@ -99,10 +110,10 @@ export const AboutVision = () => {
             <div className="xs-about-feature">
               <h3>Our Values</h3>
               <ul className="xs-unorder-list play green-icon">
-                <li>Accountability</li>
-                <li>Reliability</li>
-                <li>Cost-effectiveness</li>
-                <li>Personal service</li>
+                <li>Kasih Sayang</li>
+                <li>Perjuangan</li>
+                <li>Integritas</li>
+                <li>Kerjasama</li>
               </ul>
             </div>
           </div>

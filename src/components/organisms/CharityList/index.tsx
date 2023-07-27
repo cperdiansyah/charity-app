@@ -16,7 +16,7 @@ const CharityList = (props: ICharityList) => {
       <div className="container">
         <div className="xs-heading row xs-mb-60">
           <div className="col-md-9 col-xl-9">
-            <h2 className="xs-title">Deadline Campaign Terdekat</h2>
+            <h2 className="xs-title">Campaign Terdekat</h2>
             <span className="xs-separetor dashed" />
             <p>
               Campaign Donasi terdekat yang akan segera berakhir yang bisa kamu

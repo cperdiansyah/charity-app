@@ -1,5 +1,5 @@
 'use client'
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { AuditOutlined } from '@ant-design/icons'
 import { Alert, Form, Modal, Spin } from 'antd'
 import _isEmpty from 'lodash/isEmpty'
@@ -15,6 +15,7 @@ import useTextEditor from '@/stores/textEditor'
 import QuilEditor from '@/components/molecules/QuilEditor'
 import Title from 'antd/es/typography/Title'
 import useUpdated from '@/hooks/useUpdated'
+import useAuth from '@/hooks/useAuth'
 
 interface IApprovalUser {
   className: string
@@ -52,10 +53,12 @@ export interface ForeignData {
 
 const ApprovalUser = (props: IApprovalUser) => {
   const [form] = Form.useForm()
+  const token = useAuth()
 
   const [userData, setUserData] = useUserData()
   const [editorValue, setEditorValue] = useTextEditor()
   const [errorEditor, setErrorEditor] = useState(false)
+  const isAuth = useRef<boolean>(false)
 
   const [loading, setLoading] = useState(true)
   const [loadingSubmit, setLoadingSubmit] = useState(false)
@@ -70,6 +73,12 @@ const ApprovalUser = (props: IApprovalUser) => {
     editorValue.length === 0 ||
     editorValue === '<p><br></p>' ||
     editorValue === '<p></p>'
+
+  if (_isEmpty(token)) {
+    isAuth.current = false
+  } else {
+    isAuth.current = true
+  }
 
   useEffect(() => {
     handleResetForm()
@@ -223,10 +232,11 @@ const ApprovalUser = (props: IApprovalUser) => {
     !approvalData.userVerified &&
     approvalData?.approvalData?.status === 'pending' &&
     approvalData.userApprovalData !== null
+
   return (
     <div className={`${[props.className].join(' ')}`}>
       <Spin tip="Loading" size="small" spinning={loading}>
-        {userData?.is_verified === false && (
+        {userData?.is_verified === false && isAuth.current && (
           <>
             {!_isEmpty(userData?.id) && userData?.id !== '' && (
               <CustomButton

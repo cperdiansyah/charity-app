@@ -21,9 +21,10 @@ const Info = () => {
           </h2>
         </div>
         <div className="row text-center lg:text-left">
-          <div className="col-md-6 col-lg-3">
+          <div className="col-md-6 col-lg-4 mb-5">
             <div className="xs-service-promo">
-              <span className="icon-water" />
+              {/* <span className="icon-water" /> */}
+              <span className="icon-children" />
               <h5>
                 Anak yatim piatu
                 {/* <br />
@@ -37,9 +38,10 @@ const Info = () => {
             </div>
             {/* <!-- .xs-service-promo END --> */}
           </div>
-          <div className="col-md-6 col-lg-3">
+          <div className="col-md-6 col-lg-4 mb-5">
             <div className="xs-service-promo">
-              <span className="icon-groceries" />
+              <span className="icon-open-book" />
+
               <h5>Pendidikan</h5>
               <p>
                 Masih terdapat tantangan besar terkait anak-anak yang tidak
@@ -51,7 +53,7 @@ const Info = () => {
             </div>
             {/* <!-- .xs-service-promo END --> */}
           </div>
-          <div className="col-md-6 col-lg-3">
+          <div className="col-md-6 col-lg-4 mb-5">
             <div className="xs-service-promo">
               <span className="icon-heartbeat" />
               <h5>Medis</h5>
@@ -64,15 +66,30 @@ const Info = () => {
             </div>
             {/* <!-- .xs-service-promo END --> */}
           </div>
-          <div className="col-md-6 col-lg-3">
+          <div className="col-md-6 col-lg-4 mb-5">
             <div className="xs-service-promo">
-              <span className="icon-open-book" />
+              <span className="icon-groceries" />
               <h5>Makanan</h5>
               <p>
                 Keperluan makanan adalah hak dasar setiap individu, namun di
                 indonesia menghadapi ketidakcukupan pangan. Masalah ini dapat
                 disebabkan oleh kemiskinan, bencana alam, konflik, atau
                 ketidakstabilan ekonomi
+              </p>
+            </div>
+            {/* <!-- .xs-service-promo END --> */}
+          </div>
+          <div className="col-md-6 col-lg-4 mb-5">
+            <div className="xs-service-promo">
+              {/* <span className="icon-groceries" /> */}
+              <span className="icon-water" />
+              <h5>Air </h5>
+              <p>
+                Indonesia memiliki sumber daya air yang melimpah, masih banyak
+                masyarakat yang tidak memiliki akses yang memadai terhadap air
+                bersih. Masalah ini terkait dengan infrastruktur yang kurang
+                memadai, terutama di daerah pedesaan, serta polusi air dan
+                perubahan iklim
               </p>
             </div>
             {/* <!-- .xs-service-promo END --> */}
