@@ -85,7 +85,7 @@ const Header = ({ headerColor }: { headerColor?: string }) => {
                 className={`nav-brand ${styles['nav-brand']} md:m-0 `}
                 href={NAVIGATION_LINK.Homepage}
               >
-                <img src="/images/logo.png" alt="" />
+                <img src="/images/logoamalkita.png" alt="amalkita" />
               </Navlink>
               {/* <span>tester</span> */}
 

@@ -87,7 +87,7 @@ const ForgotPasswordForm = () => {
               <img src="https://cdn-icons-png.flaticon.com/512/124/124558.png" />
             </div>
             <h1 className="text-2xl font-bold text-gray-700">
-              Getting in Trouble ?
+              Mendapat Masalah?
             </h1>
           </div>
 
@@ -99,7 +99,7 @@ const ForgotPasswordForm = () => {
           )}
 
           <div className="w-full text-center text-sm text-gray-600">
-            Don't have an account?
+            Belum punya akun?
             <Navlink
               className="text-medium ml-1 text-indigo-600 hover:underline"
               href={NAVIGATION_LINK.Signup}
@@ -163,7 +163,7 @@ const FormFillPassword = (props: IFormAccountCheck) => {
     >
       <div className="form-item-wrapper">
         <Form.Item
-          label="Password"
+          label="New Password"
           name="password"
           className={`antd-form-item ${styles['antd-form-item']}`}
           rules={[{ required: true, message: 'Please input your password!' }]}
@@ -171,7 +171,7 @@ const FormFillPassword = (props: IFormAccountCheck) => {
           <Input type="password" placeholder="input your Password" />
         </Form.Item>
         <Form.Item
-          label="Confirm Password"
+          label="Confirm New Password"
           name="confirm-password"
           dependencies={['password']}
           className={`antd-form-item ${styles['antd-form-item']}`}

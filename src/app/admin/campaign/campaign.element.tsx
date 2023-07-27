@@ -222,7 +222,7 @@ export const FormAddCharity = () => {
         'bottomRight'
       )
       setTimeout(() => {
-        return router.replace(NAVIGATION_LINK.CampaignList)
+        return router.replace(NAVIGATION_LINK.AdminCampaignList)
       }, 500)
     } catch (error: any) {
       console.error(error)
@@ -373,7 +373,7 @@ export const FormEditCharity = () => {
         'bottomRight'
       )
       setTimeout(() => {
-        return router.replace(NAVIGATION_LINK.CampaignList)
+        return router.replace(NAVIGATION_LINK.AdminCampaignList)
       }, 500)
     } catch (error: any) {
       console.error(error)

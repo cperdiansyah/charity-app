@@ -22,6 +22,7 @@ export interface IResponseDataAuth {
   name: string
   role: string
   id: string
+  is_verified: boolean
 }
 
 export interface IResponseDefault {

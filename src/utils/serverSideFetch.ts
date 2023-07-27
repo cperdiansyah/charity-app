@@ -118,7 +118,7 @@ export async function refreshToken(
     const resRefresh = await fetch(url, requestoption)
 
     if (!resRefresh.ok) {
-      throw new Error('Failed to refresh token')
+      throw Error('Failed to refresh token')
     }
 
     const dataRefreshToken = await resRefresh.json()

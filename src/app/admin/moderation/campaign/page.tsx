@@ -1,8 +1,12 @@
 'use client'
-import { Button, Descriptions, Image, Modal, Space, Tag, Tooltip } from 'antd'
+import { Button, Descriptions, Image, Modal, Spin, Tag, Tooltip } from 'antd'
 import dayjs from 'dayjs'
-import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
-import Link from 'next/link'
+import _get from 'lodash/get'
+import {
+  InfoCircleOutlined,
+  CheckOutlined,
+  CloseOutlined,
+} from '@ant-design/icons'
 import React, { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
 
@@ -11,40 +15,38 @@ import CustomTable from '@/components/organisms/Table'
 
 /* Utils */
 import { currencyFormat } from '@/helpers'
-import { getCharityClient } from '@/services/charity/clientService'
-import { NAVIGATION_LINK } from '@/utils/link'
-import { CAMPAIGN_STATUS_WITH_COLORS } from './campaign'
 import useUpdated from '@/hooks/useUpdated'
-import { IModalTable } from './campaign.interfce'
-import _ from 'lodash'
+import { getApprovalCharity } from '@/services/moderation/clientService'
+import { IModalTable } from '../../campaign/campaign.interfce'
+import { CAMPAIGN_STATUS_WITH_COLORS } from '../../campaign/campaign'
+import { updateCharityStatus } from '@/services/charity/clientService'
+import { notify } from '@/helpers/notify'
 
-function getColumns(showModal: any) {
+type Status = 'accept' | 'rejected'
+
+function getColumns(
+  showModal: any,
+  approvalCampaign: (data?: string, status?: Status) => VoidFunction,
+  rejectedCampaign?: VoidFunction
+) {
   return [
     {
-      dataIndex: 'title',
+      dataIndex: ['foreign_data', 'title'],
       key: 'title',
       title: 'Title',
       width: 250,
     },
     {
       title: 'Status',
+      dataIndex: ['foreign_data', 'status'],
       key: 'status',
       width: 100,
-      render: (value: any) => {
-        const { status, end_date } = value
-
-        const isCampaignStillRunning = dayjs(end_date) > dayjs()
-
+      render: (status: any) => {
         let campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
           (item) => item.status === status
         )
 
         if (campaignStatus) {
-          if (!isCampaignStillRunning) {
-            campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
-              (item) => item.label === 'completed'
-            )
-          }
           return (
             <Tag color={campaignStatus?.color}>
               {campaignStatus?.status.toUpperCase()}
@@ -57,20 +59,20 @@ function getColumns(showModal: any) {
     },
     {
       title: 'Donation Target',
-      dataIndex: 'donation_target',
+      dataIndex: ['foreign_data', 'donation_target'],
       key: 'donation_target',
 
-      render: (data: number) => `Rp. ${currencyFormat(data)}`,
+      render: (data: number) => `${currencyFormat(data)}`,
     },
     {
       title: 'Start Date',
-      dataIndex: 'start_date',
+      dataIndex: ['foreign_data', 'start_date'],
       key: 'start_date',
       render: (date: string) => dayjs(date).format('DD MMMM YYYY'),
     },
     {
       title: 'End Date',
-      dataIndex: 'end_date',
+      dataIndex: ['foreign_data', 'end_date'],
       key: 'end_date',
       render: (date: string) => dayjs(date).format('DD MMMM YYYY'),
     },
@@ -82,15 +84,28 @@ function getColumns(showModal: any) {
       render: (value: any, record: any) => {
         return (
           <div className="flex items-center">
-            <Tooltip placement="bottomRight" title="Edit Banner">
-              <Link
-                href={`${NAVIGATION_LINK.AdminCampaignEdit}${value._id}`}
-                className="px-3 py-2"
+            <Tooltip placement="bottomRight" title="Approve Campaign">
+              <Button
+                style={{ color: '#87d068', border: 'solid 0px' }}
+                onClick={() => approvalCampaign(value, 'accept')}
+                disabled={value.status === 'accept'}
               >
-                <EditOutlined />
-              </Link>
+                <CheckOutlined />
+              </Button>
             </Tooltip>
-            <Tooltip placement="bottomRight" title="Detail Banner">
+            <Tooltip placement="bottomRight" title="Reject Campaign">
+              <Button
+                style={{ color: '#f50', border: 'solid 0px' }}
+                onClick={() => approvalCampaign(value, 'rejected')}
+                disabled={
+                  value.status === 'accept' || value.status === 'rejected'
+                }
+              >
+                {/* <CheckOutlined /> */}
+                <CloseOutlined />
+              </Button>
+            </Tooltip>
+            <Tooltip placement="bottomRight" title="Detail Approval Campaign">
               <Button
                 style={{ color: '#1890ff', border: 'solid 0px' }}
                 onClick={() => showModal(record)}
@@ -107,11 +122,11 @@ function getColumns(showModal: any) {
 
 const MemoizeModalTable = React.memo(ModalTable)
 
-const AdminCharity = () => {
+const ModerationCampaign = () => {
   const searchParams = useSearchParams()
   const [visible, setVisible] = useState<boolean>(false)
-  const [chairtyData, setCharityData] = useState<any>({})
-
+  const [campaignData, setCampaignData] = useState<any>()
+  const [loading, setLoading] = useState<boolean>(false)
   const current = searchParams.get('current')
   const pageSize = searchParams.get('pageSize')
 
@@ -120,31 +135,60 @@ const AdminCharity = () => {
     pageSize?: number | string
   ) => {
     const queryParams = {
-      page: Number(current) || 1,
-      rows: Number(pageSize) || 10,
+      page: current || 1,
+      rows: pageSize || 10,
     }
-    const dataCharity = await getCharityClient(queryParams)
+    const dataCharity = await getApprovalCharity(queryParams)
     const result = {
-      data: dataCharity.charity,
+      data: dataCharity.data,
       meta: dataCharity.meta,
     }
     return result
   }
 
   const showModal = (record: any) => {
-    setCharityData(record)
+    setCampaignData(record)
     setVisible(true)
+  }
+
+  const approvalCampaign: any = async (data?: any, status?: Status) => {
+    try {
+      setLoading(true)
+      const dataApproval = {
+        id: data.foreign_data._id,
+        status,
+      }
+      await updateCharityStatus(dataApproval)
+      setLoading(false)
+    } catch (error: any) {
+      setLoading(false)
+      console.log(error)
+      const errorResponse = error.response
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse?.data?.error?.error?.message || '',
+        'bottomRight'
+      )
+    }
   }
 
   return (
     <div>
-      <CustomTable columns={getColumns(showModal)} init={init} />
-      <MemoizeModalTable
-        open={visible}
-        setOpen={setVisible}
-        data={chairtyData}
-        setData={setCharityData}
-      />
+      <Spin tip="Loading" spinning={loading}>
+        <CustomTable
+          columns={getColumns(showModal, approvalCampaign)}
+          init={init}
+          loading={loading}
+          hideAddButton={true}
+        />
+        <MemoizeModalTable
+          open={visible}
+          setOpen={setVisible}
+          data={campaignData}
+          setData={setCampaignData}
+        />
+      </Spin>
     </div>
   )
 }
@@ -170,18 +214,10 @@ function ModalTable(props: IModalTable) {
   }, [props.open])
 
   /* Status */
-  const { status, end_date } = props?.data
-  const isCampaignStillRunning = dayjs(end_date) > dayjs()
+  const { status } = props?.data?.foreign_data
   let campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
     (item) => item.label === status
   )
-  if (campaignStatus) {
-    if (!isCampaignStillRunning) {
-      campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
-        (item) => item.label === 'completed'
-      )
-    }
-  }
 
   return (
     <Modal
@@ -194,17 +230,17 @@ function ModalTable(props: IModalTable) {
       {/* <Button>Detail</Button> */}
       <Descriptions bordered className="mt-4">
         <Descriptions.Item label="Title" span={24}>
-          {props?.data?.title}
+          {props?.data?.foreign_data?.title}
         </Descriptions.Item>
         <Descriptions.Item label="Image" span={24}>
           <Image
-            src={_.get(props?.data, 'media[0].content')}
-            alt={props?.data?.title}
+            src={_get(props?.data, 'foreign_data.media[0].content')}
+            alt={props?.data?.foreign_data?.title}
             sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
           />
         </Descriptions.Item>
         <Descriptions.Item label="Donation Target" span={24}>
-          {`Rp. ${currencyFormat(props?.data?.donation_target)}`}
+          {`${currencyFormat(props?.data?.foreign_data?.donation_target)}`}
         </Descriptions.Item>
         <Descriptions.Item label="Status" span={24}>
           {campaignStatus ? (
@@ -217,19 +253,21 @@ function ModalTable(props: IModalTable) {
         </Descriptions.Item>
 
         <Descriptions.Item label="Start Date" span={24}>
-          {dayjs(props?.data?.start_date).format('DD MMMM YYYY')}
+          {dayjs(props?.data?.foreign_data?.start_date).format('DD MMMM YYYY')}
         </Descriptions.Item>
         <Descriptions.Item label="End Date" span={24}>
-          {dayjs(props?.data?.end_date).format('DD MMMM YYYY')}
+          {dayjs(props?.data?.foreign_data?.end_date).format('DD MMMM YYYY')}
         </Descriptions.Item>
         <Descriptions.Item label="Post Date" span={24}>
-          {props?.data?.post_date
-            ? dayjs(props?.data?.post_date).format('DD MMMM YYYY')
+          {props?.data?.foreign_data?.post_date
+            ? dayjs(props?.data?.foreign_data?.post_date).format('DD MMMM YYYY')
             : '-'}
         </Descriptions.Item>
         <Descriptions.Item label="Description" span={24}>
           <div
-            dangerouslySetInnerHTML={{ __html: props?.data?.description }}
+            dangerouslySetInnerHTML={{
+              __html: props?.data?.foreign_data?.description,
+            }}
           ></div>
         </Descriptions.Item>
       </Descriptions>
@@ -237,4 +275,4 @@ function ModalTable(props: IModalTable) {
   )
 }
 
-export default AdminCharity
+export default ModerationCampaign

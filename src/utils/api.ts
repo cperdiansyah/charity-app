@@ -11,6 +11,7 @@ export const SERVICE = {
   checkAccount: '/api/v1/auth/check-account',
   resetPassword: '/api/v1/auth/reset-password',
   refreshToken: '/api/v1/auth/refresh',
+  user: '/api/v1/user',
   // Media Temp
   uploadMediaTemp: '/api/v1/media/upload',
   // Charity
@@ -28,6 +29,10 @@ export const SERVICE = {
   //Payment
   PaymentCharity: '/api/v1/payment/charity/',
   Transaction: '/api/v1/transaction',
+
+  // Approval
+  Approval: '/api/v1/approval',
+  ApprovalUser: '/api/v1/approval/approval-user',
 }
 
 export const BASE_HEADERS = {

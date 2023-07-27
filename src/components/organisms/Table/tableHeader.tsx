@@ -10,9 +10,11 @@ interface IProps {
   placeholder: string
   onSearch: VoidFunction
   pathname: string
+  hideAddButton?: boolean
 }
 
 const TableHeader = (props: IProps) => {
+  const { hideAddButton = false } = props
   return (
     <div className="table-header mb-3 flex justify-between">
       <div className="table-header-left">
@@ -22,15 +24,17 @@ const TableHeader = (props: IProps) => {
           style={{ width: 200 }}
         />
       </div>
-      <div className="table-header-right">
-        <CustomButton
-          islink={'true'}
-          href={`${props.pathname}/add`}
-          className=" flex items-center justify-center text-sm"
-        >
-          <PlusOutlined />
-        </CustomButton>
-      </div>
+      {!hideAddButton && (
+        <div className="table-header-right">
+          <CustomButton
+            islink={'true'}
+            href={`${props.pathname}/add`}
+            className=" flex items-center justify-center text-sm"
+          >
+            <PlusOutlined />
+          </CustomButton>
+        </div>
+      )}
     </div>
   )
 }

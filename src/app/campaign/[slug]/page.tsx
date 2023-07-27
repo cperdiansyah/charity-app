@@ -35,6 +35,7 @@ import useUserData from '@/stores/userData'
 import { notify } from '@/helpers/notify'
 import { IErrorResponse } from '@/services/auth/index.interface'
 import useMidtransSnap from '@/hooks/useMidtransSnap'
+import { NAVIGATION_LINK } from '@/utils/link'
 
 const CampaignDetail = () => {
   const [form] = Form.useForm()
@@ -43,8 +44,7 @@ const CampaignDetail = () => {
   const { slug: slugcharity } = params
 
   const [userData, setUserData] = useUserData()
-  const {token, setToken} = useMidtransSnap()
-
+  const { token, setToken } = useMidtransSnap()
 
   const [isExpand, setIsExpand] = useState(false)
   const [loading, setLoading] = useState(false)
@@ -116,6 +116,9 @@ const CampaignDetail = () => {
   }
 
   const handleOpen = () => {
+    if (!userData.id) {
+      return router.replace(NAVIGATION_LINK.Login)
+    }
     setIsModalOpen(true)
   }
   const handleCancel = () => {
@@ -219,7 +222,7 @@ const CampaignDetail = () => {
                 <ul className="xs-list-with-content mb-3 ">
                   <li className="pledged ">
                     {currencyFormat(amount)}
-                    <span className={`${styles['font-label']}`}>Pledged</span>
+                    <span className={`${styles['font-label']}`}>Donasi</span>
                   </li>
                   <li className="target ">
                     {currencyFormat(campaignData?.donation_target || 0)}
@@ -237,13 +240,12 @@ const CampaignDetail = () => {
                           : percentage
                         : 0}
                     </span>
-                    %<span className={`${styles['font-label']}`}>Funded</span>
+                    %
+                    <span className={`${styles['font-label']}`}>Terkumpul</span>
                   </li>
                   <li className="">
                     {endDate && endDate.diff(today, 'day')}
-                    <span className={`${styles['font-label']}`}>
-                      Days to go
-                    </span>
+                    <span className={`${styles['font-label']}`}>Hari Lagi</span>
                   </li>
                 </ul>
               </div>
@@ -269,7 +271,7 @@ const CampaignDetail = () => {
                   onClick={() => setIsExpand((prev) => !prev)}
                   className={`${styles['campaign-content-info__campaign-description__expand-button']}`}
                 >
-                  {isExpand ? 'Read More' : 'Read Less'}
+                  {isExpand ? 'Selengkapnya' : 'Lebih Sedikit'}
                 </button>
               </div>
             </div>
@@ -282,7 +284,7 @@ const CampaignDetail = () => {
               >
                 {percentage >= 100
                   ? 'All donations have been collected'
-                  : ' Donate This Cause'}
+                  : ' Donasi Sekarang'}
               </CustomButton>
             </div>
           </div>

@@ -1,80 +1,61 @@
 'use client'
-
-import React, { useEffect, useState, Key } from 'react'
-import _ from 'lodash'
+import UserLayout from '@/components/templates/UserLayout'
+import React, { useState, useEffect, Key } from 'react'
 import _isEmpty from 'lodash/isEmpty'
-import _filter from 'lodash/filter'
-import { Empty, Spin } from 'antd'
+import _get from 'lodash/get'
 
+import styles from '../campaign.module.scss'
 import CharityCard, {
   ICharityCard,
   ICharityList,
 } from '@/components/molecules/CharityCard'
-
-import { api } from '@/utils/clientSideFetch'
-import { SERVICE } from '@/utils/api'
 import useUpdated from '@/hooks/useUpdated'
+import { SERVICE } from '@/utils/api'
+import { api } from '@/utils/clientSideFetch'
 import { calculateTotalAmount } from '@/helpers'
-import CustomButton from '@/components/atoms/Button'
-import { NAVIGATION_LINK } from '@/utils/link'
-import UserLayout from '@/components/templates/UserLayout'
-import Welcome from '@/components/organisms/Welcome'
-import CharityList from '@/components/organisms/CharityList'
-import Info from '@/components/organisms/Info'
+import { Pagination, PaginationProps, Spin } from 'antd'
 
-interface ICampaignList {
-  className?: string
-}
-// const getCharity = async () => {
-//   try {
-//     const dataCharity = await nextFetch({
-//       endpoint: `${SERVICE.charity}?rows=6`,
-//       method: 'GET',
-//       token: '',
-//     })
-//     return dataCharity
-//   } catch (error) {
-//     return error
-//   }
-// }
-
-export default async function Home() {
-  // const dataCharity = await getCharity()
-  // const { charity } = dataCharity
+const CampaignList = () => {
   const [charity, setCharity] = useState<ICharityList>({
     charity: [],
     meta: {
       page: 1,
-      rows: 6,
+      rows: 10,
       totalPages: 1,
       total: 0,
     },
   })
-  const [loading, setLoading] = useState(true)
-
+  const [loading, setLoading] = useState(false)
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 10,
+  })
   useEffect(() => {
-    getCharity()
-  }, [])
+    getCharity(pagination.current, pagination.pageSize)
+  }, [pagination.current, pagination.pageSize])
+
   useUpdated(() => {
     if (!_isEmpty(charity.charity)) {
-      // setLoading(true)
+      setLoading(true)
       getPaymentData()
       setLoading(false)
     }
   }, [charity?.charity?.length])
 
-  const getCharity = async () => {
-    // setLoading(true)
+  const getCharity = async (page?: number, pageSize?: number) => {
+    setLoading(true)
 
     try {
-      const dataCharity = await api.get(`${SERVICE.charity}?rows=3`)
-      // const { charity } = dataCharity.data
+      const dataCharity = await api.get(
+        `${SERVICE.charity}?page=${page || 1}&rows=${pageSize || 6}`
+      )
+
       const charity = dataCharity.data
 
       const filteredCharity: ICharityList = charity?.charity?.map(
         (item: any) => ({
           image:
-            _.get(item, 'media[0].content') ||
+            _get(item, 'media[0].content') ||
             'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930',
           target: item?.donation_target,
           donated: 0,
@@ -101,6 +82,7 @@ export default async function Home() {
       return error
     }
   }
+
   const getPaymentData = async () => {
     try {
       const listIdCharity: string[] = []
@@ -138,25 +120,39 @@ export default async function Home() {
       setLoading(false)
     }
   }
-
-  // const filteredCharity: ICharityCard[] = charity?.map((item: any) => ({
-  //   image:
-  //     _.get(item, 'media[0].content') ||
-  //     'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930',
-  //   target: item.donation_target,
-  //   donated: 0,
-  //   title: item?.title,
-  //   endDate: item?.end_date,
-  //   author: item?.author?.name,
-  //   slug: item?.slug,
-  // }))
-  // console.log(filteredCharity)
+  const onChange: PaginationProps['onChange'] = (page, pageSize) => {
+    setPagination({ current: page, pageSize })
+  }
 
   return (
-    <UserLayout>
-      <Welcome />
-      <CharityList dataCharity={charity.charity} maxCharity={3} />
-      <Info />
+    <UserLayout
+      className="relative pt-[90px] md:pt-[150px] "
+      headerColor="black"
+    >
+      <div className={`top-bg ${styles['campaign-page']}`}></div>
+      <div className="container">
+        <Spin tip="Loading" size="small" spinning={loading}>
+          <div className="row">
+            {charity?.charity?.map((item: ICharityCard, index: Key) => {
+              return <CharityCard {...item} key={index} />
+            })}
+          </div>
+          <Pagination
+            total={charity.meta.total}
+            showTotal={(total, range) =>
+              `${range[0]}-${range[1]} of ${total} items`
+            }
+            showSizeChanger={true}
+            pageSizeOptions={['10', '20', '50', '100']}
+            defaultPageSize={pagination.pageSize}
+            onChange={onChange}
+            current={pagination.current}
+            className="mb-3"
+          />
+        </Spin>
+      </div>
     </UserLayout>
   )
 }
+
+export default CampaignList

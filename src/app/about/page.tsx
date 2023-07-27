@@ -15,8 +15,8 @@ const About = () => {
       <main className="xs-main">
         <PopupVideoSection />
         <AboutVision />
-        <CounterSection />
-        <WeDoSection />
+        {/* <CounterSection />
+        <WeDoSection /> */}
       </main>
     </UserTemplate>
   )
