@@ -25,6 +25,8 @@ import styles from './sidebar.module.scss'
 import { sidebarWidth } from '@/helpers'
 import useUpdated from '@/hooks/useUpdated'
 import useUserData from '@/stores/userData'
+import Navlink from '@/components/atoms/Navlink'
+import { NAVIGATION_LINK } from '@/utils/link'
 
 const AdminSidebar: React.FC = () => {
   const router = useRouter()
@@ -71,7 +73,15 @@ const AdminSidebar: React.FC = () => {
       collapsible
       collapsed={collapsed}
     >
-      <div className={`demo-logo-vertical ${styles['demo-logo-vertical']}`} />
+      {/* <div className={`demo-logo-vertical ${styles['demo-logo-vertical']}`} /> */}
+      <Navlink
+        className={`demo-logo-vertical nav-brand ${
+          [styles['nav-brand'], styles['demo-logo-vertical']].join(' ')
+        } md:m-0 `}
+        href={NAVIGATION_LINK.Homepage}
+      >
+        <img src="/images/logo_revisi.png" alt="amalkita" />
+      </Navlink>
       <Menu
         theme="dark"
         mode="inline"
