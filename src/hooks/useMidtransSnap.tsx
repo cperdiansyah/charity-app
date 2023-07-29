@@ -15,7 +15,6 @@ const useMidtransSnap = () => {
       'data-client-key',
       process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || ''
     )
-    console.log(scriptTag)
     document.body.appendChild(scriptTag)
 
     return () => {
