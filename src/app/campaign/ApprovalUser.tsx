@@ -232,75 +232,79 @@ const ApprovalUser = (props: IApprovalUser) => {
     !approvalData.userVerified &&
     approvalData?.approvalData?.status === 'pending' &&
     approvalData.userApprovalData !== null
-
   return (
     <div className={`${[props.className].join(' ')}`}>
       <Spin tip="Loading" size="small" spinning={loading}>
-        {userData?.is_verified === false && isAuth.current && (
-          <>
-            {!_isEmpty(userData?.id) && userData?.id !== '' && (
-              <CustomButton
-                buttontype="primary"
-                className={`btn btn-primary btn-block mx-auto mb-5  rounded-lg !px-4 !py-3 text-base`}
-                disabled={loading}
-                onClick={showModal}
-              >
-                <AuditOutlined />
-                {userNotRequestCampaign
-                  ? 'Mau Coba Buat Campaign ?'
-                  : userRequestCampaignButNotApprovedYet &&
-                    'Permintaan Anda sedang ditinjau, harap tunggu'}
-              </CustomButton>
-            )}
-
-            {(userNotRequestCampaign ||
-              userRequestCampaignButNotApprovedYet) && (
-              <Modal
-                title="Campaign Request"
-                open={isModalOpen}
-                onOk={handleOk}
-                onCancel={handleCancel}
-                className="z-auto"
-                // centered
-                footer={null}
-              >
-                <Form
-                  form={form}
-                  name="donation-form"
-                  initialValues={{ remember: true }}
-                  onFinish={handleSubmitRequest}
-                  autoComplete="off"
-                  layout="vertical"
-                  onFinishFailed={checkEditorValue}
+        {userData?.is_verified === false &&
+          userData.role === 'user' &&
+          isAuth.current && (
+            <>
+              {userData?.id?.length > 0 && userData?.id !== '' && (
+                <CustomButton
+                  buttontype="primary"
+                  className={`btn btn-primary btn-block mx-auto mb-5  rounded-lg !px-4 !py-3 text-base`}
+                  disabled={loading}
+                  onClick={showModal}
                 >
-                  <Spin tip="Loading" size="small" spinning={loadingSubmit}>
-                    <Form.Item>
-                      <Title level={5}>Alasan Pengajuan</Title>
-                      <QuilEditor placeholder="Beri kami alasan mengapa Anda ingin membuat  campaign" />
-                      {errorEditor && (
-                        <Alert message="Text Editor is Required" type="error" />
-                      )}
-                    </Form.Item>
-                  </Spin>
+                  <AuditOutlined />
+                  {userNotRequestCampaign
+                    ? 'Mau Coba Buat Campaign ?'
+                    : userRequestCampaignButNotApprovedYet &&
+                      'Permintaan Anda sedang ditinjau, harap tunggu'}
+                </CustomButton>
+              )}
 
-                  <Form.Item>
-                    <CustomButton
-                      buttontype="primary"
-                      className="btn btn-primary btn-block mx-auto mb-5  rounded-lg !px-4 !py-3 text-base"
-                      htmlType="submit"
-                      loading={loadingSubmit}
-                    >
-                      {userNotRequestCampaign
-                        ? 'Kirim Pengajuan Pembuatan Camapaign'
-                        : userRequestCampaignButNotApprovedYet &&
-                          'Update Pengajuan Pembuatan Camapaign'}
-                    </CustomButton>
-                  </Form.Item>
-                </Form>
-              </Modal>
-            )}
-          </>
-        )}
+              {(userNotRequestCampaign ||
+                userRequestCampaignButNotApprovedYet) && (
+                <Modal
+                  title="Campaign Request"
+                  open={isModalOpen}
+                  onOk={handleOk}
+                  onCancel={handleCancel}
+                  className="z-auto"
+                  // centered
+                  footer={null}
+                >
+                  <Form
+                    form={form}
+                    name="donation-form"
+                    initialValues={{ remember: true }}
+                    onFinish={handleSubmitRequest}
+                    autoComplete="off"
+                    layout="vertical"
+                    onFinishFailed={checkEditorValue}
+                  >
+                    <Spin tip="Loading" size="small" spinning={loadingSubmit}>
+                      <Form.Item>
+                        <Title level={5}>Alasan Pengajuan</Title>
+                        <QuilEditor placeholder="Beri kami alasan mengapa Anda ingin membuat  campaign" />
+                        {errorEditor && (
+                          <Alert
+                            message="Text Editor is Required"
+                            type="error"
+                          />
+                        )}
+                      </Form.Item>
+                    </Spin>
+
+                    <Form.Item>
+                      <CustomButton
+                        buttontype="primary"
+                        className="btn btn-primary btn-block mx-auto mb-5  rounded-lg !px-4 !py-3 text-base"
+                        htmlType="submit"
+                        loading={loadingSubmit}
+                      >
+                        {userNotRequestCampaign
+                          ? 'Kirim Pengajuan Pembuatan Camapaign'
+                          : userRequestCampaignButNotApprovedYet &&
+                            'Update Pengajuan Pembuatan Camapaign'}
+                      </CustomButton>
+                    </Form.Item>
+                  </Form>
+                </Modal>
+              )}
+            </>
+          )}
       </Spin>
     </div>
   )
