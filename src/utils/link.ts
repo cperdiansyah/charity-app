@@ -31,4 +31,5 @@ export const NAVIGATION_LINK = {
   Login: '/auth/login',
   Signup: '/auth/signup',
   ForgotPassword: '/auth/forgot-password',
+  SedekahSubuh: '/sedekah-subuh',
 }
