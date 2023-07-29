@@ -5,14 +5,17 @@ import useUpdated from './useUpdated'
 const useMidtransSnap = () => {
   const [token, setToken] = useState('')
   useEffect(() => {
-    const midtransSnapUrl = process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL || ''
+    const midtransSnapUrl =
+      String(process.env.NEXT_PUBLIC_MIDTRANS_SNAP_URL).replace(/['"]+/g, '') ||
+      ''
     let scriptTag = document.createElement('script')
     // scriptTag.src = midtransSnapUrl
-    scriptTag.setAttribute('src', midtransSnapUrl.replaceAll('"', ''))
+    scriptTag.setAttribute('src', midtransSnapUrl)
     scriptTag.setAttribute(
       'data-client-key',
       process.env.NEXT_PUBLIC_MIDTRANS_CLIENT_KEY || ''
     )
+    console.log(scriptTag)
     document.body.appendChild(scriptTag)
 
     return () => {
