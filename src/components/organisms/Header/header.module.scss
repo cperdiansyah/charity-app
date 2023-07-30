@@ -84,9 +84,9 @@ $breakpoint-tablet: 1000px;
 }
 
 .profile-menu-button {
-  padding: 8px 15px;
-  background-color: #fff;
-  color: #18bfc3;
+  padding: 8px 15px !important;
+  background-color: #fff !important;
+  color: #18bfc3 !important;
   // @apply;
   .avatar {
     @apply flex items-center justify-center;
