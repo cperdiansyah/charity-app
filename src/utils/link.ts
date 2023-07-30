@@ -17,6 +17,8 @@ const AdminLink = {
   ReportCampaign: '/admin/report/campaign',
   ReportBanner: '/admin/report/banner',
   ReportUser: '/admin/report/user',
+  // Config
+  ConfigAdmin: '/admin/config',
 }
 
 export const NAVIGATION_LINK = {
@@ -31,4 +33,5 @@ export const NAVIGATION_LINK = {
   Login: '/auth/login',
   Signup: '/auth/signup',
   ForgotPassword: '/auth/forgot-password',
+  SedekahSubuh: '/sedekah-subuh',
 }

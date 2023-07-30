@@ -16,6 +16,7 @@ const CustomButton = (props: IPorps) => {
           href={props.href ?? '/'}
           text={props.text}
           className={`btn btn-primary btn-primary ${styles['btn-primary']} ${props.className}`}
+          disable={props.disabled}
         >
           {props.children}
         </Navlink>
@@ -30,6 +31,7 @@ const CustomButton = (props: IPorps) => {
             styles['btn-primary'],
             styles['btn-secondary'],
           ].join(' ')}  ${props.className}`}
+          disable={props.disabled}
         >
           {props.children}
         </Navlink>
@@ -41,6 +43,7 @@ const CustomButton = (props: IPorps) => {
         href={props.href ?? '/'}
         text={props.text}
         className={`${styles['default-link-button-style']}  ${props.className}`}
+        disable={props.disabled}
       >
         {props.children}
       </Navlink>

@@ -1,12 +1,8 @@
 import React from 'react'
 
 import UserLayout from '@/components/templates/UserLayout'
-import CampaignList from './CampaignList'
-import SwiperBanner from './SwiperBanner'
 
-import styles from './campaign.module.scss'
-import ApprovalUser from './ApprovalUser'
-import SedekahSubuh from './SedekahSubuh'
+import styles from './sedekah-subuh.module.scss'
 
 const UserDonation = () => {
   return (
@@ -16,10 +12,10 @@ const UserDonation = () => {
     >
       <div className={`top-bg ${styles['campaign-page']}`}></div>
       <div className="container">
-        <SwiperBanner className="mb-5" />
+        {/* <SwiperBanner className="mb-5" />
         <SedekahSubuh />
         <CampaignList />
-        <ApprovalUser className="my-3" />
+        <ApprovalUser className="my-3" /> */}
       </div>
     </UserLayout>
   )

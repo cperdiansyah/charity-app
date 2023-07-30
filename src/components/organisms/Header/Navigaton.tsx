@@ -80,7 +80,7 @@ export const NavigationDekstop = (props: {
           <div className="profile-menu flex items-center ">
             <CustomButton
               buttontype="primary"
-              href={NAVIGATION_LINK.Profile}
+              href="#"
               className={`${styles['profile-menu-button']} mr-3`}
             >
               <Avatar
@@ -171,7 +171,7 @@ export const NavigationMobile = (props: {
             <li>
               <CustomButton
                 buttontype="primary"
-                href={NAVIGATION_LINK.Profile}
+                href="#"
                 className={` mb-5  ${styles['profile-menu-button']}  ${styles['button-primary']}`}
               >
                 <Avatar
