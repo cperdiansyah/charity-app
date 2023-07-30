@@ -17,6 +17,8 @@ const AdminLink = {
   ReportCampaign: '/admin/report/campaign',
   ReportBanner: '/admin/report/banner',
   ReportUser: '/admin/report/user',
+  // Config
+  ConfigAdmin: '/admin/config',
 }
 
 export const NAVIGATION_LINK = {
