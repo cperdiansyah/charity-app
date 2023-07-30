@@ -29,7 +29,8 @@ export const SERVICE = {
   //Payment
   PaymentCharity: '/api/v1/payment/charity/',
   Transaction: '/api/v1/transaction',
-
+  // Config
+  Config: '/api/v1/config',
   // Approval
   Approval: '/api/v1/approval',
   ApprovalUser: '/api/v1/approval/approval-user',

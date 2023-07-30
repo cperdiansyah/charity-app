@@ -4,6 +4,7 @@ import {
   PictureOutlined,
   AuditOutlined,
   PrinterOutlined,
+  SettingOutlined,
 } from '@ant-design/icons'
 import { NAVIGATION_LINK } from '@/utils/link'
 
@@ -37,6 +38,11 @@ export const SidebarMenu = {
     icon: PrinterOutlined,
     children: [{ label: 'Campaign' }, { label: 'User' }],
   },
+  config: {
+    label: 'Config',
+    icon: SettingOutlined,
+    pathname: NAVIGATION_LINK.ConfigAdmin,
+  },
 }
 
 export const adminSidebar = [
@@ -45,6 +51,7 @@ export const adminSidebar = [
   SidebarMenu.banner,
   SidebarMenu.contentModeration,
   SidebarMenu.report,
+  SidebarMenu.config,
 ]
 
 export const userVerfiedSidebar = [

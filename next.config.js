@@ -2,6 +2,7 @@
 
 // const path = require('path')
 const nextConfig = {
+  // optimizeFonts: false,
 
   // experimental: {
   //   serverActions: true,

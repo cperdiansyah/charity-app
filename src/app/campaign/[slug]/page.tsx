@@ -317,10 +317,10 @@ const CampaignDetail = () => {
             rules={[
               {
                 required: true,
-                message: 'Please input your doantion!',
+                message: 'Silakan masukan donasi Anda',
               },
               {
-                message: 'Donations given exceed the limit',
+                message: 'Donasi yang diberikan melebihi batas',
                 validator(_, value) {
                   const donationTarget = campaignData?.donation_target
                   if (value > donationTarget) {
@@ -332,7 +332,7 @@ const CampaignDetail = () => {
                 // warningOnly: true,
               },
               {
-                message: 'Your donation exceeds the target',
+                message: 'Donasi Anda melebihi target',
                 validator(_, value) {
                   const donationTarget = campaignData?.donation_target
                   const donation = value + amount
@@ -363,7 +363,7 @@ const CampaignDetail = () => {
           <Form.Item>
             {campaignData?.donation_target > amount && (
               <Alert
-                message={`You can still make a donation of Rp. ${currencyFormat(
+                message={`Anda masih dapat memberikan donasi sebesar Rp. ${currencyFormat(
                   campaignData?.donation_target - amount
                 )}`}
                 type="info"
