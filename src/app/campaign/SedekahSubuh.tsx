@@ -57,8 +57,8 @@ const SedekahSubuh = () => {
         </Tag>
       )}
       {dataConfig.sedekahSubuhEnable && (
-        <Tag color="warning" className="w-fit capitalize">
-          enable by config on admin page
+        <Tag color="green" className="w-fit text-sm capitalize">
+          diaktifkan oleh konfigurasi di halaman admin
         </Tag>
       )}
     </div>
