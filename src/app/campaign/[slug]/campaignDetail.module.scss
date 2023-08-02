@@ -2,8 +2,9 @@
   @apply w-full md:w-[70vw];
   &-content {
     &-image {
-      img {
-        @apply m-auto h-full   object-cover md:h-[80vh] md:w-[70vw];
+      img,
+      &__antd-img {
+        @apply m-auto h-full object-cover md:h-[80vh] md:w-[70vw];
       }
     }
     &-button {
