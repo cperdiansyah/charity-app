@@ -5,6 +5,7 @@ import {
   Alert,
   Button,
   Form,
+  Image,
   Input,
   InputNumber,
   Modal,
@@ -191,15 +192,26 @@ const CampaignDetail = () => {
           </div>
           <div className="campaign-content">
             <div className={`${styles['campaign-content-image']}`}>
-              <img
+              {/* <img
                 src={
-                  campaignData?.media[0]?.cotent ||
+                  _get(campaignData, 'media[0].content') ||
                   'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png'
                 }
                 alt=""
                 className=""
                 loading="lazy"
                 decoding="async"
+              /> */}
+              <Image
+                // width={200}
+                className={`${styles['campaign-content-image__antd-img']} `}
+                height={'80vh'}
+                style={{
+                  objectFit: 'cover',
+                }}
+                width={'100%'}
+                src={_get(campaignData, 'media[0].content')}
+                fallback="https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png"
               />
             </div>
 
