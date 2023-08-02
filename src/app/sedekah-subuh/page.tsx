@@ -1,8 +1,11 @@
+'use client'
+
 import React from 'react'
 
 import UserLayout from '@/components/templates/UserLayout'
 
 import styles from './sedekah-subuh.module.scss'
+import SedekahSubuh from './SedekahSubuh'
 
 const UserDonation = () => {
   return (
@@ -11,7 +14,8 @@ const UserDonation = () => {
       headerColor="black"
     >
       <div className={`top-bg ${styles['campaign-page']}`}></div>
-      <div className="container">
+      <div className="container gap-2">
+        <SedekahSubuh />
         {/* <SwiperBanner className="mb-5" />
         <SedekahSubuh />
         <CampaignList />
