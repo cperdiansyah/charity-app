@@ -151,7 +151,7 @@ const CampaignDetail = () => {
       )
       const dataCreateTransaction = resCreateTransaction.data.content
       const { redirect_url, token } = dataCreateTransaction?.response_midtrans
-      console.log(redirect_url)
+      // console.log(redirect_url)
       setToken(token)
       handleReset()
       setLoadingSubmit(false)
@@ -192,18 +192,7 @@ const CampaignDetail = () => {
           </div>
           <div className="campaign-content">
             <div className={`${styles['campaign-content-image']}`}>
-              {/* <img
-                src={
-                  _get(campaignData, 'media[0].content') ||
-                  'https://upload.wikimedia.org/wikipedia/commons/thumb/d/d1/Image_not_available.png/640px-Image_not_available.png'
-                }
-                alt=""
-                className=""
-                loading="lazy"
-                decoding="async"
-              /> */}
               <Image
-                // width={200}
                 className={`${styles['campaign-content-image__antd-img']} `}
                 height={'80vh'}
                 style={{
