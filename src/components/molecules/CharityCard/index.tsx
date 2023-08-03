@@ -14,10 +14,10 @@ import useScreenWidth from '@/hooks/useScreenWidth'
 export interface ICharityList {
   charity?: ICharityCard[] | []
   meta: {
-    page: number
-    rows: number
-    totalPages: number
-    total: number
+    page?: number
+    rows?: number
+    totalPages?: number
+    total?: number
   }
 }
 

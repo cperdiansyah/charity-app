@@ -5,6 +5,7 @@ import { NAVIGATION_LINK } from '@/utils/link'
 import { Form, InputNumber, Modal, Tag } from 'antd'
 import { useRouter } from 'next/navigation'
 import _get from 'lodash/get'
+import _isEmpty from 'lodash/isEmpty'
 
 import CustomButton from '@/components/atoms/Button'
 import useUserData from '@/stores/userData'
@@ -15,17 +16,29 @@ import { SERVICE } from '@/utils/api'
 import useMidtransSnap from '@/hooks/useMidtransSnap'
 import { IErrorResponse } from '@/services/auth/index.interface'
 import { notify } from '@/helpers/notify'
+import useAuth from '@/hooks/useAuth'
+import useUpdated from '@/hooks/useUpdated'
 
 const SedekahSubuh = () => {
   const [form] = Form.useForm()
   const { token, setToken } = useMidtransSnap()
+  const userToken = useAuth()
 
   const router = useRouter()
+  const isAuth = useRef<boolean>(false)
+
+  if (_isEmpty(userToken)) {
+    isAuth.current = false
+  } else {
+    isAuth.current = true
+  }
 
   const [userData, setUserData] = useUserData()
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [dataConfig, setDataConfig] = useState<any>({})
+  const [dataSedekahSubuh, setDataSedekahSubuh] = useState<any>({})
+  const [dataPaymentSedekahSubuh, setDataPaymentSedekahSubuh] = useState<any>()
   const [loadingSubmit, setLoadingSubmit] = useState(false)
 
   const isEnableSedekahSubuh = useRef<boolean>(false)
@@ -42,9 +55,20 @@ const SedekahSubuh = () => {
   const isSedekahSubuhOpen =
     dataConfig.sedekahSubuhEnable || isEnableSedekahSubuh.current
 
+  const isSedekahSubuhCanRepeat =
+    dataPaymentSedekahSubuh?.campaignPayment?.length > 0
+
   useEffect(() => {
     getConfig()
+
+    // getSedekahSubuhCampaign()
   }, [])
+
+  useEffect(() => {
+    if (isAuth.current && userData.id) {
+      getSedekahSubuhPayment()
+    }
+  }, [isAuth.current, userData.id])
 
   const getConfig = async () => {
     try {
@@ -52,15 +76,40 @@ const SedekahSubuh = () => {
       setDataConfig(resConfig.data.config)
     } catch (error) {
       console.log(error)
+      notify('error', 'Something went wrong', '', 'bottomRight')
     }
   }
+
+  const getSedekahSubuhCampaign = async () => {
+    try {
+      const resSedekahSubuh = await api.get(`${SERVICE.charity}/sedekah-subuh`)
+      const dataSedekahSubuh = resSedekahSubuh.data
+      setDataSedekahSubuh(dataSedekahSubuh.campaign)
+    } catch (error) {
+      console.log(error)
+      notify('error', 'Something went wrong', '', 'bottomRight')
+    }
+  }
+  const getSedekahSubuhPayment = async () => {
+    try {
+      const resSedekahSubuh = await api.get(
+        `${SERVICE.Transaction}/sedekah-subuh/check/${userData.id}`
+      )
+      const dataSedekahSubuh = resSedekahSubuh.data
+      setDataPaymentSedekahSubuh(dataSedekahSubuh)
+    } catch (error) {
+      console.log(error)
+      notify('error', 'Something went wrong', '', 'bottomRight')
+    }
+  }
+  // console.log(dataPaymentSedekahSubuh)
 
   const handleOk = () => {
     setIsModalOpen(false)
   }
 
   const handleOpen = () => {
-    if (!userData.id) {
+    if (!userData.id || !isAuth.current) {
       return router.replace(NAVIGATION_LINK.Login)
     }
     setIsModalOpen(true)
@@ -78,6 +127,21 @@ const SedekahSubuh = () => {
     setLoadingSubmit(true)
     console.log(values)
     try {
+      const userId = userData.id
+      const donation = values.donation
+
+      const transactionData = {
+        user_id: userId,
+        amount: donation,
+      }
+      const resCreateTransaction = await api.post(
+        `${SERVICE.Transaction}/charge/sedekah-subuh`,
+        transactionData
+      )
+      const dataCreateTransaction = resCreateTransaction.data.content
+      const { redirect_url, token } = dataCreateTransaction?.response_midtrans
+      // console.log(redirect_url)
+      setToken(token)
       handleReset()
       setLoadingSubmit(false)
     } catch (error) {
@@ -97,24 +161,29 @@ const SedekahSubuh = () => {
     }
   }
   return (
-    <div className="mb-5 flex flex-col items-center justify-center">
+    <div className="mb-5 flex flex-col items-center justify-center gap-3">
       <CustomButton
         buttontype="primary"
         className={` btn btn-primary btn-block ${
           styles['sedekah-subuh-active']
         } ${
-          !isSedekahSubuhOpen ? `${styles['sedekah-subuh-notactive']}` : ''
+          !isSedekahSubuhOpen ||
+          dataPaymentSedekahSubuh?.campaignPayment?.length > 0
+            ? `${styles['sedekah-subuh-notactive']}`
+            : ''
         } `}
         onClick={handleOpen}
-        disabled={!isSedekahSubuhOpen}
+        disabled={!isSedekahSubuhOpen || isSedekahSubuhCanRepeat}
       >
-        Sedekah Subuh
+        {isSedekahSubuhCanRepeat
+          ? 'Anda Sudah Melakukan Sedekah Subuh Hari Ini'
+          : 'Sedekah Subuh'}
       </CustomButton>
-      {!isSedekahSubuhOpen && (
-        <Tag color="processing" className="w-fit ">
-          Sedekah Subuh Hanya Tersedia Pada Pukul 04.00 s/d 06.00
-        </Tag>
-      )}
+      {/* {!isSedekahSubuhOpen && ( */}
+      <Tag color="processing" className="w-fit ">
+        Sedekah Subuh Hanya Tersedia Pada Pukul 04.00 s/d 06.00
+      </Tag>
+      {/* )} */}
       {dataConfig.sedekahSubuhEnable && (
         <Tag color="green" className="w-fit text-sm capitalize">
           diaktifkan oleh konfigurasi di halaman admin
@@ -122,7 +191,7 @@ const SedekahSubuh = () => {
       )}
 
       <Modal
-        title="Input Donation"
+        title="Input Sedekah Subuh"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
