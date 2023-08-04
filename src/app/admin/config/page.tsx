@@ -59,13 +59,14 @@ const ConfigPage = () => {
   ) : (
     <Spin spinning={loadingSubmit}>
       <Form
-        labelCol={{ span: 4 }}
-        wrapperCol={{ span: 14 }}
+        // labelCol={{ span: 4 }}
+        // wrapperCol={{ span: 14 }}
         layout="vertical"
         form={form}
         onFinish={handleSubmitConfig}
         initialValues={{
           sedekahSubuhEnable: dataConfig?.sedekahSubuhEnable,
+          sedekahSubuhCanRepeat: dataConfig?.sedekahSubuhCanRepeat,
         }}
       >
         <Form.Item
@@ -77,6 +78,17 @@ const ConfigPage = () => {
           <Switch
             className="bg-slate-300"
             defaultChecked={dataConfig?.sedekahSubuhEnable}
+          />
+        </Form.Item>
+        <Form.Item
+          label="Sedekah Subuh Can Repeat"
+          name="sedekahSubuhCanRepeat"
+          valuePropName="checked"
+          className="text-2xl font-semibold"
+        >
+          <Switch
+            className="bg-slate-300"
+            defaultChecked={dataConfig?.sedekahSubuhCanRepeat}
           />
         </Form.Item>
 

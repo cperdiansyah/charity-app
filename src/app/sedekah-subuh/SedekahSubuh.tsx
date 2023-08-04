@@ -55,8 +55,13 @@ const SedekahSubuh = () => {
   const isSedekahSubuhOpen =
     dataConfig.sedekahSubuhEnable || isEnableSedekahSubuh.current
 
-  const isSedekahSubuhCanRepeat =
+  const isSedekahSubuhCanRepeat = dataConfig?.sedekahSubuhCanRepeat
+  const isTodayHasSedekahSubuh =
     dataPaymentSedekahSubuh?.campaignPayment?.length > 0
+
+  const repeatSedekahSubuh = isTodayHasSedekahSubuh
+    ? isSedekahSubuhCanRepeat
+    : true
 
   useEffect(() => {
     getConfig()
@@ -160,6 +165,7 @@ const SedekahSubuh = () => {
       )
     }
   }
+
   return (
     <div className="mb-5 flex flex-col items-center justify-center gap-3">
       <CustomButton
@@ -167,15 +173,14 @@ const SedekahSubuh = () => {
         className={` btn btn-primary btn-block ${
           styles['sedekah-subuh-active']
         } ${
-          !isSedekahSubuhOpen ||
-          dataPaymentSedekahSubuh?.campaignPayment?.length > 0
-            ? `${styles['sedekah-subuh-notactive']}`
+          !isSedekahSubuhOpen || !repeatSedekahSubuh
+            ? `${styles['sedekah-subuh-notactive']} cursor-not-allowed`
             : ''
         } `}
         onClick={handleOpen}
-        disabled={!isSedekahSubuhOpen || isSedekahSubuhCanRepeat}
+        disabled={!isSedekahSubuhOpen || !repeatSedekahSubuh}
       >
-        {isSedekahSubuhCanRepeat
+        {isTodayHasSedekahSubuh
           ? 'Anda Sudah Melakukan Sedekah Subuh Hari Ini'
           : 'Sedekah Subuh'}
       </CustomButton>
@@ -191,7 +196,7 @@ const SedekahSubuh = () => {
       )}
 
       <Modal
-        title="Input Sedekah Subuh"
+        title="Form Sedekah Subuh"
         open={isModalOpen}
         onOk={handleOk}
         onCancel={handleCancel}
@@ -231,6 +236,22 @@ const SedekahSubuh = () => {
               }}
               readOnly
             />
+          </Form.Item>
+          <Form.Item className="gap-3">
+            {/* {!isSedekahSubuhOpen && ( */}
+            <Tag color="processing" className="mb-3 w-fit">
+              Sedekah Subuh Hanya Bisa Sekali Dalam Sehari
+            </Tag>
+            {/* )} */}
+            {isSedekahSubuhCanRepeat && (
+              <Tag
+                color="green"
+                className="w-fit whitespace-normal text-sm capitalize "
+              >
+                Sedekah subuh di set bisa dilakukan berulang kali oleh
+                konfigurasi di halaman admin
+              </Tag>
+            )}
           </Form.Item>
           <Form.Item>
             <CustomButton
