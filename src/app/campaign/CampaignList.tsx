@@ -131,16 +131,17 @@ const CampaignList = (props: ICampaignList) => {
           <Empty description="Campaigns Tidak Tersedia" className="mx-auto" />
         )}
       </div>
-      {charity.meta.total > (charity?.charity?.length || 0) && (
-        // {charity.meta.total > 3 && (
-        <CustomButton
-          buttontype="primary"
-          className={`btn btn-primary btn-block mx-auto mb-5 w-fit rounded-lg !px-4 !py-3 text-base`}
-          href={`${NAVIGATION_LINK.CampaignList}`}
-        >
-          Lihat Lainnya
-        </CustomButton>
-      )}
+      {charity?.meta?.total &&
+        charity?.meta?.total > (charity?.charity?.length || 0) && (
+          // {charity.meta.total > 3 && (
+          <CustomButton
+            buttontype="primary"
+            className={`btn btn-primary btn-block mx-auto mb-5 w-fit rounded-lg !px-4 !py-3 text-base`}
+            href={`${NAVIGATION_LINK.CampaignList}`}
+          >
+            Lihat Lainnya
+          </CustomButton>
+        )}
     </Spin>
   )
 }
