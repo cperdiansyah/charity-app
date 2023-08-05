@@ -1,7 +1,9 @@
 'use client'
 
 import React, { useEffect, useState, Key } from 'react'
-import _ from 'lodash'
+// import _ from 'lodash'
+import debounce from 'lodash/debounce'
+import get from 'lodash/get'
 import _isEmpty from 'lodash/isEmpty'
 import _filter from 'lodash/filter'
 import { Empty, Spin } from 'antd'
@@ -74,7 +76,7 @@ export default async function Home() {
       const filteredCharity: ICharityList = charity?.charity?.map(
         (item: any) => ({
           image:
-            _.get(item, 'media[0].content') ||
+            get(item, 'media[0].content') ||
             'https://upload.wikimedia.org/wikipedia/commons/1/14/No_Image_Available.jpg?20200913095930',
           target: item?.donation_target,
           donated: 0,

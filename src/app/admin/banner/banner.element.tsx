@@ -12,7 +12,8 @@ import {
   Switch,
 } from 'antd'
 import React, { useEffect, useState } from 'react'
-import _, { debounce } from 'lodash'
+// import _, { debounce } from 'lodash'
+import debounce from 'lodash/debounce'
 
 import { useParams, useRouter } from 'next/navigation'
 import dayjs from 'dayjs'

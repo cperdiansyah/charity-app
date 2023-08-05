@@ -19,7 +19,10 @@ import {
 import { InboxOutlined } from '@ant-design/icons'
 import dayjs from 'dayjs'
 import { useParams, useRouter } from 'next/navigation'
-import _, { debounce } from 'lodash'
+// import _, { debounce } from 'lodash'
+import debounce from 'lodash/debounce'
+import get from 'lodash/get'
+
 
 /* Component */
 import CustomButton from '@/components/atoms/Button'
@@ -303,7 +306,7 @@ export const FormEditCharity = () => {
         draft: dataCharity?.draft,
         target: dataCharity?.donation_target,
         media: {
-          media_content: _.get(dataCharity, 'media[0].content'),
+          media_content: get(dataCharity, 'media[0].content'),
         },
         dateCampaign: [
           dayjs(dataCharity?.start_date),
