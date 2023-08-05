@@ -1,7 +1,7 @@
 'use client'
 
 import React, { useEffect, useRef, useState } from 'react'
-import { HeatMapGrid } from 'react-grid-heatmap'
+// import { HeatMapGrid } from 'react-grid-heatmap'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
@@ -61,7 +61,7 @@ const Heatmap = (props: { dataSedekahSubuh: any }) => {
 
   return (
     <div className={`mx-auto mb-3 w-3/5 ${styles['heatmap']}`}>
-      {!loading && (
+      {/* {!loading && (
         <HeatMapGrid
           data={data}
           xLabels={xLabels}
@@ -98,7 +98,7 @@ const Heatmap = (props: { dataSedekahSubuh: any }) => {
           xLabelsPos="bottom"
           square
         />
-      )}
+      )} */}
     </div>
   )
 }
