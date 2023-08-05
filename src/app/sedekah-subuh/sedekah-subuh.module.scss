@@ -1,17 +1,35 @@
-/* .campaign-page {
-  height: 100vh;
-
-  background: rgb(255, 255, 255);
-  background: linear-gradient(
-    0deg,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(147, 248, 250, 1) 48%,
-    rgba(55, 242, 246, 1) 83%
-  );
-  @apply absolute top-0 w-full;
+.sedekah-subuh-active {
+  @apply mx-auto mb-3 w-fit rounded-lg px-4 py-3 text-base shadow-lg hover:bg-primary-color hover:text-white;
 }
- */
 
-.swiper-banner {
-  @apply max-h-52 w-full overflow-hidden rounded-lg;
+.sedekah-subuh-notactive {
+  @apply opacity-80 grayscale-[30%] before:content-none after:content-none;
+
+  &:disabled {
+    @apply bg-primary-color;
+  }
+}
+
+.point-info {
+  @apply flex  items-center gap-2;
+  &-icon,
+  img {
+    @apply w-10;
+  }
+  .value {
+    @apply text-lg font-semibold;
+  }
+}
+
+.ant-card-body {
+  :global {
+    width: 100%;
+  }
+}
+
+.heatmap {
+  & > div {
+    flex-direction: column !important;
+    @apply items-center;
+  }
 }
