@@ -1,11 +1,13 @@
 'use client'
 
-import useUpdated from '@/hooks/useUpdated'
+import React, { useEffect, useRef, useState } from 'react'
+import { HeatMapGrid } from 'react-grid-heatmap'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
-import React, { useEffect, useRef, useState } from 'react'
-import { HeatMapGrid } from 'react-grid-heatmap'
+
+import useUpdated from '@/hooks/useUpdated'
+import styles from './sedekah-subuh.module.scss'
 
 // Apply the plugins
 dayjs.extend(utc)
@@ -58,7 +60,7 @@ const Heatmap = (props: { dataSedekahSubuh: any }) => {
   const data = new Array(yLabels.length).fill(0).map(() => sedekahSubuh)
 
   return (
-    <div className="mx-auto mb-3 w-3/5">
+    <div className={`mx-auto mb-3 w-3/5 ${styles['heatmap']}`}>
       {!loading && (
         <HeatMapGrid
           data={data}
