@@ -1,7 +1,6 @@
 'use client'
 import React, { useState, useEffect, useRef } from 'react'
 import dayjs from 'dayjs'
-import { NAVIGATION_LINK } from '@/utils/link'
 import { Form, InputNumber, Modal, Tag } from 'antd'
 import { useRouter } from 'next/navigation'
 import _get from 'lodash/get'
@@ -10,6 +9,7 @@ import _isEmpty from 'lodash/isEmpty'
 import CustomButton from '@/components/atoms/Button'
 import useUserData from '@/stores/userData'
 
+import { NAVIGATION_LINK } from '@/utils/link'
 import styles from './sedekah-subuh.module.scss'
 import { api } from '@/utils/clientSideFetch'
 import { SERVICE } from '@/utils/api'
@@ -17,7 +17,6 @@ import useMidtransSnap from '@/hooks/useMidtransSnap'
 import { IErrorResponse } from '@/services/auth/index.interface'
 import { notify } from '@/helpers/notify'
 import useAuth from '@/hooks/useAuth'
-import useUpdated from '@/hooks/useUpdated'
 
 const SedekahSubuh = () => {
   const [form] = Form.useForm()
@@ -37,7 +36,6 @@ const SedekahSubuh = () => {
 
   const [isModalOpen, setIsModalOpen] = useState(false)
   const [dataConfig, setDataConfig] = useState<any>({})
-  const [dataSedekahSubuh, setDataSedekahSubuh] = useState<any>({})
   const [dataPaymentSedekahSubuh, setDataPaymentSedekahSubuh] = useState<any>()
   const [loadingSubmit, setLoadingSubmit] = useState(false)
 
@@ -85,16 +83,6 @@ const SedekahSubuh = () => {
     }
   }
 
-  const getSedekahSubuhCampaign = async () => {
-    try {
-      const resSedekahSubuh = await api.get(`${SERVICE.charity}/sedekah-subuh`)
-      const dataSedekahSubuh = resSedekahSubuh.data
-      setDataSedekahSubuh(dataSedekahSubuh.campaign)
-    } catch (error) {
-      console.log(error)
-      notify('error', 'Something went wrong', '', 'bottomRight')
-    }
-  }
   const getSedekahSubuhPayment = async () => {
     try {
       const resSedekahSubuh = await api.get(

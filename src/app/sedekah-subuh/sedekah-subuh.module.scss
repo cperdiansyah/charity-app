@@ -9,3 +9,20 @@
     @apply bg-primary-color;
   }
 }
+
+.point-info {
+  @apply flex  items-center gap-2;
+  &-icon,
+  img {
+    @apply w-10;
+  }
+  .value {
+    @apply text-lg font-semibold;
+  }
+}
+
+.ant-card-body {
+  :global {
+    width: 100%;
+  }
+}
