@@ -6,7 +6,7 @@
   @apply opacity-80 grayscale-[30%] before:content-none after:content-none;
 
   &:disabled {
-    @apply bg-primary-color;
+    @apply bg-primary-color opacity-80 grayscale-[70%];
   }
 }
 
@@ -32,4 +32,10 @@
     flex-direction: column !important;
     @apply items-center;
   }
+}
+
+.reward-card-image {
+  // width: 120px;
+
+  @apply mx-auto w-1/2;
 }

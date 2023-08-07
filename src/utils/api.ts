@@ -35,7 +35,10 @@ export const SERVICE = {
   Approval: '/api/v1/approval',
   ApprovalUser: '/api/v1/approval/approval-user',
   // Point
+
   Point: '/api/v1/point',
+  // Reward
+  Reward: '/api/v1/reward',
 }
 
 export const BASE_HEADERS = {

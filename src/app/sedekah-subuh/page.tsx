@@ -13,10 +13,13 @@ import { notify } from '@/helpers/notify'
 import { SERVICE } from '@/utils/api'
 import { api } from '@/utils/clientSideFetch'
 import { Spin } from 'antd'
+import Reward from './Reward'
 
 const UserDonation = () => {
   const [userData, setUserData] = useUserData()
   const [dataSedekahSubuh, setDataSedekahSubuh] = useState<any>()
+  const [dataPoint, setDataPoint] = useState<any>()
+
   const [loading, setLoading] = useState(true)
 
   // useEffect(() => {
@@ -28,8 +31,21 @@ const UserDonation = () => {
   useEffect(() => {
     if (userData.id && userData.id.length > 0) {
       getSedekahSubuhCampaign()
+      getPoint()
     }
   }, [userData.id])
+
+  const getPoint = async () => {
+    try {
+      const resPoint = await api.get(`${SERVICE.Point}/me`)
+      const data = resPoint.data
+      setDataPoint((state: any) => data.poin)
+    } catch (error) {
+      console.log(error)
+      notify('error', 'Something went wrong', '', 'bottomRight')
+    }
+  }
+
 
   const getSedekahSubuhCampaign = async () => {
     try {
@@ -60,8 +76,9 @@ const UserDonation = () => {
         <div className={`top-bg ${styles['campaign-page']}`}></div>
         <div className="container gap-2">
           <Heatmap dataSedekahSubuh={dataSedekahSubuh} />
-          <PoinInfo dataSedekahSubuh={dataSedekahSubuh} />
+          <PoinInfo dataSedekahSubuh={dataSedekahSubuh} dataPoint={dataPoint} />
           <SedekahSubuh />
+          <Reward dataPoint={dataPoint} />
         </div>
       </Spin>
     </UserLayout>
