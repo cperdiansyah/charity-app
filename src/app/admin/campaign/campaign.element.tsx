@@ -13,6 +13,7 @@ import {
   RadioChangeEvent,
   Row,
   Spin,
+  Upload,
   UploadFile,
   UploadProps,
 } from 'antd'
@@ -22,7 +23,6 @@ import { useParams, useRouter } from 'next/navigation'
 // import _, { debounce } from 'lodash'
 import debounce from 'lodash/debounce'
 import get from 'lodash/get'
-
 
 /* Component */
 import CustomButton from '@/components/atoms/Button'
@@ -156,6 +156,20 @@ const normFile = (e: any) => {
 
 */
 
+const uploadFileWithUrl = async (urls: string[]) => {
+  console.log(urls)
+  try {
+    const res = await api.post(SERVICE.mediaUpload, {
+      urls: urls,
+    })
+    const result = res.data
+
+    return result.uploadedUrls
+  } catch (error) {
+    notify('error', 'Something went wrong', '', 'bottomRight')
+  }
+}
+
 export const FormAddCharity = () => {
   const [form] = Form.useForm()
   const router = useRouter()
@@ -189,16 +203,21 @@ export const FormAddCharity = () => {
     setEditorValue('')
     setUploadFileUrl([])
   }
-
   const handlSubmit: any = async (values: any) => {
     checkEditorValue()
     setLoading(true)
-
     try {
       let media: ICharityMedia[] | undefined
 
       if (values.media_source !== 'url') {
-        // mediaUrl = await uploadFileWithUrl(uploadFileUrl)
+        const url = form.getFieldValue('media_content_url')
+        const mediaUrl = await uploadFileWithUrl([url])
+        media = [
+          {
+            content: mediaUrl[0],
+            content_type: 'image',
+          },
+        ]
       } else {
         media = [
           {
@@ -345,7 +364,13 @@ export const FormEditCharity = () => {
       let media: ICharityMedia[] | undefined
 
       if (values.media_source !== 'url') {
-        // mediaUrl = await uploadFileWithUrl(uploadFileUrl)
+        const mediaUrl = await uploadFileWithUrl(uploadFileUrl)
+        media = [
+          {
+            content: mediaUrl,
+            content_type: 'image',
+          },
+        ]
       } else {
         media = [
           {
@@ -422,6 +447,11 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
 
   const [imageUrl, setImageUrl] = useState('')
 
+  const [uploadFileUrl, setUploadFileUrl] = useState([])
+  // const uploadFileUrl = useRef([''])
+
+  const [fileList, setFileList] = useState<UploadFile[]>()
+
   useEffect(() => {
     if (props.initialValue) {
       props.form.setFieldsValue(props.initialValue)
@@ -435,6 +465,80 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
 
   const radioChange = (e: RadioChangeEvent) => {
     setMediaContentSource(e.target.value)
+  }
+
+  const uploadImageRequest = (options?: any) => {
+    setTimeout(async () => {
+      const { onSuccess, onError, file, onProgress } = options
+      try {
+        const fmData = new FormData()
+        const config = {
+          headers: { 'content-type': 'multipart/form-data' },
+        }
+        fmData.append('media_source', file)
+
+        const response = await api.post(SERVICE.uploadMediaTemp, fmData, config)
+        const fileUrl: any = response.data.url
+        setUploadFileUrl(fileUrl)
+        props.form.setFieldValue('media_content_url', fileUrl)
+
+        // // const newUrl = [...uploadFileUrl.current, fileUrl[0]]
+        // const newUrl: any = [...uploadFileUrl, ...fileUrl]
+        // // console.log(uploadFileUrl)
+        // // console.log(newUrl)
+
+        // // console.log(uploadFileUrl.length)
+        // if (uploadFileUrl.length === 0) {
+        //   // uploadFileUrl = fileUrl
+        //   setUploadFileUrl(fileUrl)
+        // } else {
+        //   // uploadFileUrl.push(fileUrl[0])
+        //   // uploadFileUrl.current = newUrl
+        //   setUploadFileUrl(newUrl)
+        // }
+
+        let newFileList = fileList
+
+        // 1. Limit the number of uploaded files
+        // Only to show two recent uploaded files, and old ones will be replaced by the new
+        newFileList = newFileList?.slice(-2)
+
+        // 2. Read from response and show file link
+        newFileList = newFileList?.map((file) => {
+          if (fileUrl) {
+            // Component will show file.url as link
+            file.url = fileUrl
+          }
+          return file
+        })
+
+        setFileList(newFileList)
+        onSuccess('Ok')
+      } catch (err) {
+        console.log('Eroor: ', err)
+        const error = new Error('Some error')
+        return onError({ err })
+      }
+    }, 500)
+  }
+
+  const handleChange: UploadProps['onChange'] = (info) => {
+    let newFileList = [...info.fileList]
+
+    // 1. Limit the number of uploaded files
+    // Only to show two recent uploaded files, and old ones will be replaced by the new
+    newFileList = newFileList.slice(-2)
+
+    // 2. Read from response and show file link
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url
+      }
+      return file
+    })
+
+    setFileList(newFileList)
   }
   return (
     <div className="form-add-charity-container">
@@ -511,9 +615,8 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                   defaultValue={mediaContentSource}
                 >
                   <Radio value={'url'}>Url</Radio>
-                  <Radio value={'upload'} disabled>
-                    Upload
-                  </Radio>
+                  {/* <Radio value={'upload'} disabled> */}
+                  <Radio value={'upload'}>Upload</Radio>
                 </Radio.Group>
               </Form.Item>
 
@@ -572,7 +675,7 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                         prevValues.media_source !== curValues.media_source
                       }
                     >
-                      {/* <Form.Item
+                      <Form.Item
                         name="media_content_upload"
                         valuePropName="fileList"
                         getValueFromEvent={normFile}
@@ -588,7 +691,8 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                           accept="image/*,video/*"
                           customRequest={uploadImageRequest}
                           onChange={handleChange}
-                          fileList={uploadFileUrl}
+                          fileList={fileList}
+                          maxCount={1}
                         >
                           <p className="ant-upload-drag-icon">
                             <InboxOutlined />
@@ -600,12 +704,15 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                             Support for a single or bulk upload.
                           </p>
                         </Upload.Dragger>
-                      </Form.Item> */}
+                      </Form.Item>
                     </Form.Item>
                   )
                 }}
               </Form.List>
             </Col>
+            <Form.Item name="media_content_url" label="Title" hidden>
+              <Input placeholder="input Title Campaign" />
+            </Form.Item>
             <Col span={24}>
               <QuilEditor placeholder="Input your content here" />
               {props?.errorEditor && (

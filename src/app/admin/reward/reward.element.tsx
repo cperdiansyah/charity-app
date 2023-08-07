@@ -47,6 +47,18 @@ const normFile = (e: any) => {
   return e?.fileList
 }
 
+const uploadFileWithUrl = async (urls: string[]) => {
+  try {
+    const res = await api.post(SERVICE.mediaUpload, {
+      urls: urls,
+    })
+    const result = res.data
+
+    return result.uploadedUrls
+  } catch (error) {
+    notify('error', 'Something went wrong', '', 'bottomRight')
+  }
+}
 export const FormAddReward = (props: IFormAddBanner) => {
   const [form] = Form.useForm()
   const router = useRouter()
@@ -252,18 +264,7 @@ export const FormReward = (props: IFormBanner) => {
     }, 500)
   }
 
-  const uploadFileWithUrl = async (urls: string[]) => {
-    try {
-      const res = await api.post(SERVICE.mediaUpload, {
-        urls: urls,
-      })
-      const result = res.data
-
-      return result.uploadedUrls
-    } catch (error) {
-      notify('error', 'Something went wrong', '', 'bottomRight')
-    }
-  }
+  
 
   const handleChange: UploadProps['onChange'] = (info) => {
     let newFileList = [...info.fileList]
