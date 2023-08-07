@@ -5,12 +5,16 @@ import {
   Form,
   Image,
   Input,
+  InputNumber,
   Radio,
   RadioChangeEvent,
   Row,
   Spin,
   Switch,
+  message,
 } from 'antd'
+import { InboxOutlined } from '@ant-design/icons'
+
 import React, { useEffect, useState } from 'react'
 // import _, { debounce } from 'lodash'
 import debounce from 'lodash/debounce'
@@ -31,10 +35,19 @@ import {
   initialValue,
   mediaContentSource,
 } from './reward.interface'
+import Upload, { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
 
 const { RangePicker } = DatePicker
 
-export const FormAddBanner = (props: IFormAddBanner) => {
+const normFile = (e: any) => {
+  // console.log('Upload event:', e)
+  if (Array.isArray(e)) {
+    return e
+  }
+  return e?.fileList
+}
+
+export const FormAddReward = (props: IFormAddBanner) => {
   const [form] = Form.useForm()
   const router = useRouter()
 
@@ -51,7 +64,14 @@ export const FormAddBanner = (props: IFormAddBanner) => {
         status: values.status ? 'active' : 'inactive',
         image: values?.media?.media_content,
       }
-      await api.post(SERVICE.createBanner, dataBanner)
+
+      const dataReward = {
+        name: values.name,
+        price: values.name,
+        image: values?.media?.media_content,
+      }
+      // await api.post(SERVICE.createBanner, dataBanner)
+      await api.post(`${SERVICE.Reward}/create`, dataReward)
       notify(
         'success',
         'Add Banner Successful',
@@ -75,7 +95,7 @@ export const FormAddBanner = (props: IFormAddBanner) => {
   }
 
   return (
-    <FormBanner
+    <FormReward
       form={form}
       loading={loading}
       onFinish={handlSubmit}
@@ -167,7 +187,7 @@ export const FormEditBanner = (props: IFormAddBanner) => {
   }
 
   return (
-    <FormBanner
+    <FormReward
       form={form}
       loading={loading}
       onFinish={handlSubmit}
@@ -177,11 +197,19 @@ export const FormEditBanner = (props: IFormAddBanner) => {
   )
 }
 
-export const FormBanner = (props: IFormBanner) => {
+export const FormReward = (props: IFormBanner) => {
   const [mediaContentSource, setMediaContentSource] =
     useState<mediaContentSource>('url')
+  const [loading, setLoading] = useState(false)
 
   const [imageUrl, setImageUrl] = useState('')
+
+  const [uploadFileUrl, setUploadFileUrl] = useState([])
+  // const uploadFileUrl = useRef([''])
+
+  const [fileList, setFileList] = useState<UploadFile[]>()
+
+  console.log(uploadFileUrl)
 
   useEffect(() => {
     if (props.initialValue) {
@@ -198,6 +226,89 @@ export const FormBanner = (props: IFormBanner) => {
     setMediaContentSource(e.target.value)
   }
 
+  /* Upload media */
+  // unused code but can be need in the future
+
+  const uploadImageRequest = (options?: any) => {
+    setTimeout(async () => {
+      const { onSuccess, onError, file, onProgress } = options
+      try {
+        const fmData = new FormData()
+        const config = {
+          headers: { 'content-type': 'multipart/form-data' },
+        }
+        fmData.append('media_source', file)
+
+        const response = await api.post(SERVICE.uploadMediaTemp, fmData, config)
+        const fileUrl: any = response.data.url
+        setUploadFileUrl(fileUrl)
+
+        onSuccess('Ok')
+      } catch (err) {
+        console.log('Eroor: ', err)
+        const error = new Error('Some error')
+        return onError({ err })
+      }
+    }, 500)
+  }
+
+  const uploadFileWithUrl = async (urls: string[]) => {
+    try {
+      const res = await api.post(SERVICE.mediaUpload, {
+        urls: urls,
+      })
+      const result = res.data
+
+      return result.uploadedUrls
+    } catch (error) {
+      notify('error', 'Something went wrong', '', 'bottomRight')
+    }
+  }
+
+  const handleChange: UploadProps['onChange'] = (info) => {
+    let newFileList = [...info.fileList]
+
+    // 1. Limit the number of uploaded files
+    // Only to show two recent uploaded files, and old ones will be replaced by the new
+    newFileList = newFileList.slice(-2)
+
+    // 2. Read from response and show file link
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url
+      }
+      return file
+    })
+
+    setFileList(newFileList)
+  }
+
+  // const props: UploadProps = {
+  //   name: 'files',
+  //   // fileList: { fileList },
+  //   // action="/upload.do"
+  //   // accept: 'image/*,video/*',
+  //   // customRequest: { uploadImageRequest },
+  //   onChange: { handleChange },
+
+  //   // name: 'file',
+  //   // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
+  //   // headers: {
+  //   //   authorization: 'authorization-text',
+  //   // },
+  //   // onChange(info) {
+  //   //   if (info.file.status !== 'uploading') {
+  //   //     console.log(info.file, info.fileList)
+  //   //   }
+  //   //   if (info.file.status === 'done') {
+  //   //     message.success(`${info.file.name} file uploaded successfully`)
+  //   //   } else if (info.file.status === 'error') {
+  //   //     message.error(`${info.file.name} file upload failed.`)
+  //   //   }
+  //   // },
+  // }
+
   return (
     <div className="form-add-banner-container">
       <Spin spinning={props.loading}>
@@ -212,57 +323,33 @@ export const FormBanner = (props: IFormBanner) => {
             {/* Banner Content */}
             <Col span={12}>
               <Form.Item
-                name="title"
-                label="Title"
+                name="name"
+                label="Name"
                 rules={[
-                  { required: true, message: 'Title is required' },
+                  { required: true, message: 'Name is required' },
                   { type: 'string', min: 6 },
                 ]}
               >
-                <Input placeholder="input Title Banner" />
+                <Input placeholder="input Name Reward" />
               </Form.Item>
               <Form.Item
-                name="redirection_link"
-                shouldUpdate={(prevValues, curValues) =>
-                  prevValues.media_source !== curValues.media_source
-                }
-                label="Redirection Link"
+                name="price"
+                label="Price Reward"
                 rules={[
                   {
                     required: true,
-                    message: 'Redirection link is required',
-                  },
-
-                  {
-                    pattern: new RegExp(
-                      /(https?:\/\/)?[a-zA-Z0-9-\.@:%_\+~#=]{2,256}\.[a-z]{2,6}\b([-a-zA-Z0-9@:%_\+.~#?&//=]*)?/
-                    ),
-                    message: 'Invalid URL',
+                    message: 'Price link is required',
                   },
                 ]}
               >
-                <Input placeholder="https://example.com/your-destiantion-page" />
-              </Form.Item>
-              <Form.Item
-                name="status"
-                label="Status"
-                rules={[{ required: true, message: 'Status is required' }]}
-                initialValue={true}
-              >
-                <Switch
-                  checkedChildren="Active"
-                  unCheckedChildren="Inactive"
-                  defaultChecked={true}
+                <InputNumber
+                  placeholder="input Price Reward"
+                  formatter={(value: any) =>
+                    `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
+                  }
+                  parser={(value: any) => value!.replace(/\$\s?|(,*)/g, '')}
+                  className="w-full"
                 />
-              </Form.Item>
-              <Form.Item
-                name="dateBanner"
-                label="Banner Duration"
-                rules={[
-                  { required: true, message: 'Banner Duration is required' },
-                ]}
-              >
-                <RangePicker disabledDate={disabledDate} format={dateFormat} />
               </Form.Item>
             </Col>
             {/* Image */}
@@ -282,7 +369,8 @@ export const FormBanner = (props: IFormBanner) => {
                   defaultValue={mediaContentSource}
                 >
                   <Radio value={'url'}>Url</Radio>
-                  <Radio value={'upload'} disabled>
+                  <Radio value={'upload'}>
+                    {/* <Radio value={'upload'} disabled> */}
                     Upload
                   </Radio>
                 </Radio.Group>
@@ -343,7 +431,7 @@ export const FormBanner = (props: IFormBanner) => {
                         prevValues.media_source !== curValues.media_source
                       }
                     >
-                      {/* <Form.Item
+                      <Form.Item
                         name="media_content_upload"
                         valuePropName="fileList"
                         getValueFromEvent={normFile}
@@ -360,6 +448,7 @@ export const FormBanner = (props: IFormBanner) => {
                           customRequest={uploadImageRequest}
                           onChange={handleChange}
                           fileList={uploadFileUrl}
+                          maxCount={1}
                         >
                           <p className="ant-upload-drag-icon">
                             <InboxOutlined />
@@ -371,7 +460,7 @@ export const FormBanner = (props: IFormBanner) => {
                             Support for a single or bulk upload.
                           </p>
                         </Upload.Dragger>
-                      </Form.Item> */}
+                      </Form.Item>
                     </Form.Item>
                   )
                 }}

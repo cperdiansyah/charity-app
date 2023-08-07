@@ -1,10 +1,10 @@
 'use client'
 
 import React from 'react'
-import { FormAddBanner } from '../reward.element'
+import { FormAddReward } from '../reward.element'
 
-const AdminAddBanner = () => {
-  return <FormAddBanner />
+const AdminAddReward = () => {
+  return <FormAddReward />
 }
 
-export default AdminAddBanner
+export default AdminAddReward
