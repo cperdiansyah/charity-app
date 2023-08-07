@@ -15,42 +15,42 @@ import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
 import { useSearchParams } from 'next/navigation'
 
 import CustomTable from '@/components/organisms/Table'
-import { getBannerClient } from '@/services/banner/clientService'
+// import { getBannerClient } from '@/services/banner/clientService'
+import { getRewardClient } from '@/services/reward/clientService'
+
 import useUpdated from '@/hooks/useUpdated'
 import { IModalTable } from './reward.interface'
 import { NAVIGATION_LINK } from '@/utils/link'
+import { formatNumber } from '@/app/sedekah-subuh/PoinInfo'
+
+import styles from './style.module.scss'
 
 function getColumns(showModal: any) {
   return [
     {
-      dataIndex: 'title',
-      key: 'title',
-      title: 'Title',
+      dataIndex: 'name',
+      key: 'name',
+      title: 'Name',
     },
     {
-      title: 'Status',
-      key: 'status',
-      render: (value: any) => {
-        const { status, end_date } = value
-        const isStatusActive = dayjs(end_date) > dayjs() && status === 'accept'
-        // console.log(isStatusActive)
-        const color = isStatusActive ? 'green' : 'volcano'
-        const text = isStatusActive ? 'ACTIVE' : 'INACTIVE'
-
-        return <Tag color={color}>{text}</Tag>
-      },
+      title: 'Price',
+      dataIndex: 'price',
+      key: 'price',
+      render: (data: any) => formatNumber(data),
     },
     {
-      title: 'Start Date',
-      dataIndex: 'start_date',
-      key: 'start_date',
-      render: (date: string) => dayjs(date).format('DD MMMM YYYY'),
-    },
-    {
-      title: 'End Date',
-      dataIndex: 'end_date',
-      key: 'end_date',
-      render: (date: string) => dayjs(date).format('DD MMMM YYYY'),
+      title: 'Image',
+      dataIndex: 'image',
+      key: 'image',
+      render: (data: string) => (
+        <div className={`${styles['image-cell']}`}>
+          <Image
+            src={data}
+            alt="image"
+            sizes="(max-width: 768px) 30vw, (max-width: 1200px) 50vw, 33vw"
+          />
+        </div>
+      ),
     },
     {
       title: 'Action',
@@ -63,20 +63,20 @@ function getColumns(showModal: any) {
           <div className="flex items-center">
             <Tooltip placement="bottomRight" title="Edit Banner">
               <Link
-                href={`${NAVIGATION_LINK.BannerEdit}${value._id}`}
+                href={`${NAVIGATION_LINK.RewardEdit}${value._id}`}
                 className="px-3 py-2"
               >
                 <EditOutlined />
               </Link>
             </Tooltip>
-            <Tooltip placement="bottomRight" title="Detail Banner">
+            {/* <Tooltip placement="bottomRight" title="Detail Banner">
               <Button
                 style={{ color: '#1890ff', border: 'solid 0px' }}
                 onClick={() => showModal(record)}
               >
                 <InfoCircleOutlined />
               </Button>
-            </Tooltip>
+            </Tooltip> */}
           </div>
         )
       },
@@ -86,17 +86,10 @@ function getColumns(showModal: any) {
 
 const MemoizeModalTable = React.memo(ModalTable)
 
-const AdminBanner = () => {
+const AdminRewward = () => {
   const searchParams = useSearchParams()
   const [visible, setVisible] = useState(false)
-  const [bannerData, setBannerData] = useState<any>()
-
-  const current = searchParams.get('current')
-  const pageSize = searchParams.get('pageSize')
-  const queryParams = {
-    page: Number(current) || 1,
-    rows: Number(pageSize) || 10,
-  }
+  const [RewardData, setRewardData] = useState<any>()
 
   const init = async (
     current?: number | string,
@@ -107,17 +100,17 @@ const AdminBanner = () => {
       rows: Number(pageSize) || 10,
     }
 
-    const dataBanner = await getBannerClient(queryParams)
+    const dataReward = await getRewardClient(queryParams)
 
     const result = {
-      data: dataBanner.banner,
-      meta: dataBanner.meta,
+      data: dataReward.data,
+      meta: dataReward.meta,
     }
     return result
   }
 
   const showModal = (record: any) => {
-    setBannerData(record)
+    setRewardData(record)
     setVisible(true)
   }
 
@@ -128,8 +121,8 @@ const AdminBanner = () => {
       <MemoizeModalTable
         open={visible}
         setOpen={setVisible}
-        data={bannerData}
-        setData={setBannerData}
+        data={RewardData}
+        setData={setRewardData}
       />
     </div>
   )
@@ -198,4 +191,4 @@ function ModalTable(props: IModalTable) {
   )
 }
 
-export default AdminBanner
+export default AdminRewward
