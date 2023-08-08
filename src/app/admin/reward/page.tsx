@@ -1,29 +1,23 @@
 'use client'
-import {
-  Button,
-  Descriptions,
-  Modal,
-  ModalFuncProps,
-  Image,
-  Tag,
-  Tooltip,
-} from 'antd'
+import { Button, Image, Tooltip, Form } from 'antd'
 import dayjs from 'dayjs'
 import Link from 'next/link'
 import React, { useState } from 'react'
-import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import { EditOutlined, DeleteOutlined } from '@ant-design/icons'
 import { useSearchParams } from 'next/navigation'
 
 import CustomTable from '@/components/organisms/Table'
 // import { getBannerClient } from '@/services/banner/clientService'
-import { getRewardClient } from '@/services/reward/clientService'
+import {
+  deleteRewardClient,
+  getRewardClient,
+} from '@/services/reward/clientService'
 
-import useUpdated from '@/hooks/useUpdated'
-import { IModalTable } from './reward.interface'
 import { NAVIGATION_LINK } from '@/utils/link'
 import { formatNumber } from '@/app/sedekah-subuh/PoinInfo'
 
 import styles from './style.module.scss'
+import { notify } from '@/helpers/notify'
 
 function getColumns(showModal: any) {
   return [
@@ -59,15 +53,33 @@ function getColumns(showModal: any) {
       width: 150,
 
       render: (value: any, record: any) => {
+        const onFinish = async () => {
+          try {
+            await deleteRewardClient(value)
+            location.reload()
+          } catch (error) {
+            console.log(error)
+            notify('error', 'Something went wrong', '', 'bottomRight')
+          }
+        }
         return (
           <div className="flex items-center">
-            <Tooltip placement="bottomRight" title="Edit Banner">
+            <Tooltip placement="bottomRight" title="Edit Reward">
               <Link
                 href={`${NAVIGATION_LINK.RewardEdit}${value._id}`}
                 className="px-3 py-2"
               >
                 <EditOutlined />
               </Link>
+            </Tooltip>
+            <Tooltip placement="bottomRight" title="Delete Reward">
+              <Form onFinish={onFinish}>
+                <Button className="border-none" htmlType="submit">
+                  {/* <EditOutlined />
+                  <DeleteOutlined /> */}
+                  <DeleteOutlined />
+                </Button>
+              </Form>
             </Tooltip>
             {/* <Tooltip placement="bottomRight" title="Detail Banner">
               <Button
@@ -84,7 +96,7 @@ function getColumns(showModal: any) {
   ]
 }
 
-const MemoizeModalTable = React.memo(ModalTable)
+// const MemoizeModalTable = React.memo(ModalTable)
 
 const AdminRewward = () => {
   const searchParams = useSearchParams()
@@ -116,78 +128,8 @@ const AdminRewward = () => {
 
   return (
     <div>
-      {/* <CustomTable columns={getColumns(showModal)} init={init} /> */}
       <CustomTable columns={getColumns(showModal)} init={init} />
-      <MemoizeModalTable
-        open={visible}
-        setOpen={setVisible}
-        data={RewardData}
-        setData={setRewardData}
-      />
     </div>
-  )
-}
-
-function ModalTable(props: IModalTable) {
-  if (props?.data === undefined) return <></>
-
-  const handleCancel = (e: any) => {
-    e.stopPropagation()
-    if (props?.setOpen) props?.setOpen(false)
-  }
-
-  const resetData = (e?: any) => {
-    setTimeout(() => {
-      if (props?.setData) props?.setData()
-    }, 500)
-  }
-
-  const { status, end_date } = props?.data
-  const isStatusActive = dayjs(end_date) > dayjs() && status === 'active'
-  const color = isStatusActive ? 'green' : 'volcano'
-  const text = isStatusActive ? 'ACTIVE' : 'INACTIVE'
-
-  useUpdated(() => {
-    if (!props.open) {
-      resetData()
-    }
-  }, [props.open])
-
-  return (
-    <Modal
-      onCancel={handleCancel}
-      open={props.open}
-      footer={null}
-      closable={true}
-      maskClosable={true}
-    >
-      <Descriptions bordered className="mt-4">
-        <Descriptions.Item label="Title" span={24}>
-          {props?.data?.title}
-        </Descriptions.Item>
-        <Descriptions.Item label="Image" span={24}>
-          <Image
-            src={props?.data?.image}
-            alt={props?.data?.title}
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          />
-        </Descriptions.Item>
-        <Descriptions.Item label="Status" span={24}>
-          <Tag color={color}>{text}</Tag>
-        </Descriptions.Item>
-        <Descriptions.Item label="Start Date" span={24}>
-          {dayjs(props?.data?.start_date).format('DD MMMM YYYY')}
-        </Descriptions.Item>
-        <Descriptions.Item label="End Date" span={24}>
-          {dayjs(props?.data?.end_date).format('DD MMMM YYYY')}
-        </Descriptions.Item>
-        <Descriptions.Item label="Redirection Link" span={24}>
-          <Link href={props?.data?.redirection_link} target="_blank">
-            {props?.data?.redirection_link}
-          </Link>
-        </Descriptions.Item>
-      </Descriptions>
-    </Modal>
   )
 }
 
