@@ -10,7 +10,12 @@ import {
   Row,
   Spin,
   Switch,
+  Upload,
+  UploadFile,
+  UploadProps,
 } from 'antd'
+import { InboxOutlined } from '@ant-design/icons'
+
 import React, { useEffect, useState } from 'react'
 // import _, { debounce } from 'lodash'
 import debounce from 'lodash/debounce'
@@ -34,6 +39,28 @@ import {
 
 const { RangePicker } = DatePicker
 
+const normFile = (e: any) => {
+  // console.log('Upload event:', e)
+  if (Array.isArray(e)) {
+    return e
+  }
+  return e?.fileList
+}
+
+const uploadFileWithUrl = async (urls: string[]) => {
+  console.log(urls)
+  try {
+    const res = await api.post(SERVICE.bannerUpload, {
+      urls: urls,
+    })
+    const result = res.data
+
+    return result.uploadedUrls
+  } catch (error) {
+    notify('error', 'Something went wrong', '', 'bottomRight')
+  }
+}
+
 export const FormAddBanner = (props: IFormAddBanner) => {
   const [form] = Form.useForm()
   const router = useRouter()
@@ -43,13 +70,23 @@ export const FormAddBanner = (props: IFormAddBanner) => {
   const handlSubmit: any = async (values: any) => {
     setLoading(true)
     try {
+      let media: string
+
+      if (values.media_source !== 'url') {
+        const url = form.getFieldValue('media_content_url')
+        const mediaUrl = await uploadFileWithUrl([url])
+        media = mediaUrl[0]
+      } else {
+        media = values?.media?.media_content
+      }
+
       const dataBanner = {
         title: values.title,
         start_date: dayjs(values.dateBanner[0]),
         end_date: dayjs(values.dateBanner[1]),
         redirection_link: values.redirection_link,
         status: values.status ? 'active' : 'inactive',
-        image: values?.media?.media_content,
+        image: media,
       }
       await api.post(SERVICE.createBanner, dataBanner)
       notify(
@@ -134,13 +171,22 @@ export const FormEditBanner = (props: IFormAddBanner) => {
   const handlSubmit: any = async (values: any) => {
     setLoading(true)
     try {
+       let media: string
+
+       if (values.media_source !== 'url') {
+         const url = form.getFieldValue('media_content_url')
+         const mediaUrl = await uploadFileWithUrl([url])
+         media = mediaUrl[0]
+       } else {
+         media = values?.media?.media_content
+       }
       const dataBanner = {
         title: values.title,
         start_date: dayjs(values.dateBanner[0]),
         end_date: dayjs(values.dateBanner[1]),
         redirection_link: values.redirection_link,
         status: values.status ? 'active' : 'inactive',
-        image: values?.media?.media_content,
+        image: media,
       }
 
       await api.patch(`${SERVICE.banner}/${idBanner}`, dataBanner)
@@ -182,6 +228,8 @@ export const FormBanner = (props: IFormBanner) => {
     useState<mediaContentSource>('url')
 
   const [imageUrl, setImageUrl] = useState('')
+  const [uploadFileUrl, setUploadFileUrl] = useState([])
+  const [fileList, setFileList] = useState<UploadFile[]>()
 
   useEffect(() => {
     if (props.initialValue) {
@@ -196,6 +244,80 @@ export const FormBanner = (props: IFormBanner) => {
 
   const radioChange = (e: RadioChangeEvent) => {
     setMediaContentSource(e.target.value)
+  }
+
+  const uploadImageRequest = (options?: any) => {
+    setTimeout(async () => {
+      const { onSuccess, onError, file, onProgress } = options
+      try {
+        const fmData = new FormData()
+        const config = {
+          headers: { 'content-type': 'multipart/form-data' },
+        }
+        fmData.append('media_source', file)
+
+        const response = await api.post(SERVICE.uploadMediaTemp, fmData, config)
+        const fileUrl: any = response.data.url
+        setUploadFileUrl(fileUrl)
+        props.form.setFieldValue('media_content_url', fileUrl)
+
+        // // const newUrl = [...uploadFileUrl.current, fileUrl[0]]
+        // const newUrl: any = [...uploadFileUrl, ...fileUrl]
+        // // console.log(uploadFileUrl)
+        // // console.log(newUrl)
+
+        // // console.log(uploadFileUrl.length)
+        // if (uploadFileUrl.length === 0) {
+        //   // uploadFileUrl = fileUrl
+        //   setUploadFileUrl(fileUrl)
+        // } else {
+        //   // uploadFileUrl.push(fileUrl[0])
+        //   // uploadFileUrl.current = newUrl
+        //   setUploadFileUrl(newUrl)
+        // }
+
+        let newFileList = fileList
+
+        // 1. Limit the number of uploaded files
+        // Only to show two recent uploaded files, and old ones will be replaced by the new
+        newFileList = newFileList?.slice(-2)
+
+        // 2. Read from response and show file link
+        newFileList = newFileList?.map((file) => {
+          if (fileUrl) {
+            // Component will show file.url as link
+            file.url = fileUrl
+          }
+          return file
+        })
+
+        setFileList(newFileList)
+        onSuccess('Ok')
+      } catch (err) {
+        console.log('Eroor: ', err)
+        const error = new Error('Some error')
+        return onError({ err })
+      }
+    }, 500)
+  }
+
+  const handleChange: UploadProps['onChange'] = (info) => {
+    let newFileList = [...info.fileList]
+
+    // 1. Limit the number of uploaded files
+    // Only to show two recent uploaded files, and old ones will be replaced by the new
+    newFileList = newFileList.slice(-2)
+
+    // 2. Read from response and show file link
+    newFileList = newFileList.map((file) => {
+      if (file.response) {
+        // Component will show file.url as link
+        file.url = file.response.url
+      }
+      return file
+    })
+
+    setFileList(newFileList)
   }
 
   return (
@@ -282,7 +404,8 @@ export const FormBanner = (props: IFormBanner) => {
                   defaultValue={mediaContentSource}
                 >
                   <Radio value={'url'}>Url</Radio>
-                  <Radio value={'upload'} disabled>
+                  <Radio value={'upload'}>
+                    {/* <Radio value={'upload'} disabled> */}
                     Upload
                   </Radio>
                 </Radio.Group>
@@ -343,7 +466,7 @@ export const FormBanner = (props: IFormBanner) => {
                         prevValues.media_source !== curValues.media_source
                       }
                     >
-                      {/* <Form.Item
+                      <Form.Item
                         name="media_content_upload"
                         valuePropName="fileList"
                         getValueFromEvent={normFile}
@@ -360,6 +483,7 @@ export const FormBanner = (props: IFormBanner) => {
                           customRequest={uploadImageRequest}
                           onChange={handleChange}
                           fileList={uploadFileUrl}
+                          maxCount={1}
                         >
                           <p className="ant-upload-drag-icon">
                             <InboxOutlined />
@@ -371,12 +495,15 @@ export const FormBanner = (props: IFormBanner) => {
                             Support for a single or bulk upload.
                           </p>
                         </Upload.Dragger>
-                      </Form.Item> */}
+                      </Form.Item>
                     </Form.Item>
                   )
                 }}
               </Form.List>
             </Col>
+            <Form.Item name="media_content_url" label="Title" hidden>
+              <Input placeholder="input Title Campaign" />
+            </Form.Item>
             <Form.Item name="submit">
               <CustomButton
                 htmlType="submit"

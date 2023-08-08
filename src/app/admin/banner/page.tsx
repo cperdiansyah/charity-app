@@ -150,7 +150,7 @@ function ModalTable(props: IModalTable) {
   }
 
   const { status, end_date } = props?.data
-  const isStatusActive = dayjs(end_date) > dayjs() && status === 'active'
+  const isStatusActive = dayjs(end_date) > dayjs() && status === 'accept'
   const color = isStatusActive ? 'green' : 'volcano'
   const text = isStatusActive ? 'ACTIVE' : 'INACTIVE'
 

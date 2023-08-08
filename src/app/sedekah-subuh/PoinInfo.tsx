@@ -9,32 +9,25 @@ import { Card } from 'antd'
 
 import styles from './sedekah-subuh.module.scss'
 
-const PoinInfo = (props: { dataSedekahSubuh: any }) => {
+const PoinInfo = (props: { dataSedekahSubuh: any; dataPoint: any }) => {
   const { dataSedekahSubuh } = props
 
-  const [dataPoint, setDataPoint] = useState<any>()
+  // const [dataPoint, setDataPoint] = useState<any>()
 
   useEffect(() => {
-    getPoint()
+    // getPoint()
   }, [])
-  const getPoint = async () => {
-    try {
-      const resPoint = await api.get(`${SERVICE.Point}/me`)
-      const data = resPoint.data
-      setDataPoint((state: any) => data.poin)
-    } catch (error) {
-      console.log(error)
-      notify('error', 'Something went wrong', '', 'bottomRight')
-    }
-  }
+  // const getPoint = async () => {
+  //   try {
+  //     const resPoint = await api.get(`${SERVICE.Point}/me`)
+  //     const data = resPoint.data
+  //     setDataPoint((state: any) => data.poin)
+  //   } catch (error) {
+  //     console.log(error)
+  //     notify('error', 'Something went wrong', '', 'bottomRight')
+  //   }
+  // }
 
-  const formatNumber: any = (number: number) => {
-    return Intl.NumberFormat('id-ID', {
-      currency: 'IDR',
-      //  style: 'currency',
-      minimumFractionDigits: 0,
-    }).format(number)
-  }
   return (
     <Card
       className="mx-auto mb-3 flex rounded-lg shadow-md"
@@ -52,7 +45,7 @@ const PoinInfo = (props: { dataSedekahSubuh: any }) => {
             alt="point icon"
           />
           <div className={`${styles['value']}`}>
-            <span>{formatNumber(dataPoint?.value || 0)}</span> Point
+            <span>{formatNumber(props.dataPoint?.value || 0)}</span> Point
           </div>
         </div>
         <div className={`sreak-donation  ${styles['point-info']}`}>
@@ -66,6 +59,13 @@ const PoinInfo = (props: { dataSedekahSubuh: any }) => {
       </div>
     </Card>
   )
+}
+export const formatNumber: any = (number: number) => {
+  return Intl.NumberFormat('id-ID', {
+    currency: 'IDR',
+    //  style: 'currency',
+    minimumFractionDigits: 0,
+  }).format(number)
 }
 
 export default PoinInfo

@@ -5,6 +5,7 @@ import {
   AuditOutlined,
   PrinterOutlined,
   SettingOutlined,
+  CrownOutlined,
 } from '@ant-design/icons'
 import { NAVIGATION_LINK } from '@/utils/link'
 
@@ -23,6 +24,11 @@ export const SidebarMenu = {
     label: 'Banner',
     icon: PictureOutlined,
     pathname: NAVIGATION_LINK.BannerList,
+  },
+  reward: {
+    label: 'Reward',
+    icon: CrownOutlined,
+    pathname: NAVIGATION_LINK.RewardList,
   },
   contentModeration: {
     label: 'Moderation',
@@ -49,6 +55,7 @@ export const adminSidebar = [
   SidebarMenu.dashboard,
   SidebarMenu.charity,
   SidebarMenu.banner,
+  SidebarMenu.reward,
   SidebarMenu.contentModeration,
   SidebarMenu.report,
   SidebarMenu.config,
