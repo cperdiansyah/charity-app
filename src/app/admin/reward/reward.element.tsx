@@ -49,7 +49,7 @@ const normFile = (e: any) => {
 
 const uploadFileWithUrl = async (urls: string[]) => {
   try {
-    const res = await api.post(SERVICE.mediaUpload, {
+    const res = await api.post(`${SERVICE.Reward}/upload`, {
       urls: urls,
     })
     const result = res.data
@@ -68,30 +68,31 @@ export const FormAddReward = (props: IFormAddBanner) => {
   const handlSubmit: any = async (values: any) => {
     setLoading(true)
     try {
-      const dataBanner = {
-        title: values.title,
-        start_date: dayjs(values.dateBanner[0]),
-        end_date: dayjs(values.dateBanner[1]),
-        redirection_link: values.redirection_link,
-        status: values.status ? 'active' : 'inactive',
-        image: values?.media?.media_content,
+      let media: string
+
+      if (values.media_source !== 'url') {
+        const url = form.getFieldValue('media_content_url')
+        const mediaUrl = await uploadFileWithUrl([url])
+        media = mediaUrl[0]
+      } else {
+        media = values?.media?.media_content
       }
 
       const dataReward = {
         name: values.name,
-        price: values.name,
-        image: values?.media?.media_content,
+        price: values.price,
+        image: media,
       }
       // await api.post(SERVICE.createBanner, dataBanner)
       await api.post(`${SERVICE.Reward}/create`, dataReward)
       notify(
         'success',
-        'Add Banner Successful',
-        'banner created successfully',
+        'Add Reward Successful',
+        'reward created successfully',
         'bottomRight'
       )
       setTimeout(() => {
-        return router.replace(NAVIGATION_LINK.BannerList)
+        return router.replace(NAVIGATION_LINK.RewardList)
       }, 500)
     } catch (error: any) {
       console.error(error)
@@ -120,34 +121,29 @@ export const FormEditBanner = (props: IFormAddBanner) => {
   const [form] = Form.useForm()
   const router = useRouter()
   const params = useParams()
-  const { id: idBanner } = params
+  const { id: idReward } = params
 
   const [loading, setLoading] = useState(false)
-  const [bannerValue, setBannerValue] = useState<initialValue>()
+  const [rewardValue, setRewardValue] = useState<any>()
 
   useEffect(() => {
-    getBannerData()
+    getRewardData()
   }, [])
 
-  const getBannerData = async () => {
+  const getRewardData = async () => {
     setLoading(true)
     try {
-      const resBanner = await api.get(`${SERVICE.banner}/${idBanner}`)
+      const resBanner = await api.get(`${SERVICE.Reward}/${idReward}`)
       const dataBanner = resBanner.data.banner
 
       const initialValue = {
-        title: dataBanner?.title,
-        status: dataBanner?.status === 'active' ? true : false,
-        redirection_link: dataBanner?.redirection_link,
+        name: dataBanner?.name,
+        price: dataBanner?.price,
         media: {
           media_content: dataBanner?.image,
         },
-        dateBanner: [
-          dayjs(dataBanner?.start_date),
-          dayjs(dataBanner?.end_date),
-        ],
       }
-      setBannerValue(initialValue)
+      setRewardValue(initialValue)
 
       setLoading(false)
     } catch (error: any) {
@@ -166,24 +162,33 @@ export const FormEditBanner = (props: IFormAddBanner) => {
   const handlSubmit: any = async (values: any) => {
     setLoading(true)
     try {
-      const dataBanner = {
-        title: values.title,
-        start_date: dayjs(values.dateBanner[0]),
-        end_date: dayjs(values.dateBanner[1]),
-        redirection_link: values.redirection_link,
-        status: values.status ? 'active' : 'inactive',
-        image: values?.media?.media_content,
+
+      let media: string
+
+      if (values.media_source !== 'url') {
+        const url = form.getFieldValue('media_content_url')
+        const mediaUrl = await uploadFileWithUrl([url])
+        media = mediaUrl[0]
+      } else {
+        media = values?.media?.media_content
       }
 
-      await api.patch(`${SERVICE.banner}/${idBanner}`, dataBanner)
+      const dataReward = {
+        name: values.name,
+        price: values.price,
+        image: media,
+      }
+      
+
+      await api.patch(`${SERVICE.Reward}/update/${idReward}`, dataReward)
       notify(
         'success',
-        'Update Banner Successful',
-        'banner updated successfully',
+        'Update Reward Successful',
+        'reward updated successfully',
         'bottomRight'
       )
       setTimeout(() => {
-        return router.replace(NAVIGATION_LINK.BannerList)
+        return router.replace(NAVIGATION_LINK.RewardList)
       }, 500)
     } catch (error: any) {
       console.error(error)
@@ -204,7 +209,7 @@ export const FormEditBanner = (props: IFormAddBanner) => {
       loading={loading}
       onFinish={handlSubmit}
       buttonSubmitText="Update"
-      initialValue={bannerValue}
+      initialValue={rewardValue}
     />
   )
 }
@@ -240,7 +245,6 @@ export const FormReward = (props: IFormBanner) => {
 
   /* Upload media */
   // unused code but can be need in the future
-
   const uploadImageRequest = (options?: any) => {
     setTimeout(async () => {
       const { onSuccess, onError, file, onProgress } = options
@@ -254,7 +258,39 @@ export const FormReward = (props: IFormBanner) => {
         const response = await api.post(SERVICE.uploadMediaTemp, fmData, config)
         const fileUrl: any = response.data.url
         setUploadFileUrl(fileUrl)
+        props.form.setFieldValue('media_content_url', fileUrl)
 
+        // // const newUrl = [...uploadFileUrl.current, fileUrl[0]]
+        // const newUrl: any = [...uploadFileUrl, ...fileUrl]
+        // // console.log(uploadFileUrl)
+        // // console.log(newUrl)
+
+        // // console.log(uploadFileUrl.length)
+        // if (uploadFileUrl.length === 0) {
+        //   // uploadFileUrl = fileUrl
+        //   setUploadFileUrl(fileUrl)
+        // } else {
+        //   // uploadFileUrl.push(fileUrl[0])
+        //   // uploadFileUrl.current = newUrl
+        //   setUploadFileUrl(newUrl)
+        // }
+
+        let newFileList = fileList
+
+        // 1. Limit the number of uploaded files
+        // Only to show two recent uploaded files, and old ones will be replaced by the new
+        newFileList = newFileList?.slice(-2)
+
+        // 2. Read from response and show file link
+        newFileList = newFileList?.map((file) => {
+          if (fileUrl) {
+            // Component will show file.url as link
+            file.url = fileUrl
+          }
+          return file
+        })
+
+        setFileList(newFileList)
         onSuccess('Ok')
       } catch (err) {
         console.log('Eroor: ', err)
@@ -263,8 +299,6 @@ export const FormReward = (props: IFormBanner) => {
       }
     }, 500)
   }
-
-  
 
   const handleChange: UploadProps['onChange'] = (info) => {
     let newFileList = [...info.fileList]
@@ -284,31 +318,6 @@ export const FormReward = (props: IFormBanner) => {
 
     setFileList(newFileList)
   }
-
-  // const props: UploadProps = {
-  //   name: 'files',
-  //   // fileList: { fileList },
-  //   // action="/upload.do"
-  //   // accept: 'image/*,video/*',
-  //   // customRequest: { uploadImageRequest },
-  //   onChange: { handleChange },
-
-  //   // name: 'file',
-  //   // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  //   // headers: {
-  //   //   authorization: 'authorization-text',
-  //   // },
-  //   // onChange(info) {
-  //   //   if (info.file.status !== 'uploading') {
-  //   //     console.log(info.file, info.fileList)
-  //   //   }
-  //   //   if (info.file.status === 'done') {
-  //   //     message.success(`${info.file.name} file uploaded successfully`)
-  //   //   } else if (info.file.status === 'error') {
-  //   //     message.error(`${info.file.name} file upload failed.`)
-  //   //   }
-  //   // },
-  // }
 
   return (
     <div className="form-add-banner-container">
@@ -467,6 +476,9 @@ export const FormReward = (props: IFormBanner) => {
                 }}
               </Form.List>
             </Col>
+            <Form.Item name="media_content_url" label="Title" hidden>
+              <Input placeholder="input Title Campaign" />
+            </Form.Item>
             <Form.Item name="submit">
               <CustomButton
                 htmlType="submit"
