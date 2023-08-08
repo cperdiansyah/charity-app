@@ -25,6 +25,8 @@ export const SERVICE = {
   banner: '/api/v1/banner',
   createBanner: '/api/v1/banner/create',
   detailBanner: '/api/v1/banner/:id',
+  bannerUpload: '/api/v1/banner/upload',
+
   // acceptBanner: '/api/v1/banner/:id/status',
   //Payment
   PaymentCharity: '/api/v1/payment/charity/',
