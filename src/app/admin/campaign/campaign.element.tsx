@@ -293,10 +293,11 @@ export const FormEditCharity = () => {
       let media: ICharityMedia[] | undefined
 
       if (values.media_source !== 'url') {
-        const mediaUrl = await uploadFileWithUrl(uploadFileUrl)
+        const url = form.getFieldValue('media_content_url')
+        const mediaUrl = await uploadFileWithUrl([url])
         media = [
           {
-            content: mediaUrl,
+            content: mediaUrl[0],
             content_type: 'image',
           },
         ]

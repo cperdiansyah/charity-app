@@ -171,13 +171,22 @@ export const FormEditBanner = (props: IFormAddBanner) => {
   const handlSubmit: any = async (values: any) => {
     setLoading(true)
     try {
+       let media: string
+
+       if (values.media_source !== 'url') {
+         const url = form.getFieldValue('media_content_url')
+         const mediaUrl = await uploadFileWithUrl([url])
+         media = mediaUrl[0]
+       } else {
+         media = values?.media?.media_content
+       }
       const dataBanner = {
         title: values.title,
         start_date: dayjs(values.dateBanner[0]),
         end_date: dayjs(values.dateBanner[1]),
         redirection_link: values.redirection_link,
         status: values.status ? 'active' : 'inactive',
-        image: values?.media?.media_content,
+        image: media,
       }
 
       await api.patch(`${SERVICE.banner}/${idBanner}`, dataBanner)
