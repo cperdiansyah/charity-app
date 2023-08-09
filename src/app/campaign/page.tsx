@@ -11,7 +11,7 @@ import SedekahSubuh from './SedekahSubuh'
 const UserDonation = () => {
   return (
     <UserLayout
-      className="relative pt-[90px] md:pt-[150px] "
+      className="relative pt-[150px] md:pt-[150px] "
       headerColor="black"
     >
       <div className={`top-bg ${styles['campaign-page']}`}></div>

@@ -9,6 +9,10 @@ const AdminLink = {
   BannerList: '/admin/banner',
   BannerAdd: '/admin/banner/add',
   BannerEdit: '/admin/banner/edit/',
+  // Reward
+  RewardList: '/admin/reward',
+  RewardAdd: '/admin/reward/add',
+  RewardEdit: '/admin/reward/edit/',
   /* Approval */
   ApprovalCampaign: '/admin/moderation/campaign',
   ApprovalBanner: '/admin/moderation/banner',

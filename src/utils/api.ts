@@ -25,6 +25,8 @@ export const SERVICE = {
   banner: '/api/v1/banner',
   createBanner: '/api/v1/banner/create',
   detailBanner: '/api/v1/banner/:id',
+  bannerUpload: '/api/v1/banner/upload',
+
   // acceptBanner: '/api/v1/banner/:id/status',
   //Payment
   PaymentCharity: '/api/v1/payment/charity/',
@@ -34,6 +36,13 @@ export const SERVICE = {
   // Approval
   Approval: '/api/v1/approval',
   ApprovalUser: '/api/v1/approval/approval-user',
+  // Point
+
+  Point: '/api/v1/point',
+  // Reward
+  Reward: '/api/v1/reward',
+  // Exchange
+  Exchange: '/api/v1/exchange',
 }
 
 export const BASE_HEADERS = {

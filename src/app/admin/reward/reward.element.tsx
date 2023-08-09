@@ -1,8 +1,5 @@
 'use client'
-import React, { useEffect, useState, useRef } from 'react'
 import {
-  Alert,
-  Checkbox,
   Col,
   DatePicker,
   Form,
@@ -13,37 +10,32 @@ import {
   RadioChangeEvent,
   Row,
   Spin,
-  Upload,
-  UploadFile,
-  UploadProps,
+  Switch,
+  message,
 } from 'antd'
 import { InboxOutlined } from '@ant-design/icons'
-import dayjs from 'dayjs'
-import { useParams, useRouter } from 'next/navigation'
+
+import React, { useEffect, useState } from 'react'
 // import _, { debounce } from 'lodash'
 import debounce from 'lodash/debounce'
-import get from 'lodash/get'
 
-/* Component */
-import CustomButton from '@/components/atoms/Button'
-import QuilEditor from '@/components/molecules/QuilEditor'
-import useTextEditor from '@/stores/textEditor'
+import { useParams, useRouter } from 'next/navigation'
+import dayjs from 'dayjs'
 
-/* Utils */
+import { notify } from '@/helpers/notify'
 import { disabledDate, dateFormat } from '@/utils/date'
 import { api } from '@/utils/clientSideFetch'
 import { SERVICE } from '@/utils/api'
-import { notify } from '@/helpers/notify'
 import { NAVIGATION_LINK } from '@/utils/link'
 
-/* Interface */
+import CustomButton from '@/components/atoms/Button'
 import {
-  IFormCharity,
+  IFormAddBanner,
+  IFormBanner,
+  initialValue,
   mediaContentSource,
-  ICharityMedia,
-  InitialValue,
-} from './campaign.interfce'
-import useUserData from '@/stores/userData'
+} from './reward.interface'
+import Upload, { RcFile, UploadFile, UploadProps } from 'antd/es/upload'
 
 const { RangePicker } = DatePicker
 
@@ -55,40 +47,9 @@ const normFile = (e: any) => {
   return e?.fileList
 }
 
-/* 
-
-  // const props: UploadProps = {
-  //   name: 'files',
-  //   // fileList: { fileList },
-  //   // action="/upload.do"
-  //   // accept: 'image/*,video/*',
-  //   // customRequest: { uploadImageRequest },
-  //   onChange: { handleChange },
-
-  //   // name: 'file',
-  //   // action: 'https://www.mocky.io/v2/5cc8019d300000980a055e76',
-  //   // headers: {
-  //   //   authorization: 'authorization-text',
-  //   // },
-  //   // onChange(info) {
-  //   //   if (info.file.status !== 'uploading') {
-  //   //     console.log(info.file, info.fileList)
-  //   //   }
-  //   //   if (info.file.status === 'done') {
-  //   //     message.success(`${info.file.name} file uploaded successfully`)
-  //   //   } else if (info.file.status === 'error') {
-  //   //     message.error(`${info.file.name} file upload failed.`)
-  //   //   }
-  //   // },
-  // }
-
-
-*/
-
 const uploadFileWithUrl = async (urls: string[]) => {
-  console.log(urls)
   try {
-    const res = await api.post(SERVICE.mediaUpload, {
+    const res = await api.post(`${SERVICE.Reward}/upload`, {
       urls: urls,
     })
     const result = res.data
@@ -98,177 +59,44 @@ const uploadFileWithUrl = async (urls: string[]) => {
     notify('error', 'Something went wrong', '', 'bottomRight')
   }
 }
-
-export const FormAddCharity = () => {
+export const FormAddReward = (props: IFormAddBanner) => {
   const [form] = Form.useForm()
   const router = useRouter()
-  const [editorValue, setEditorValue] = useTextEditor()
-  const [errorEditor, setErrorEditor] = useState(false)
+
   const [loading, setLoading] = useState(false)
-  const [uploadFileUrl, setUploadFileUrl] = useState([])
-  // const uploadFileUrl = useRef([''])
 
-  const [fileList, setFileList] = useState<UploadFile[]>()
-
-  const editorEmptyLogic =
-    editorValue.length === 0 ||
-    editorValue === '<p><br></p>' ||
-    editorValue === '<p></p>'
-
-  useEffect(() => {
-    handleResetForm()
-  }, [])
-
-  useEffect(() => {
-    if (errorEditor) {
-      if (!editorEmptyLogic) {
-        setErrorEditor(false)
-      }
-    }
-  }, [editorValue.length])
-
-  const handleResetForm = () => {
-    form.resetFields()
-    setEditorValue('')
-    setUploadFileUrl([])
-  }
   const handlSubmit: any = async (values: any) => {
-    checkEditorValue()
     setLoading(true)
     try {
-      let media: ICharityMedia[] | undefined
+      let media: string
 
       if (values.media_source !== 'url') {
         const url = form.getFieldValue('media_content_url')
         const mediaUrl = await uploadFileWithUrl([url])
-        media = [
-          {
-            content: mediaUrl[0],
-            content_type: 'image',
-          },
-        ]
+        media = mediaUrl[0]
       } else {
-        media = [
-          {
-            content: values.media.media_content,
-            content_type: 'image',
-          },
-        ]
+        media = values?.media?.media_content
       }
 
-      const dataCharity = {
-        title: values.title,
-        description: editorValue,
-        donation_target: values.target,
-        start_date: dayjs(values.dateCampaign[0]),
-        end_date: dayjs(values.dateCampaign[1]),
-        is_draft: values.draft,
-        media,
+      const dataReward = {
+        name: values.name,
+        price: values.price,
+        image: media,
       }
-      await api.post(SERVICE.charity, dataCharity)
+      // await api.post(SERVICE.createBanner, dataBanner)
+      await api.post(`${SERVICE.Reward}/create`, dataReward)
       notify(
         'success',
-        'Add Campaign Successful',
-        'campaign created successfully, please wait for admin verification',
+        'Add Reward Successful',
+        'reward created successfully',
         'bottomRight'
       )
       setTimeout(() => {
-        return router.replace(NAVIGATION_LINK.AdminCampaignList)
+        return router.replace(NAVIGATION_LINK.RewardList)
       }, 500)
     } catch (error: any) {
       console.error(error)
       const errorResponse = error.response
-      notify(
-        'error',
-        'Something went wrong',
-        errorResponse.data.error.error.message || '',
-        'bottomRight'
-      )
-      setLoading(false)
-    }
-  }
-  const checkOnFailed = () => {
-    checkEditorValue()
-  }
-
-  const checkEditorValue = () => {
-    if (editorEmptyLogic) {
-      setErrorEditor(true)
-    }
-  }
-
-  return (
-    <FormCharity
-      loading={loading}
-      form={form}
-      onFinish={handlSubmit}
-      onFinishFailed={checkOnFailed}
-      errorEditor={errorEditor}
-    />
-  )
-}
-
-export const FormEditCharity = () => {
-  const [form] = Form.useForm()
-  const router = useRouter()
-  const params = useParams()
-  const { id: idCharity } = params
-
-  const [userData, setUserData] = useUserData()
-
-  const [editorValue, setEditorValue] = useTextEditor()
-  const [charityValue, setChairtyValue] = useState<InitialValue>()
-
-  const [errorEditor, setErrorEditor] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [uploadFileUrl, setUploadFileUrl] = useState([])
-  // const uploadFileUrl = useRef([''])
-
-  const [fileList, setFileList] = useState<UploadFile[]>()
-
-  const editorEmptyLogic =
-    editorValue.length === 0 ||
-    editorValue === '<p><br></p>' ||
-    editorValue === '<p></p>'
-
-  useEffect(() => {
-    handleResetForm()
-    getCharityData(idCharity)
-  }, [])
-
-  useEffect(() => {
-    if (errorEditor) {
-      if (!editorEmptyLogic) {
-        setErrorEditor(false)
-      }
-    }
-  }, [editorValue.length])
-
-  const getCharityData = async (id: string) => {
-    setLoading(true)
-    try {
-      const resCharity = await api.get(`${SERVICE.charity}/${id}`)
-      const dataCharity = resCharity.data.charity
-      const initialValue: InitialValue = {
-        title: dataCharity?.title,
-        draft: dataCharity?.draft,
-        target: dataCharity?.donation_target,
-        media: {
-          media_content: get(dataCharity, 'media[0].content'),
-        },
-        dateCampaign: [
-          dayjs(dataCharity?.start_date),
-          dayjs(dataCharity?.end_date),
-        ],
-      }
-      setChairtyValue(initialValue)
-      setEditorValue(dataCharity.description)
-
-      setLoading(false)
-    } catch (error: any) {
-      console.error(error)
-      const errorResponse = error.response
-      console.log(errorResponse)
       notify(
         'error',
         'Something went wrong',
@@ -279,101 +107,117 @@ export const FormEditCharity = () => {
     }
   }
 
-  const handleResetForm = () => {
-    form.resetFields()
-    setEditorValue('')
-    setUploadFileUrl([])
-  }
+  return (
+    <FormReward
+      form={form}
+      loading={loading}
+      onFinish={handlSubmit}
+      buttonSubmitText="Save"
+    />
+  )
+}
 
-  const handlSubmit: any = async (values: any) => {
-    checkEditorValue()
+export const FormEditBanner = (props: IFormAddBanner) => {
+  const [form] = Form.useForm()
+  const router = useRouter()
+  const params = useParams()
+  const { id: idReward } = params
+
+  const [loading, setLoading] = useState(false)
+  const [rewardValue, setRewardValue] = useState<any>()
+
+  useEffect(() => {
+    getRewardData()
+  }, [])
+
+  const getRewardData = async () => {
     setLoading(true)
-
     try {
-      let media: ICharityMedia[] | undefined
+      const resBanner = await api.get(`${SERVICE.Reward}/${idReward}`)
+      const dataBanner = resBanner.data.banner
 
-      if (values.media_source !== 'url') {
-        const url = form.getFieldValue('media_content_url')
-        const mediaUrl = await uploadFileWithUrl([url])
-        media = [
-          {
-            content: mediaUrl[0],
-            content_type: 'image',
-          },
-        ]
-      } else {
-        media = [
-          {
-            content: values.media.media_content,
-            content_type: 'image',
-          },
-        ]
+      const initialValue = {
+        name: dataBanner?.name,
+        price: dataBanner?.price,
+        media: {
+          media_content: dataBanner?.image,
+        },
       }
+      setRewardValue(initialValue)
 
-      const dataCharity = {
-        title: values.title,
-        description: editorValue,
-        donation_target: values.target,
-        start_date: dayjs(values.dateCampaign[0]),
-        end_date: dayjs(values.dateCampaign[1]),
-        is_draft: values.draft,
-        media,
-      }
-      await api.patch(`${SERVICE.charity}/${idCharity}`, dataCharity)
-      notify(
-        'success',
-        'Update Campaign Successful',
-        `campaign updaetd successfully${
-          userData.role !== 'admin'
-            ? ', please wait for admin verification'
-            : ''
-        }`,
-        'bottomRight'
-      )
-      setTimeout(() => {
-        return router.replace(NAVIGATION_LINK.AdminCampaignList)
-      }, 500)
+      setLoading(false)
     } catch (error: any) {
       console.error(error)
       const errorResponse = error.response
-      console.log(errorResponse)
       notify(
         'error',
         'Something went wrong',
-        errorResponse?.data?.error?.error?.message ||
-          errorResponse?.data?.error?.message ||
-          '',
+        errorResponse?.data?.error?.error?.message || '',
         'bottomRight'
       )
       setLoading(false)
     }
   }
-  const checkOnFailed = () => {
-    checkEditorValue()
-  }
 
-  const checkEditorValue = () => {
-    if (editorEmptyLogic) {
-      setErrorEditor(true)
+  const handlSubmit: any = async (values: any) => {
+    setLoading(true)
+    try {
+
+      let media: string
+
+      if (values.media_source !== 'url') {
+        const url = form.getFieldValue('media_content_url')
+        const mediaUrl = await uploadFileWithUrl([url])
+        media = mediaUrl[0]
+      } else {
+        media = values?.media?.media_content
+      }
+
+      const dataReward = {
+        name: values.name,
+        price: values.price,
+        image: media,
+      }
+      
+
+      await api.patch(`${SERVICE.Reward}/update/${idReward}`, dataReward)
+      notify(
+        'success',
+        'Update Reward Successful',
+        'reward updated successfully',
+        'bottomRight'
+      )
+      setTimeout(() => {
+        return router.replace(NAVIGATION_LINK.RewardList)
+      }, 500)
+    } catch (error: any) {
+      console.error(error)
+      const errorResponse = error.response
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse?.data?.error?.error?.message || '',
+        'bottomRight'
+      )
+      setLoading(false)
     }
   }
 
   return (
-    <FormCharity
-      loading={loading}
+    <FormReward
       form={form}
+      loading={loading}
       onFinish={handlSubmit}
-      onFinishFailed={checkOnFailed}
-      errorEditor={errorEditor}
-      initialValue={charityValue}
       buttonSubmitText="Update"
+      initialValue={rewardValue}
     />
   )
 }
 
-export const FormCharity: React.FC<IFormCharity> = (props) => {
+export const FormReward = (props: IFormBanner) => {
   const [mediaContentSource, setMediaContentSource] =
     useState<mediaContentSource>('url')
+  const [loading, setLoading] = useState(false)
 
   const [imageUrl, setImageUrl] = useState('')
 
@@ -381,6 +225,8 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
   // const uploadFileUrl = useRef([''])
 
   const [fileList, setFileList] = useState<UploadFile[]>()
+
+  console.log(uploadFileUrl)
 
   useEffect(() => {
     if (props.initialValue) {
@@ -397,6 +243,8 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
     setMediaContentSource(e.target.value)
   }
 
+  /* Upload media */
+  // unused code but can be need in the future
   const uploadImageRequest = (options?: any) => {
     setTimeout(async () => {
       const { onSuccess, onError, file, onProgress } = options
@@ -470,40 +318,42 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
 
     setFileList(newFileList)
   }
+
   return (
-    <div className="form-add-charity-container">
+    <div className="form-add-banner-container">
       <Spin spinning={props.loading}>
         <Form
           form={props.form}
           onFinish={props.onFinish}
           scrollToFirstError
           layout="vertical"
-          onFinishFailed={props.onFinishFailed}
           initialValues={props.initialValue}
         >
           <Row gutter={24}>
-            {/* Content Campaign */}
+            {/* Banner Content */}
             <Col span={12}>
               <Form.Item
-                name="title"
-                label="Title"
+                name="name"
+                label="Name"
                 rules={[
-                  { required: true, message: 'Title is required' },
+                  { required: true, message: 'Name is required' },
                   { type: 'string', min: 6 },
                 ]}
               >
-                <Input placeholder="input Title Campaign" />
+                <Input placeholder="input Name Reward" />
               </Form.Item>
               <Form.Item
-                name="target"
-                label="Campaign Target"
+                name="price"
+                label="Price Reward"
                 rules={[
-                  { required: true, message: 'Campaign Target is required' },
+                  {
+                    required: true,
+                    message: 'Price link is required',
+                  },
                 ]}
               >
                 <InputNumber
-                  prefix="Rp. "
-                  placeholder="input Campaign Target"
+                  placeholder="input Price Reward"
                   formatter={(value: any) =>
                     `${value}`.replace(/\B(?=(\d{3})+(?!\d))/g, ',')
                   }
@@ -511,24 +361,8 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                   className="w-full"
                 />
               </Form.Item>
-              <Form.Item
-                name="dateCampaign"
-                label="Date Campaign"
-                rules={[
-                  { required: true, message: 'Date Campaign is required' },
-                ]}
-              >
-                <RangePicker
-                  disabledDate={disabledDate}
-                  format={dateFormat}
-                  style={{
-                    width: '70%',
-                  }}
-                />
-              </Form.Item>
             </Col>
-
-            {/* Image Campaign */}
+            {/* Image */}
             <Col span={12}>
               <p className="text-left text-lg font-medium">Media</p>
               <Form.Item
@@ -545,8 +379,10 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                   defaultValue={mediaContentSource}
                 >
                   <Radio value={'url'}>Url</Radio>
-                  {/* <Radio value={'upload'} disabled> */}
-                  <Radio value={'upload'}>Upload</Radio>
+                  <Radio value={'upload'}>
+                    {/* <Radio value={'upload'} disabled> */}
+                    Upload
+                  </Radio>
                 </Radio.Group>
               </Form.Item>
 
@@ -621,7 +457,7 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
                           accept="image/*,video/*"
                           customRequest={uploadImageRequest}
                           onChange={handleChange}
-                          fileList={fileList}
+                          fileList={uploadFileUrl}
                           maxCount={1}
                         >
                           <p className="ant-upload-drag-icon">
@@ -643,32 +479,15 @@ export const FormCharity: React.FC<IFormCharity> = (props) => {
             <Form.Item name="media_content_url" label="Title" hidden>
               <Input placeholder="input Title Campaign" />
             </Form.Item>
-            <Col span={24}>
-              <QuilEditor placeholder="Input your content here" />
-              {props?.errorEditor && (
-                <Alert message="Text Editor is Required" type="error" />
-              )}
-            </Col>
-            <Col span={14}>
-              <Form.Item name="draft" valuePropName="checked" className="my-3">
-                <Checkbox
-                  defaultChecked={false}
-                  // checked={draftChecked}
-                  // onClick={() => setDraftChecked(!draftChecked)}
-                >
-                  Draft
-                </Checkbox>
-              </Form.Item>
-              <Form.Item name="submit">
-                <CustomButton
-                  htmlType="submit"
-                  buttontype="primary"
-                  className="mt-2 !rounded-lg"
-                >
-                  {props.buttonSubmitText || 'Save'}
-                </CustomButton>
-              </Form.Item>
-            </Col>
+            <Form.Item name="submit">
+              <CustomButton
+                htmlType="submit"
+                buttontype="primary"
+                className="mt-2 !rounded-lg"
+              >
+                {props.buttonSubmitText || 'Save'}
+              </CustomButton>
+            </Form.Item>
           </Row>
         </Form>
       </Spin>

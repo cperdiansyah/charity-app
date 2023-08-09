@@ -2,8 +2,8 @@
   @apply w-full md:w-[70vw];
   &-content {
     &-image {
-      img,
-      &__antd-img {
+      &__antd-img,
+      img {
         @apply m-auto h-full object-cover md:h-[80vh] md:w-[70vw];
       }
     }
