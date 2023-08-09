@@ -41,6 +41,8 @@ export const SERVICE = {
   Point: '/api/v1/point',
   // Reward
   Reward: '/api/v1/reward',
+  // Exchange
+  Exchange: '/api/v1/exchange',
 }
 
 export const BASE_HEADERS = {
