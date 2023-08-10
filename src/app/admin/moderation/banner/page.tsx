@@ -154,6 +154,8 @@ const ModerationBanner = () => {
       // console.log(data)
       await updateBannerStatus(dataApproval)
       setLoading(false)
+      notify('success', 'Update status success', '', 'bottomRight')
+
     } catch (error: any) {
       setLoading(false)
       console.log(error)
