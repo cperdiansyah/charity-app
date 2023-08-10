@@ -30,7 +30,7 @@ type Status = 'accept' | 'rejected'
 
 function getColumns(
   showModal: any,
-  approvalCampaign: (data?: string, status?: Status) => VoidFunction,
+  approvalUser: (data?: string, status?: Status) => VoidFunction,
   rejectedCampaign?: VoidFunction
 ) {
   return [
@@ -91,7 +91,7 @@ function getColumns(
             <Tooltip placement="bottomRight" title="Approve Campaign">
               <Button
                 style={{ color: '#87d068', border: 'solid 0px' }}
-                onClick={() => approvalCampaign(value, 'accept')}
+                onClick={() => approvalUser(value, 'accept')}
                 disabled={value.status === 'accept'}
               >
                 <CheckOutlined />
@@ -100,7 +100,7 @@ function getColumns(
             <Tooltip placement="bottomRight" title="Reject Campaign">
               <Button
                 style={{ color: '#f50', border: 'solid 0px' }}
-                onClick={() => approvalCampaign(value, 'rejected')}
+                onClick={() => approvalUser(value, 'rejected')}
                 disabled={
                   value.status === 'accept' || value.status === 'rejected'
                 }
@@ -155,7 +155,7 @@ const ModerationUser = () => {
     setVisible(true)
   }
 
-  const approvalCampaign: any = async (data?: any, status?: Status) => {
+  const approvalUser: any = async (data?: any, status?: Status) => {
     try {
       setLoading(true)
       const dataApproval = {
@@ -164,6 +164,7 @@ const ModerationUser = () => {
       }
       await updateUserStatus(dataApproval)
       setLoading(false)
+      notify('success', 'Update status success', '', 'bottomRight')
     } catch (error: any) {
       setLoading(false)
       console.log(error)
@@ -181,7 +182,7 @@ const ModerationUser = () => {
     <div>
       <Spin tip="Loading" spinning={loading}>
         <CustomTable
-          columns={getColumns(showModal, approvalCampaign)}
+          columns={getColumns(showModal, approvalUser)}
           init={init}
           loading={loading}
           hideAddButton={true}

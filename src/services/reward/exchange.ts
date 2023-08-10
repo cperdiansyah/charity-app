@@ -9,9 +9,9 @@ interface IGetBannersQuery {
   rows?: number | string
 }
 
-export const getRewardClient = async (query?: IGetBannersQuery) => {
+export const getExchangeRequestList = async (query?: IGetBannersQuery) => {
   try {
-    const resReward = await api.get(`${SERVICE.Reward}/list`, {
+    const resReward = await api.get(`${SERVICE.Exchange}/list?status=all`, {
       params: {
         ...query,
       },
@@ -23,11 +23,14 @@ export const getRewardClient = async (query?: IGetBannersQuery) => {
   }
 }
 
-export const deleteRewardClient = async (data?: any) => {
+export const updateExchangeRequest = async (data: any) => {
   try {
-    const resReward = await api.delete(`${SERVICE.Reward}/delete/${data._id}`)
-    const dataReward = _get(resReward, 'data')
-    return dataReward
+    const resCharity = await api.patch(
+      `${SERVICE.Exchange}/update/${data.id}`,
+      data
+    )
+    const dataCharity = _get(resCharity, 'data')
+    return dataCharity
   } catch (error) {
     return Promise.reject(error)
   }
