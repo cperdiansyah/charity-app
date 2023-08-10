@@ -1,32 +1,13 @@
 'use client'
 
-import React, { useEffect, useState } from 'react'
+import React from 'react'
 import { HeartFilled } from '@ant-design/icons'
-import { notify } from '@/helpers/notify'
-import { SERVICE } from '@/utils/api'
-import { api } from '@/utils/clientSideFetch'
 import { Card } from 'antd'
 
 import styles from './sedekah-subuh.module.scss'
 
 const PoinInfo = (props: { dataSedekahSubuh: any; dataPoint: any }) => {
   const { dataSedekahSubuh } = props
-
-  // const [dataPoint, setDataPoint] = useState<any>()
-
-  useEffect(() => {
-    // getPoint()
-  }, [])
-  // const getPoint = async () => {
-  //   try {
-  //     const resPoint = await api.get(`${SERVICE.Point}/me`)
-  //     const data = resPoint.data
-  //     setDataPoint((state: any) => data.poin)
-  //   } catch (error) {
-  //     console.log(error)
-  //     notify('error', 'Something went wrong', '', 'bottomRight')
-  //   }
-  // }
 
   return (
     <Card
