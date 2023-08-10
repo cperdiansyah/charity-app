@@ -21,6 +21,8 @@ const AdminLink = {
   ReportCampaign: '/admin/report/campaign',
   ReportBanner: '/admin/report/banner',
   ReportUser: '/admin/report/user',
+  // Exchange Reward
+  exchangeReward: '/admin/exchange-reward',
   // Config
   ConfigAdmin: '/admin/config',
 }

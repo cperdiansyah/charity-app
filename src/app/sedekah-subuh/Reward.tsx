@@ -3,36 +3,25 @@ import React, { useEffect, useState } from 'react'
 import { Card, Col, Empty, Form, Modal, Row, Spin } from 'antd'
 import styles from './sedekah-subuh.module.scss'
 import CustomButton from '@/components/atoms/Button'
-import { notify } from '@/helpers/notify'
-import { api } from '@/utils/clientSideFetch'
-import { SERVICE } from '@/utils/api'
 import { formatNumber } from './PoinInfo'
-import useUserData from '@/stores/userData'
+import useUpdated from '@/hooks/useUpdated'
 
-const Reward = (props: { dataPoint: any }) => {
-  const [userData, setUserData] = useUserData()
-  3
-  const [dataReward, setDataReward] = useState<any>()
-  const [isModalOpen, setIsModalOpen] = useState(false)
-  const [clickedReward, setClickedReward] = useState<any>()
-  const [loading, setLoading] = useState(false)
+const Reward = (props: {
+  loading: boolean
+  dataPoint: any
+  dataReward?: any
+  isModalOpen?: any
+  setClickedReward?: any
+  handleClick: VoidFunction
+}) => {
+  const [isModalOpen, setIsModalOpen] = useState(props.isModalOpen)
 
-  useEffect(() => {
-    getRewardData()
-  }, [])
-  const getRewardData = async () => {
-    try {
-      const resReward = await api.get(`${SERVICE.Reward}/list`)
-      const data = resReward.data
-      setDataReward((state: any) => data.data)
-    } catch (error) {
-      console.log(error)
-      notify('error', 'Something went wrong', '', 'bottomRight')
-    }
-  }
+  useUpdated(() => {
+    setIsModalOpen((state: boolean) => props.isModalOpen)
+  }, [props.isModalOpen])
 
   const showModal = (reward: any) => {
-    setClickedReward(reward)
+    props.setClickedReward(reward)
     setIsModalOpen(true)
   }
 
@@ -44,42 +33,14 @@ const Reward = (props: { dataPoint: any }) => {
     setIsModalOpen(false)
   }
 
-  const handleClick = async () => {
-    try {
-      setLoading(true)
-      const dataExchangeRequest = {
-        user_id: userData.id,
-        reward_id: clickedReward?._id,
-      }
-      // Hit exchange reward request
-      await api.post(`${SERVICE.Exchange}/create`, dataExchangeRequest)
-      setLoading(false)
-      setIsModalOpen(false)
-      notify(
-        'success',
-        'Penukaran reward berhasil diproses',
-        'silahkan tunggu informasi lanjutan dari admin',
-        'bottomRight'
-      )
-      setTimeout(() => {
-        location.reload()
-      }, 500)
-    } catch (error) {
-      setLoading(false)
-
-      console.log(error)
-      notify('error', 'Something went wrong', '', 'bottomRight')
-    }
-  }
-
   return (
     <div className="mx-auto mb-5  ">
       <h3 className="h3 mb-3 text-center text-xl">Reward</h3>
       <div className="reward-list flex flex-col gap-3 md:flex-row">
-        {dataReward?.length === 0 ? (
+        {props?.dataReward?.length === 0 ? (
           <Empty description="Reward Tidak Tersedia" className="mx-auto" />
         ) : (
-          dataReward?.map((reward: any) => {
+          props?.dataReward?.map((reward: any) => {
             return (
               <>
                 <RewardCard
@@ -87,7 +48,6 @@ const Reward = (props: { dataPoint: any }) => {
                   point={props.dataPoint?.value}
                   price={reward?.price}
                   title={reward?.name}
-                  // onClick={handleClick}
                   showModal={() => showModal(reward)}
                 />
                 <Modal
@@ -96,9 +56,10 @@ const Reward = (props: { dataPoint: any }) => {
                   onOk={handleOk}
                   onCancel={handleCancel}
                   footer={null}
+                  centered
                 >
-                  <Spin spinning={loading}>
-                    <Form onFinish={handleClick}>
+                  <Spin spinning={props?.loading}>
+                    <Form onFinish={props.handleClick} className="mt-3">
                       <Row gutter={24}>
                         <Col span={12}>
                           <Form.Item>
