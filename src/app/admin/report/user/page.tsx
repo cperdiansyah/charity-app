@@ -2,8 +2,8 @@
 
 import React from 'react'
 
-const ReportUser = () => {
-  return <div>ReportUser</div>
+const ReportSedekahSubuh = () => {
+  return <div>ReportSedekahSubuh</div>
 }
 
-export default ReportUser
+export default ReportSedekahSubuh

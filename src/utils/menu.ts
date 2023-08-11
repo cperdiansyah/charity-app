@@ -50,7 +50,7 @@ export const SidebarMenu = {
     label: 'Report',
     icon: PrinterOutlined,
     children: [
-      { label: 'User', pathname: NAVIGATION_LINK.ReportUser },
+      // { label: 'User', pathname: NAVIGATION_LINK.ReportUser },
       { label: 'Campaign', pathname: NAVIGATION_LINK.ReportCampaign },
     ],
   },
@@ -74,6 +74,7 @@ export const adminSidebar = [
   SidebarMenu.exchangeReward,
   SidebarMenu.contentModeration,
   SidebarMenu.report,
+  SidebarMenu.reportSedekahSubuh,
   SidebarMenu.config,
 ]
 

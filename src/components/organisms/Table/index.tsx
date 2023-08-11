@@ -16,6 +16,8 @@ const CustomTable: React.FC<ICustomTable> = ({
   placeholder,
   loading: loadingProps,
   hideAddButton,
+  hideSearchField
+
 }) => {
   const pathname = usePathname()
   const router = useRouter()
@@ -168,6 +170,7 @@ const CustomTable: React.FC<ICustomTable> = ({
         pathname={pathname}
         placeholder={placeholder || ''}
         hideAddButton={hideAddButton}
+        hideSearchField={hideSearchField}
       />
 
       <div className="table-content">
