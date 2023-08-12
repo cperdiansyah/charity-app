@@ -17,6 +17,8 @@ const CustomButton = (props: IPorps) => {
           text={props.text}
           className={`btn btn-primary btn-primary ${styles['btn-primary']} ${props.className}`}
           disable={props.disabled}
+          linkTarget={props.linkTarget}
+          
         >
           {props.children}
         </Navlink>
