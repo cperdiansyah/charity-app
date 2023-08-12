@@ -176,6 +176,7 @@ const ModerationBanner = () => {
           init={init}
           loading={loading}
           hideAddButton={true}
+          hideSearchField
         />
         <MemoizeModalTable
           open={visible}
