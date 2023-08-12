@@ -1,7 +1,7 @@
 'use client'
-import { Button, Descriptions, Image, Modal, Space, Tag, Tooltip } from 'antd'
+import { Tag, Tooltip } from 'antd'
 import dayjs from 'dayjs'
-import { EditOutlined, InfoCircleOutlined } from '@ant-design/icons'
+import {  InfoCircleOutlined } from '@ant-design/icons'
 import Link from 'next/link'
 import React, { useState } from 'react'
 import { useSearchParams } from 'next/navigation'
@@ -14,8 +14,6 @@ import { currencyFormat } from '@/helpers'
 import { getCharityClient } from '@/services/charity/clientService'
 import { NAVIGATION_LINK } from '@/utils/link'
 import { CAMPAIGN_STATUS_WITH_COLORS } from './campaign'
-import useUpdated from '@/hooks/useUpdated'
-import { IModalTable } from './campaign.interfce'
 import _ from 'lodash'
 
 function getColumns(showModal: any) {
