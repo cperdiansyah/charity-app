@@ -36,7 +36,7 @@ export const DynamicBreadcrumbs = () => {
       breadcrumbItems.push({
         title: (
           <Navlink
-            text={pathSegments[i]}
+            text={pathSegments[i].replace(/-/g, ' ')}
             href={currentPath}
             className="capitalize"
           />

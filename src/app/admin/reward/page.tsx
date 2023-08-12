@@ -128,7 +128,11 @@ const AdminRewward = () => {
 
   return (
     <div>
-      <CustomTable columns={getColumns(showModal)} init={init} />
+      <CustomTable
+        columns={getColumns(showModal)}
+        init={init}
+        hideSearchField
+      />
     </div>
   )
 }

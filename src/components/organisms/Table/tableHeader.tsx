@@ -11,18 +11,21 @@ interface IProps {
   onSearch: VoidFunction
   pathname: string
   hideAddButton?: boolean
+  hideSearchField?: boolean
 }
 
 const TableHeader = (props: IProps) => {
-  const { hideAddButton = false } = props
+  const { hideAddButton = false, hideSearchField = false } = props
   return (
     <div className="table-header mb-3 flex justify-between">
       <div className="table-header-left">
-        <Search
-          placeholder={props?.placeholder || 'Input Search Text'}
-          onSearch={props.onSearch}
-          style={{ width: 200 }}
-        />
+        {!hideSearchField && (
+          <Search
+            placeholder={props?.placeholder || 'Input Search Text'}
+            onSearch={props.onSearch}
+            style={{ width: 200 }}
+          />
+        )}
       </div>
       {!hideAddButton && (
         <div className="table-header-right">

@@ -8,7 +8,7 @@ const Footer = () => {
       <div className="container">
         <div className="xs-footer-top-layer">
           <div className="row">
-            <div className="col-lg-3 col-md-6 footer-widget xs-pr-20">
+            <div className="col-lg-4 col-md-6 footer-widget xs-pr-20">
               <a
                 href="/"
                 className="xs-footer-logo text-2xl font-semibold text-white"
@@ -21,7 +21,7 @@ const Footer = () => {
                 Yatim Piatu An-Nur dengan semangat Sejuta Kebaikan Dimulai Dari
                 Satu Langkah Bersama
               </p>
-              <ul className="xs-social-list-v2">
+              <ul className="xs-social-list-v2 hidden">
                 <li>
                   <a href="#" className="color-facebook">
                     <i className="fa fa-facebook" />
@@ -45,7 +45,7 @@ const Footer = () => {
               </ul>
               {/* <!-- .xs-social-list END --> */}
             </div>
-            <div className="col-lg-4 col-md-6 footer-widget">
+            <div className="col-lg-4 col-md-6 footer-widget hidden">
               <h3 className="widget-title">About Us</h3>
               <ul className="xs-footer-list">
                 <li>

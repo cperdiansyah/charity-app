@@ -22,7 +22,7 @@ const HeaderBack = (props: { style?: CSSProperties }) => {
       .split('/')
       .filter((segment) => segment !== '')
     const onlyGetSubjectPath = pathSegments.slice(0, 2).reverse().join(' ')
-    setHeader(toCapitalize(onlyGetSubjectPath))
+    setHeader(toCapitalize(onlyGetSubjectPath.replace(/-/g, ' ')))
   }
   const handleClick = () => {
     router.back()

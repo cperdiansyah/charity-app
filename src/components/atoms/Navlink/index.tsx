@@ -2,6 +2,7 @@
 
 import Link from 'next/link'
 import React from 'react'
+import { LinkTarget } from '../Button/interface'
 
 interface INavlink {
   children?: React.ReactNode
@@ -10,6 +11,7 @@ interface INavlink {
   isExternalLink?: boolean
   className?: string
   text?: string
+  linkTarget?: LinkTarget
 }
 
 const Navlink = ({
