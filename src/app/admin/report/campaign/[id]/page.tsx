@@ -1,6 +1,6 @@
 'use client'
 import React, { useEffect, useState } from 'react'
-import { Descriptions, Row, Tag } from 'antd'
+import { Descriptions, Tag } from 'antd'
 import { LoadingOutlined } from '@ant-design/icons'
 
 import { useParams } from 'next/navigation'
@@ -12,6 +12,9 @@ import timezone from 'dayjs/plugin/timezone'
 import localeData from 'dayjs/plugin/localeData'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import 'dayjs/locale/id'
+
+/* Component */
+import CustomTable from '@/components/organisms/Table'
 
 import { notify } from '@/helpers/notify'
 import { SERVICE } from '@/utils/api'
@@ -32,6 +35,29 @@ dayjs.extend(customParseFormat)
 
 dayjs.locale('id')
 
+function getColumns(showModal?: any) {
+  return [
+    {
+      dataIndex: ['user_id', 'name'],
+      key: 'author',
+      title: 'User Name',
+    },
+    {
+      title: 'Donation Date',
+      dataIndex: 'createdAt',
+      key: 'createdAt',
+      render: (date: string) =>
+        dayjs.utc(date).tz('Asia/Jakarta').format('dddd, D MMMM YYYY'),
+    },
+    {
+      title: 'Donation Amount',
+      dataIndex: 'amount',
+      key: 'donation_target',
+      render: (data: number) => `${currencyFormat(data)}`,
+    },
+  ]
+}
+
 const ReportCampaignDetail = () => {
   const params = useParams()
   const { id: idCharity } = params
@@ -39,16 +65,64 @@ const ReportCampaignDetail = () => {
   const [visible, setVisible] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
   const [dataCampaign, setCampaign] = useState<ICampaignData | undefined>()
-  const [paymentData, setPaymentData] = useState<any>()
+  const [paymentData, setPaymentData] = useState({
+    campaignPayment: [],
+    meta: { total: 0 },
+  })
   const [amount, setAmount] = useState<number>(0)
 
   useEffect(() => {
     setLoading((state) => true)
 
     getCampaignData()
-    getTransactionData()
-    setLoading((state) => false)
+    setTimeout(() => {
+      setLoading((state) => false)
+    }, 300)
   }, [])
+
+  const init = async (
+    current?: number | string,
+    pageSize?: number | string
+  ) => {
+    try {
+      const queryParams = {
+        page: Number(current) || 1,
+        rows: Number(pageSize) || 10,
+      }
+      const resPaymentCharity = await api.get(
+        `${SERVICE.Transaction}/charity/${idCharity}`,
+        {
+          params: {
+            ...queryParams,
+            getAll: true,
+            status: 'settlement',
+          },
+        }
+      )
+      const dataPaymentCharity = resPaymentCharity.data
+      setPaymentData(dataPaymentCharity)
+
+      const totalAmount = calculateTotalAmount(
+        dataPaymentCharity?.campaignPayment
+      )
+      setAmount(totalAmount)
+
+      const result = {
+        data: dataPaymentCharity.campaignPayment,
+        meta: dataPaymentCharity.meta,
+      }
+      return result
+    } catch (error: any) {
+      console.error(error)
+      const errorResponse = error.response
+      notify(
+        'error',
+        'Something went wrong',
+        errorResponse.data.error.error.message || '',
+        'bottomRight'
+      )
+    }
+  }
 
   const getCampaignData = async () => {
     try {
@@ -69,30 +143,6 @@ const ReportCampaignDetail = () => {
     }
   }
 
-  const getTransactionData = async () => {
-    try {
-      const resPaymentCharity = await api.get(
-        `${SERVICE.Transaction}/charity/${idCharity}?getAll=true&status=settlement`
-      )
-      const dataPaymentCharity = resPaymentCharity.data
-      setPaymentData(dataPaymentCharity)
-
-      const totalAmount = calculateTotalAmount(
-        dataPaymentCharity?.campaignPayment
-      )
-      setAmount(totalAmount)
-    } catch (error: any) {
-      console.error(error)
-      const errorResponse = error.response
-      notify(
-        'error',
-        'Something went wrong',
-        errorResponse.data.error.error.message || '',
-        'bottomRight'
-      )
-    }
-  }
-  // console.log(paymentData)
   if (loading || !dataCampaign) return <LoadingOutlined />
 
   const status = dataCampaign?.status
@@ -156,6 +206,15 @@ const ReportCampaignDetail = () => {
       </Descriptions>
 
       {/* User table user payment */}
+      <h2 className="mt-5 pl-3 text-base font-semibold">User List Donation</h2>
+      <CustomTable
+        columns={getColumns()}
+        init={init}
+        hideAddButton
+        hideSearchField
+        loading={loading}
+        
+      />
     </div>
   )
 }
