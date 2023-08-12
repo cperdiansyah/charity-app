@@ -186,6 +186,7 @@ const ModerationUser = () => {
           init={init}
           loading={loading}
           hideAddButton={true}
+          hideSearchField
         />
         <MemoizeModalTable
           open={visible}

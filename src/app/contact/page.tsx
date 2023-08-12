@@ -1,11 +1,45 @@
-import React from 'react'
+'use client'
+import React, { useState } from 'react'
+import { Form, Input, Spin } from 'antd'
+import { UserOutlined, MailOutlined } from '@ant-design/icons'
+
+import emailjs from '@emailjs/browser'
 
 import styles from './contact.module.scss'
 import Map from '@/components/molecules/Map'
 import Navlink from '@/components/atoms/Navlink'
 import UserTemplate from '@/components/templates/UserLayout'
-
+import { notify } from '@/helpers/notify'
+const { TextArea } = Input
 const Contact = () => {
+  // const [emailState,]
+  const [form] = Form.useForm()
+  const [loading, setLoading] = useState(false)
+
+  const handleSubmitForm = async (values: any) => {
+    setLoading((state) => true)
+    try {
+      await emailjs.send(
+        'service_abbqq0c',
+        'template_3f89dln',
+        {
+          from_name: values.name,
+          email: values.email,
+          messages: values.message,
+        },
+        '7h4DRk-4-BCNgUHIi'
+      )
+      setLoading((state) => false)
+
+      notify('success', 'Pesan Berhasil Terkirim', '', 'bottomRight')
+    } catch (error) {
+      console.log(error)
+      setLoading((state) => false)
+
+      notify('error', 'Something went wrong', '', 'bottomRight')
+    }
+  }
+
   return (
     <UserTemplate>
       <section
@@ -35,66 +69,68 @@ const Contact = () => {
                 <div className="col-lg-6">
                   <div className="xs-contact-form-wraper">
                     <h4>Hubungi Kami</h4>
-                    <form
-                      action="#"
-                      method="POST"
-                      id="xs-contact-form"
-                      className="xs-contact-form contact-form-v2"
-                    >
-                      <div className="input-group">
-                        <input
-                          type="text"
-                          name="name"
-                          id="xs-name"
-                          className="form-control"
-                          placeholder="Enter Your Name....."
-                        />
-                        <div className="input-group-append">
-                          <div className="input-group-text">
-                            <i className="fa fa-user" />
-                          </div>
-                        </div>
-                      </div>
-                      {/* <!-- .input-group END --> */}
-                      <div className="input-group">
-                        <input
-                          type="email"
-                          name="email"
-                          id="xs-email"
-                          className="form-control"
-                          placeholder="Enter Your Email....."
-                        />
-                        <div className="input-group-append">
-                          <div className="input-group-text">
-                            <i className="fa fa-envelope-o" />
-                          </div>
-                        </div>
-                      </div>
-                      {/* <!-- .input-group END --> */}
-                      <div className="input-group message-group">
-                        <textarea
-                          name="message"
-                          placeholder="Enter Your Message....."
-                          id="xs-message"
-                          className="form-control"
-                          cols={30}
-                          rows={10}
-                        />
-                        <div className="input-group-append">
-                          <div className="input-group-text">
-                            <i className="fa fa-pencil" />
-                          </div>
-                        </div>
-                      </div>
-                      {/* <!-- .input-group END --> */}
-                      <button
-                        className="btn btn-success"
-                        type="submit"
-                        id="xs-submit"
+                    <Spin spinning={loading}>
+                      <Form
+                        form={form}
+                        onFinish={handleSubmitForm}
+                        scrollToFirstError
+                        layout="vertical"
+                        className="xs-contact-form contact-form-v2"
+                        id="xs-contact-form"
                       >
-                        submit
-                      </button>
-                    </form>
+                        <Form.Item
+                          name="name"
+                          rules={[
+                            { required: true, message: 'Name is required' },
+                          ]}
+                          className={`bg-transparent ${styles['form-item']}`}
+                        >
+                          <Input
+                            placeholder="Enter Your Name....."
+                            className="bg-transparent"
+                            suffix={<UserOutlined />}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="email"
+                          rules={[
+                            { required: true, message: 'Mail is required' },
+                          ]}
+                          className={`bg-transparent ${styles['form-item']}`}
+                        >
+                          <Input
+                            placeholder="Enter Your Email....."
+                            className="bg-transparent"
+                            suffix={<MailOutlined />}
+                          />
+                        </Form.Item>
+                        <Form.Item
+                          name="messages"
+                          rules={[
+                            { required: true, message: 'message is required' },
+                          ]}
+                          className={`bg-transparent ${styles['form-item-textarea']}`}
+                        >
+                          <TextArea
+                            cols={30}
+                            rows={10}
+                            id="xs-message"
+                            placeholder="Enter Your Text Here....."
+                            // children={<EditOutlined />}
+                          />
+                        </Form.Item>
+
+                        {/* <!-- .input-group END --> */}
+                        <button
+                          className="btn btn-primary text-primary bg-white"
+                          type="submit"
+                          id="xs-submit"
+                        >
+                          submit
+                        </button>
+                      </Form>
+                    </Spin>
+                    {/* </form> */}
                     {/* <!-- .xs-contact-form #xs-contact-form END --> */}
                   </div>
                   {/* <!-- .xs-contact-form-wraper END --> */}

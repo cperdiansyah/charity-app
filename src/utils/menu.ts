@@ -7,6 +7,7 @@ import {
   SettingOutlined,
   CrownOutlined,
   ShoppingOutlined,
+  SmileOutlined,
 } from '@ant-design/icons'
 import { NAVIGATION_LINK } from '@/utils/link'
 
@@ -48,7 +49,20 @@ export const SidebarMenu = {
   report: {
     label: 'Report',
     icon: PrinterOutlined,
-    children: [{ label: 'Campaign' }, { label: 'User' }],
+    children: [
+      // { label: 'User', pathname: NAVIGATION_LINK.ReportUser },
+      { label: 'Campaign', pathname: NAVIGATION_LINK.ReportCampaign },
+    ],
+  },
+  reportCampaign: {
+    label: 'Report Campaign',
+    icon: PrinterOutlined,
+    pathname: NAVIGATION_LINK.ReportCampaign,
+  },
+  reportSedekahSubuh: {
+    label: 'Report Sedekah Subuh',
+    icon: SmileOutlined,
+    pathname: NAVIGATION_LINK.ReportSedekahSubuh,
   },
   config: {
     label: 'Config',
@@ -64,7 +78,8 @@ export const adminSidebar = [
   SidebarMenu.reward,
   SidebarMenu.exchangeReward,
   SidebarMenu.contentModeration,
-  SidebarMenu.report,
+  SidebarMenu.reportCampaign,
+  SidebarMenu.reportSedekahSubuh,
   SidebarMenu.config,
 ]
 
@@ -72,5 +87,5 @@ export const userVerfiedSidebar = [
   SidebarMenu.dashboard,
   SidebarMenu.charity,
   SidebarMenu.banner,
-  SidebarMenu.report,
+  SidebarMenu.reportCampaign,
 ]

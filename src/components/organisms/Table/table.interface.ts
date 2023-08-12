@@ -8,6 +8,7 @@ export interface ICustomTable {
   loading?: boolean
   placeholder?: string
   hideAddButton?: boolean
+  hideSearchField?:boolean
 }
 
 export interface TableParams {

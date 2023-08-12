@@ -40,11 +40,11 @@ const AdminHeader: React.FC = () => {
       icon: <UserOutlined />,
       className: 'ml-auto',
       children: [
-        {
-          key: 'setting',
-          label: 'Settings',
-          icon: <SettingOutlined />,
-        },
+        // {
+        //   key: 'setting',
+        //   label: 'Settings',
+        //   icon: <SettingOutlined />,
+        // },
         {
           key: 'logout',
           label: 'Logout',

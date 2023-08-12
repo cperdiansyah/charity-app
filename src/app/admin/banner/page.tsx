@@ -124,7 +124,8 @@ const AdminBanner = () => {
   return (
     <div>
       {/* <CustomTable columns={getColumns(showModal)} init={init} /> */}
-      <CustomTable columns={getColumns(showModal)} init={init} />
+      <CustomTable columns={getColumns(showModal)} init={init}
+      hideSearchField/>
       <MemoizeModalTable
         open={visible}
         setOpen={setVisible}

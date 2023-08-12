@@ -43,6 +43,8 @@ export const SERVICE = {
   Reward: '/api/v1/reward',
   // Exchange
   Exchange: '/api/v1/exchange',
+  // Exchange
+  report: '/api/v1/report',
 }
 
 export const BASE_HEADERS = {

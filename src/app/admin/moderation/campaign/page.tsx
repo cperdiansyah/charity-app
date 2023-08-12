@@ -183,6 +183,7 @@ const ModerationCampaign = () => {
           init={init}
           loading={loading}
           hideAddButton={true}
+          hideSearchField
         />
         <MemoizeModalTable
           open={visible}

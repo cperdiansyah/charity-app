@@ -8,12 +8,17 @@ interface IGetCharityQuery {
   rows?: number | string
 }
 
-export const getCharityClient = async (query?: IGetCharityQuery) => {
+type status = 'accept' | 'pending' | 'rejected' | 'completed' | 'all'
+
+export const getCharityClient = async (
+  query?: IGetCharityQuery,
+  status: status = 'all'
+) => {
   try {
     const resCharity = await api.get(SERVICE.charity, {
       params: {
         ...query,
-        status: 'all',
+        status,
       },
     })
     const dataCharity = _.get(resCharity, 'data')

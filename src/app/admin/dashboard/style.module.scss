@@ -1,0 +1,18 @@
+.dashborad-wrapper {
+  // background: transparent;
+  height: calc(100vh - 250px);
+  position: relative;
+
+  &-bg {
+    background-image: url('https://amalkita.vercel.app/images/logo_revisi.png');
+    background-repeat: no-repeat;
+    background-position: center;
+    background-size: contain;
+    // background-o
+    opacity: 0.1;
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+}
