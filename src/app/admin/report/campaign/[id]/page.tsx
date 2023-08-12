@@ -30,7 +30,6 @@ import {
   currencyFormat,
 } from '@/helpers'
 import { CAMPAIGN_STATUS_WITH_COLORS } from '../campaign'
-import CustomButton from '@/components/atoms/Button'
 import Navlink from '@/components/atoms/Navlink'
 
 // Apply the plugins
@@ -186,6 +185,7 @@ const ReportCampaignDetail = () => {
         setLoadingGeneratePdf((state) => false)
       }, 500)
 
+      notification.destroy()
       notification.success({
         message: 'Generate Report Successful',
         placement: 'topRight',
