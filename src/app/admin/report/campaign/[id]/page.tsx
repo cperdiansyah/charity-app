@@ -17,7 +17,11 @@ import { notify } from '@/helpers/notify'
 import { SERVICE } from '@/utils/api'
 import { api } from '@/utils/clientSideFetch'
 import { ICampaignData } from '../campaign.interfce'
-import { currencyFormat } from '@/helpers'
+import {
+  calculateFunded,
+  calculateTotalAmount,
+  currencyFormat,
+} from '@/helpers'
 import { CAMPAIGN_STATUS_WITH_COLORS } from '../campaign'
 
 // Apply the plugins
@@ -32,14 +36,17 @@ const ReportCampaignDetail = () => {
   const params = useParams()
   const { id: idCharity } = params
 
-  const [dataCampaign, setCampaign] = useState<ICampaignData | undefined>()
   const [visible, setVisible] = useState<boolean>(false)
   const [loading, setLoading] = useState(false)
+  const [dataCampaign, setCampaign] = useState<ICampaignData | undefined>()
+  const [paymentData, setPaymentData] = useState<any>()
+  const [amount, setAmount] = useState<number>(0)
 
   useEffect(() => {
     setLoading((state) => true)
 
     getCampaignData()
+    getTransactionData()
     setLoading((state) => false)
   }, [])
 
@@ -64,6 +71,16 @@ const ReportCampaignDetail = () => {
 
   const getTransactionData = async () => {
     try {
+      const resPaymentCharity = await api.get(
+        `${SERVICE.Transaction}/charity/${idCharity}?getAll=true&status=settlement`
+      )
+      const dataPaymentCharity = resPaymentCharity.data
+      setPaymentData(dataPaymentCharity)
+
+      const totalAmount = calculateTotalAmount(
+        dataPaymentCharity?.campaignPayment
+      )
+      setAmount(totalAmount)
     } catch (error: any) {
       console.error(error)
       const errorResponse = error.response
@@ -75,8 +92,8 @@ const ReportCampaignDetail = () => {
       )
     }
   }
-  console.log(dataCampaign)
-  if (loading && !dataCampaign) return <LoadingOutlined />
+  // console.log(paymentData)
+  if (loading || !dataCampaign) return <LoadingOutlined />
 
   const status = dataCampaign?.status
   const end_date = dataCampaign?.end_date
@@ -94,8 +111,15 @@ const ReportCampaignDetail = () => {
       )
     }
   }
+
+  const percentage = calculateFunded(
+    amount || 0,
+    dataCampaign?.donation_target || 0
+  )
+
   return (
     <div>
+      {/* Campaign Info */}
       <Descriptions bordered title="Campaign Data" className="gap-3">
         <Descriptions.Item label="Author" span={24}>
           {dataCampaign?.author?.name}
@@ -123,9 +147,15 @@ const ReportCampaignDetail = () => {
           {currencyFormat(dataCampaign?.donation_target || 0)}
         </Descriptions.Item>
         <Descriptions.Item label="Donaton Funded" span={12}>
-          {currencyFormat(dataCampaign?.donation_target || 0)}
+          {currencyFormat(amount || 0)}{' '}
+          <span className="font-medium">{`(${percentage}% of Donation Target)`}</span>
+        </Descriptions.Item>
+        <Descriptions.Item label="Total User Donation" span={24}>
+          {paymentData?.meta?.total}
         </Descriptions.Item>
       </Descriptions>
+
+      {/* User table user payment */}
     </div>
   )
 }
