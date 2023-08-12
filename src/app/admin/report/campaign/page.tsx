@@ -64,7 +64,7 @@ function getColumns(showModal: any) {
       dataIndex: 'donation_target',
       key: 'donation_target',
 
-      render: (data: number) => `Rp. ${currencyFormat(data)}`,
+      render: (data: number) => `${currencyFormat(data)}`,
     },
     {
       title: 'Start Date',
