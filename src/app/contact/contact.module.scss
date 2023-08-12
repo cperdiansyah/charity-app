@@ -1,3 +1,21 @@
 .banner-contact {
   background-image: url('/images/contact_bg.png');
 }
+
+.form-item {
+  &-textarea {
+    border: 1px solid #fff;
+    border-color: rgba(200, 200, 200, 0.5);
+  }
+
+  input {
+    background: transparent !important;
+    border: unset !important;
+  }
+
+  .icon,
+  svg {
+    color: #2cc391;
+    margin-right: 5px;
+  }
+}
