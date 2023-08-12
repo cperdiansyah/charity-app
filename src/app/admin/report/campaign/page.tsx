@@ -40,7 +40,7 @@ function getColumns(showModal: any) {
         const isCampaignStillRunning = dayjs(end_date) > dayjs()
 
         let campaignStatus = CAMPAIGN_STATUS_WITH_COLORS.find(
-          (item) => item.status === status
+          (item) => item.label === status
         )
 
         if (campaignStatus) {

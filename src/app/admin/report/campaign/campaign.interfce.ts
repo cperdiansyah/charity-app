@@ -30,8 +30,36 @@ export interface InitialValue {
   }
   media_source?: string
   draft: boolean
-  dateCampaign?: string[] | Dayjs[]
-  description?: string
+  
+}
+
+export interface ICampaignData {
+  _id: string
+  title: string
+  slug: string
+  description: string
+  status: string
+  is_draft: boolean
+  donation_target: number
+  start_date: string
+  end_date: string
+  post_date: any
+  author: Author
+  media: Medum[]
+  campaign_type: string
+  createdAt: string
+  updatedAt: string
+}
+
+export interface Author {
+  _id: string
+  name: string
+}
+
+export interface Medum {
+  content: string
+  content_type: string
+  _id: string
 }
 
 

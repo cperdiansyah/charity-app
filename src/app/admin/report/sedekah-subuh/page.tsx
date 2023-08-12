@@ -1,9 +1,10 @@
+'use client'
 import React from 'react'
 
-const page = () => {
+const ReportSedekahSubuh = () => {
   return (
-    <div>page</div>
+    <div>ReportSedekahSubuh</div>
   )
 }
 
-export default page
+export default ReportSedekahSubuh

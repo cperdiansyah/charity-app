@@ -1,14 +1,14 @@
 export const CAMPAIGN_STATUS = {
-  ACCEPT: 'accept', //GREEN
+  ACCEPT: 'On Going', //GREEN
   PENDING: 'pending', //GRAY
   REJECTED: 'rejected', //RED
-  COMPLETED: 'completed', //BLUE
+  COMPLETED: 'Done', //BLUE
 }
 
 export const CAMPAIGN_STATUS_WITH_COLORS = [
   {
     label: 'accept',
-    color: 'green',
+    color: 'blue',
     status: CAMPAIGN_STATUS.ACCEPT,
   },
   {
@@ -23,7 +23,7 @@ export const CAMPAIGN_STATUS_WITH_COLORS = [
   },
   {
     label: 'completed',
-    color: 'blue',
+    color: 'green',
     status: CAMPAIGN_STATUS.COMPLETED,
   },
 ]

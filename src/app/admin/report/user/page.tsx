@@ -1,9 +1,14 @@
 'use client'
 
+import { Descriptions } from 'antd'
 import React from 'react'
 
-const ReportSedekahSubuh = () => {
-  return <div>ReportSedekahSubuh</div>
+const ReportUser = () => {
+  return (
+    <div>
+      <Descriptions title="Campaign "></Descriptions>
+    </div>
+  )
 }
 
-export default ReportSedekahSubuh
+export default ReportUser
