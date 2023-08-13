@@ -221,7 +221,7 @@ const ReportCampaignDetail = () => {
     <div>
       <button
         onClick={handleDownload}
-        className="btn ml-auto  flex gap-3 rounded-md border border-gray-300 px-4 py-3 text-gray-500 shadow-md hover:shadow-lg"
+        className="btn !ml-auto  !flex gap-3 !rounded-md border border-gray-300 !px-4 !py-3 !text-gray-500 shadow-md hover:shadow-lg"
       >
         <DownloadOutlined /> Download Report
       </button>
